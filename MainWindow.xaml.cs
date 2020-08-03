@@ -45,15 +45,18 @@ namespace Frogy
                 DateTime.Now.Minute,
                 DateTime.Now.Second);
 
-            Process nowFocusTaks = MyProcess.GetFocusTaskInfo();
+            IntPtr nowFoucsWindow = MyProcessHelper.GetFocueWindow();
+            Process nowFocusTaks = MyProcessHelper.GetWindowPID(nowFoucsWindow);
+            bool nowIsUWP = nowFocusTaks.MainModule.FileVersionInfo.ProductName == "Microsoft® Windows® Operating System";
+            List<IntPtr> allChildWindows = new MyWindowHelper(nowFocusTaks.MainWindowHandle).GetAllChildHandles();
 
             MyFocusTask nowMyFocusTask =
                 new MyFocusTask()
                 {
-                    ApplicationName = nowFocusTaks.MainModule.FileVersionInfo.ProductName,
+                    ApplicationName = nowIsUWP ? MyWindowHelper.GetWindowTitle(allChildWindows[2]) : nowFocusTaks.MainModule.FileVersionInfo.ProductName,
                     ApplicationFilePath = nowFocusTaks.MainModule.FileName,
-                    FormName = MyProcess.GetFocusTaskWindowTitle(),
-                    IsApplicationUWP = (nowFocusTaks.MainModule.FileVersionInfo.ProductName == "Microsoft® Windows® Operating System")
+                    FormName = MyWindowHelper.GetWindowTitle(nowFoucsWindow),
+                    IsApplicationUWP = nowIsUWP
                 };
 
             //如果时间线为空 则直接添加现在的进程信息然后return
@@ -84,7 +87,7 @@ namespace Frogy
             test.Items.Clear();
             foreach (MyTimeSpan timeSpan in taskList.MyDay)
             {
-                string result = timeSpan.TimeSpanTask.FormName + "    " + timeSpan.StartTime + "    " + timeSpan.StopTime;
+                string result = timeSpan.TimeSpanTask.ApplicationName + "    " + timeSpan.StartTime + "    " + timeSpan.StopTime;
                 test.Items.Add(result);
             }
         }
