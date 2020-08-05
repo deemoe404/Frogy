@@ -34,9 +34,7 @@ namespace Frogy.ViewModels
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            //如果设备处于锁定状态，则不累加计数器
-            if (MyDeviceHelper.DeviceState == 0)
-                return;
+
 
             //当前时间
             TimeSpan nowTimeSpan = new TimeSpan(
@@ -46,6 +44,24 @@ namespace Frogy.ViewModels
 
             //当前日期 用于从字典中读取当日时间线
             DateTime nowDate = DateTime.Today;
+
+            //如果设备处于锁定状态，则不累加计数器
+            if (MyDeviceHelper.DeviceState == 0)
+            {
+                appData.AppData_AllTimeLines[nowDate].TimeLine[appData.AppData_AllTimeLines[nowDate].TimeLine.Count - 1].StopTime = nowTimeSpan;
+                bool b = appData.AppData_AllTimeLines[nowDate].TimeLine.Last().TimeDurationTask.ApplicationName== "Computer Locked";
+
+                if(!b)
+                    appData.AppData_AllTimeLines[nowDate].TimeLine.Add(new MyTimeDuration()
+                    {
+                        StartTime = nowTimeSpan,
+                        TimeDurationTask = new MyTask() { ApplicationName="Computer Locked"},
+                        StopTime = nowTimeSpan
+                    });
+
+                return;
+            }
+
 
             //获取焦点窗口
             IntPtr nowFoucsWindow = MyProcessHelper.GetFocueWindow();
@@ -97,7 +113,7 @@ namespace Frogy.ViewModels
             //同一个浏览器，切换窗口也认为是切换了任务
             bool a;
             ((appData.AppData_AllTimeLines[nowDate])).TimeLine[((appData.AppData_AllTimeLines[nowDate])).TimeLine.Count - 1].StopTime = nowTimeSpan;
-            a = ((appData.AppData_AllTimeLines[nowDate])).TimeLine.Last().TimeDurationTask.FormName.Equals(nowMyFocusTask.FormName);
+            a = ((appData.AppData_AllTimeLines[nowDate])).TimeLine.Last().TimeDurationTask.FormName == nowMyFocusTask.FormName;
             if (!a)
                 ((appData.AppData_AllTimeLines[nowDate])).TimeLine.Add(new MyTimeDuration() { StartTime = nowTimeSpan, TimeDurationTask = nowMyFocusTask, StopTime = nowTimeSpan });
 
@@ -169,7 +185,9 @@ namespace Frogy.ViewModels
             }
         }
 
-
+        /// <summary>
+        /// 元数据
+        /// </summary>
         private List<string> sourceData;
         public List<string> SourceData
         {
@@ -183,10 +201,6 @@ namespace Frogy.ViewModels
                 OnPropertyChanged();
             }
         }
-
-
-
-
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
