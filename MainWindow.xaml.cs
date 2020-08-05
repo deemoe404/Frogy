@@ -42,6 +42,8 @@ namespace Frogy
             try
             {
                 taskList.Load(ApplicationData);
+                if(!taskList.AppData_AllTimeLines.ContainsKey(DateTime.Today))
+                    taskList.AppData_AllTimeLines.Add(DateTime.Today, new MyDay());
             }
             catch/*(Exception e)*/
             {
@@ -56,33 +58,48 @@ namespace Frogy
 
         private void Timer_Tick(object sender, EventArgs e)
         {
+            //当前时间
             TimeSpan nowTimeSpan = new TimeSpan(
                 DateTime.Now.Hour,
                 DateTime.Now.Minute,
-                DateTime.Now.Second);
+                DateTime.Now.Second); 
+            //当前日期 用于从字典中读取当日时间线
+            DateTime nowDate = DateTime.Today;
 
+            //获取焦点窗口
             IntPtr nowFoucsWindow = MyProcessHelper.GetFocueWindow();
-            Process nowFocusTaks = MyProcessHelper.GetWindowPID(nowFoucsWindow);
-            bool nowIsUWP = nowFocusTaks.MainModule.FileVersionInfo.FileDescription == "Application Frame Host";
+            //获取焦点窗口对应进程 如果获取进程失败，Return
+            Process nowFocusTaks;
+            try
+            {
+                nowFocusTaks = MyProcessHelper.GetWindowPID(nowFoucsWindow);
+            }
+            catch { return; }
 
-            //如果是UWP进程，那么枚举所有子窗口来获得程序名
+            //通过FileDescription判断进程是否为UWP
+            bool nowIsUWP;
+            try
+            {
+                nowIsUWP = nowFocusTaks.MainModule.FileVersionInfo.FileDescription == "Application Frame Host";
+            }
+            catch { return; }
+
+            //如果是UWP进程，那么枚举所有子窗口来获得程序名（猜测x）
             string nowApplicationName_UWP = "";
             List<IntPtr> allChildWindows = new MyWindowHelper(nowFocusTaks.MainWindowHandle).GetAllChildHandles();
             foreach (IntPtr ptr in allChildWindows)
                 if (!string.IsNullOrEmpty(MyWindowHelper.GetWindowTitle(ptr)))
                     nowApplicationName_UWP = MyWindowHelper.GetWindowTitle(ptr);
 
-
+            //构造MyFocusTask
             MyTask nowMyFocusTask =
                 new MyTask()
                 {
-                    ApplicationName = nowIsUWP ? nowApplicationName_UWP : nowFocusTaks.MainModule.FileVersionInfo.ProductName,
+                    ApplicationName = nowIsUWP ? nowApplicationName_UWP : (nowFocusTaks.MainModule.FileVersionInfo.ProductName == "Microsoft® Windows® Operating System") ? nowFocusTaks.MainModule.FileVersionInfo.FileDescription: nowFocusTaks.MainModule.FileVersionInfo.ProductName,
                     ApplicationFilePath = nowFocusTaks.MainModule.FileName,
                     FormName = MyWindowHelper.GetWindowTitle(nowFoucsWindow),
                     IsApplicationUWP = nowIsUWP
                 };
-
-            DateTime nowDate = DateTime.Today;
 
             //如果时间线为空 则直接添加现在的进程信息然后return
             if (((taskList.AppData_AllTimeLines[nowDate])).TimeLine.Count == 0)
@@ -96,15 +113,42 @@ namespace Frogy
             //如果现在的窗口名与上一个不同，则认为切换了任务任务
             //同一个浏览器，切换窗口也认为是切换了任务
             bool a;
+            ((taskList.AppData_AllTimeLines[nowDate])).TimeLine[((taskList.AppData_AllTimeLines[nowDate])).TimeLine.Count - 1].StopTime = nowTimeSpan;
             a = ((taskList.AppData_AllTimeLines[nowDate])).TimeLine.Last().TimeDurationTask.FormName.Equals(nowMyFocusTask.FormName);
-            if (!a)
+            if (!a) 
+                ((taskList.AppData_AllTimeLines[nowDate])).TimeLine.Add(new MyTimeDuration() { StartTime = nowTimeSpan, TimeDurationTask = nowMyFocusTask, StopTime = nowTimeSpan });
+
+
+            //PrintList();
+            PrintList_OverView(GetOverView(taskList.AppData_AllTimeLines[nowDate]));
+            taskList.Save(ApplicationData);
+        }
+
+        Dictionary<string,TimeSpan> GetOverView(MyDay myDay)
+        {
+            Dictionary<string, TimeSpan> overView = new Dictionary<string, TimeSpan>();
+
+            foreach(MyTimeDuration item in myDay.TimeLine)
             {
-                ((taskList.AppData_AllTimeLines[nowDate])).TimeLine[((taskList.AppData_AllTimeLines[nowDate])).TimeLine.Count - 1].StopTime = nowTimeSpan;
-                ((taskList.AppData_AllTimeLines[nowDate])).TimeLine.Add(new MyTimeDuration() { StartTime = nowTimeSpan, TimeDurationTask = nowMyFocusTask });
+                string nowAppName = item.TimeDurationTask.ApplicationName;
+                TimeSpan duration = item.StopTime - item.StartTime;
+                if (overView.ContainsKey(nowAppName))
+                    overView[nowAppName] += duration;
+                else
+                    overView.Add(nowAppName, duration);
             }
 
-            PrintList();
-            taskList.Save(ApplicationData);
+            return overView;
+        }
+
+        private void PrintList_OverView(Dictionary<string,TimeSpan> keyValuePairs)
+        {
+            test.Items.Clear();
+            foreach(string key in keyValuePairs.Keys)
+            {
+                string result = key + "     " + keyValuePairs[key];
+                test.Items.Add(result);
+            }
         }
 
         private void PrintList()

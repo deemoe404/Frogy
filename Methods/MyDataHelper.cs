@@ -25,16 +25,6 @@ namespace Frogy.Methods
             return JsonConvert.DeserializeObject<T>(Json);
         }
 
-
-        public static T Deserialize<T>(byte[] datas)
-        {
-            BinaryFormatter bf = new BinaryFormatter();
-            MemoryStream stream = new MemoryStream(datas, 0, datas.Length);
-            T obj = (T)bf.Deserialize(stream);
-            stream.Dispose();
-            return obj;
-        }
-
         /// <summary>
         /// 将对象序列化为Json
         /// </summary>
@@ -44,16 +34,6 @@ namespace Frogy.Methods
         public static string CoverObjectToJson<T>(T Object)
         {
             return JsonConvert.SerializeObject(Object, Formatting.Indented);
-        }
-
-        public static byte[] Serialize<T>(T obj)
-        {
-            BinaryFormatter bf = new BinaryFormatter();
-            MemoryStream stream = new MemoryStream();
-            bf.Serialize(stream, obj);
-            byte[] datas = stream.ToArray();
-            stream.Dispose();
-            return datas;
         }
 
         /// <summary>
