@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Frogy.Classes
 {
+    /// <summary>
+    /// 应用数据类
+    /// </summary>
     class MyAppData
     {
         /// <summary>

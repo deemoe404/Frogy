@@ -15,9 +15,32 @@ namespace Frogy
     class MyDay
     {
         /// <summary>
-        /// 今日任务记录
+        /// 今日时间线
         /// </summary>
         public List<MyTimeDuration> TimeLine = new List<MyTimeDuration>();
+
+        /// <summary>
+        /// 获取今日小结
+        /// </summary>
+        /// <returns>今日小结 - Dictionary<string, TimeSpan></returns>
+        public Dictionary<string, TimeSpan> GetOverView()
+        {
+            Dictionary<string, TimeSpan> overView = new Dictionary<string, TimeSpan>();
+
+            foreach (MyTimeDuration item in TimeLine)
+            {
+                string nowAppName = item.TimeDurationTask.ApplicationName;
+                if (string.IsNullOrEmpty(nowAppName)) continue;
+
+                TimeSpan duration = item.Duration;
+                if (overView.ContainsKey(nowAppName))
+                    overView[nowAppName] += duration;
+                else
+                    overView.Add(nowAppName, duration);
+            }
+
+            return overView;
+        }
     }
 
     /// <summary>
@@ -35,6 +58,17 @@ namespace Frogy
         /// 记录离开当前任务的时间
         /// </summary>
         public TimeSpan StopTime { get; set; } = new TimeSpan(0, 0, 0);
+
+        /// <summary>
+        /// 任务持续时间
+        /// </summary>
+        public TimeSpan Duration 
+        { 
+            get 
+            { 
+                return StopTime - StartTime; 
+            } 
+        }
 
         /// <summary>
         /// 记录当前时间执行的任务

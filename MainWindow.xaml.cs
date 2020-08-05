@@ -95,7 +95,7 @@ namespace Frogy
             MyTask nowMyFocusTask =
                 new MyTask()
                 {
-                    ApplicationName = nowIsUWP ? nowApplicationName_UWP : (nowFocusTaks.MainModule.FileVersionInfo.ProductName == "Microsoft® Windows® Operating System") ? nowFocusTaks.MainModule.FileVersionInfo.FileDescription: nowFocusTaks.MainModule.FileVersionInfo.ProductName,
+                    ApplicationName = nowIsUWP ? nowApplicationName_UWP : (nowFocusTaks.MainModule.FileVersionInfo.ProductName == "Microsoft® Windows® Operating System") ? nowFocusTaks.MainModule.FileVersionInfo.FileDescription: string.IsNullOrEmpty(nowFocusTaks.MainModule.FileVersionInfo.ProductName) ? nowFocusTaks.ProcessName : nowFocusTaks.MainModule.FileVersionInfo.ProductName,
                     ApplicationFilePath = nowFocusTaks.MainModule.FileName,
                     FormName = MyWindowHelper.GetWindowTitle(nowFoucsWindow),
                     IsApplicationUWP = nowIsUWP
@@ -119,26 +119,9 @@ namespace Frogy
                 ((taskList.AppData_AllTimeLines[nowDate])).TimeLine.Add(new MyTimeDuration() { StartTime = nowTimeSpan, TimeDurationTask = nowMyFocusTask, StopTime = nowTimeSpan });
 
 
-            //PrintList();
-            PrintList_OverView(GetOverView(taskList.AppData_AllTimeLines[nowDate]));
+            PrintList();
+            PrintList_OverView(taskList.AppData_AllTimeLines[nowDate].GetOverView());
             taskList.Save(ApplicationData);
-        }
-
-        Dictionary<string,TimeSpan> GetOverView(MyDay myDay)
-        {
-            Dictionary<string, TimeSpan> overView = new Dictionary<string, TimeSpan>();
-
-            foreach(MyTimeDuration item in myDay.TimeLine)
-            {
-                string nowAppName = item.TimeDurationTask.ApplicationName;
-                TimeSpan duration = item.StopTime - item.StartTime;
-                if (overView.ContainsKey(nowAppName))
-                    overView[nowAppName] += duration;
-                else
-                    overView.Add(nowAppName, duration);
-            }
-
-            return overView;
         }
 
         private void PrintList_OverView(Dictionary<string,TimeSpan> keyValuePairs)
@@ -152,13 +135,12 @@ namespace Frogy
         }
 
         private void PrintList()
-        {
-            //打印列表              
-            test.Items.Clear();
-            foreach (MyTimeDuration timeSpan in ((MyDay)(taskList.AppData_AllTimeLines[DateTime.Today])).TimeLine)
+        {   
+            test1.Items.Clear();
+            foreach (MyTimeDuration timeSpan in taskList.AppData_AllTimeLines[DateTime.Today].TimeLine)
             {
-                string result = timeSpan.TimeDurationTask.ApplicationName + "    " + timeSpan.StartTime + "    " + timeSpan.StopTime;
-                test.Items.Add(result);
+                string result = timeSpan.TimeDurationTask.ApplicationName + "    " + timeSpan.TimeDurationTask.FormName + "    " + timeSpan.StartTime + "    " + timeSpan.StopTime;
+                test1.Items.Add(result);
             }
         }
 
