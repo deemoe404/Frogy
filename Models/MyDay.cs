@@ -20,26 +20,29 @@ namespace Frogy
         public List<MyTimeDuration> TimeLine = new List<MyTimeDuration>();
 
         /// <summary>
-        /// 获取今日小结
+        /// 获取今日小结，即为时间线内相同软件使用时间合并后的列表
         /// </summary>
         /// <returns>今日小结 - Dictionary<string, TimeSpan></returns>
-        public Dictionary<string, TimeSpan> GetOverView()
-        {
-            Dictionary<string, TimeSpan> overView = new Dictionary<string, TimeSpan>();
-
-            foreach (MyTimeDuration item in TimeLine)
+        public Dictionary<string, TimeSpan> OverView 
+        { 
+            get
             {
-                string nowAppName = item.TimeDurationTask.ApplicationName;
-                if (string.IsNullOrEmpty(nowAppName)) continue;
+                Dictionary<string, TimeSpan> overView = new Dictionary<string, TimeSpan>();
 
-                TimeSpan duration = item.Duration;
-                if (overView.ContainsKey(nowAppName))
-                    overView[nowAppName] += duration;
-                else
-                    overView.Add(nowAppName, duration);
+                foreach (MyTimeDuration item in TimeLine)
+                {
+                    string nowAppName = item.TimeDurationTask.ApplicationName;
+                    if (string.IsNullOrEmpty(nowAppName)) continue;
+
+                    TimeSpan duration = item.Duration;
+                    if (overView.ContainsKey(nowAppName))
+                        overView[nowAppName] += duration;
+                    else
+                        overView.Add(nowAppName, duration);
+                }
+
+                return overView;
             }
-
-            return overView;
         }
     }
 

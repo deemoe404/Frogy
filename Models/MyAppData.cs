@@ -8,7 +8,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Frogy.Classes
+namespace Frogy.Models
 {
     /// <summary>
     /// 应用数据类
