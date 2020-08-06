@@ -63,9 +63,12 @@ namespace Frogy.ViewModels
             IntPtr nowFoucsWindow = MyWindowHelper.GetFocueWindow();
             string nowFoucsWindowTitle = MyWindowHelper.GetWindowTitle(nowFoucsWindow);
 
-            if (todayTimeLine.Last().TimeDurationTask.FormName != nowFoucsWindowTitle || todayTimeLine.Count == 0)
+            if (todayTimeLine.Count == 0 || todayTimeLine.Last().TimeDurationTask.FormName != nowFoucsWindowTitle)
             {
                 Process nowFocusProcess = MyProcessHelper.GetWindowPID(nowFoucsWindow);
+
+                if (nowFocusProcess.Id == 0) return;
+
                 string nowFocusProcessName = MyProcessHelper.GetProcessName(nowFocusProcess);
 
                 if (string.IsNullOrEmpty(nowFocusProcessName)) return;
@@ -86,14 +89,11 @@ namespace Frogy.ViewModels
                         TimeDurationTask = nowFocusTask
                     };
 
-                //如果时间线为空 则直接添加现在的进程信息然后return
-                if (todayTimeLine.Count == 0)
-                {
-                    todayTimeLine.Add(nowTimeDuration);
-                    return;
-                }
+                if (todayTimeLine.Count != 0)
+                    todayTimeLine.Last().StopTime = nowTimeSpan;
 
                 todayTimeLine.Add(nowTimeDuration);
+
             }
             else
             {
@@ -102,7 +102,7 @@ namespace Frogy.ViewModels
 
             appData.AllDays[nowDate].TimeLine = todayTimeLine;
             Overview = PrintOverview(appData.AllDays[DateTime.Today].OverView);
-            SourceData = PrintSourceData(appData.AllDays[DateTime.Today].TimeLine);
+            //SourceData = PrintSourceData(appData.AllDays[DateTime.Today].TimeLine);
         }
 
         private void Saver_Tick(object sender, EventArgs e)

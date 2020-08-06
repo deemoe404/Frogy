@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
 
         <ListView ItemsSource="{Binding Path=Overview}"/>
-        <ListView ItemsSource="{Binding Path=SourceData}" Grid.Column="1"/>
+        <!--<ListView ItemsSource="{Binding Path=SourceData}" Grid.Column="1"/>-->
 
     </Grid>
 </Window>
