@@ -101,11 +101,6 @@ namespace Frogy
         public string ApplicationFilePath { get; set; }
 
         /// <summary>
-        /// 程序是否为UWP
-        /// </summary>
-        public bool IsApplicationUWP { get; set; } = false;
-
-        /// <summary>
         /// 电脑状态。1=活动，0=锁定。
         /// </summary>
         public int ComputerStatus { get; set; } = 1;

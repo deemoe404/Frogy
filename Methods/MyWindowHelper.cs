@@ -14,19 +14,18 @@ namespace Frogy.Methods
         private static extern bool EnumChildWindows(IntPtr window, EnumWindowProc callback, IntPtr lParam);
 
         [DllImport("user32.dll", EntryPoint = "GetWindowText")]
-        private static extern int GetWindowText(
-            int hWnd,
-            StringBuilder lpString,
-            int nMaxCount
-        );
+        private static extern int GetWindowText(int hWnd, StringBuilder lpString, int nMaxCount);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        private static extern IntPtr GetForegroundWindow();
 
         private delegate bool EnumWindowProc(IntPtr hwnd, IntPtr lParam);
 
-        private readonly IntPtr _MainHandle;
-        public MyWindowHelper(IntPtr handle)
-        {
-            this._MainHandle = handle;
-        }
+        //private readonly IntPtr _MainHandle;
+        //public MyWindowHelper(IntPtr handle)
+        //{
+        //    this._MainHandle = handle;
+        //}
 
 
         /// <summary>
@@ -42,12 +41,20 @@ namespace Frogy.Methods
             return title.ToString();
         }
 
+        /// <summary>
+        /// 获取焦点窗口
+        /// </summary>
+        /// <returns>IntPtr</returns>
+        public static IntPtr GetFocueWindow()
+        {
+            return GetForegroundWindow();
+        }
 
         /// <summary>
         /// 获取当窗口的所有子窗口
         /// </summary>
         /// <returns></returns>
-        public List<IntPtr> GetAllChildHandles()
+        public static List<IntPtr> GetAllChildHandles(IntPtr mainHandle)
         {
             List<IntPtr> childHandles = new List<IntPtr>();
 
@@ -57,7 +64,7 @@ namespace Frogy.Methods
             try
             {
                 EnumWindowProc childProc = new EnumWindowProc(EnumWindow);
-                EnumChildWindows(this._MainHandle, childProc, pointerChildHandlesList);
+                EnumChildWindows(mainHandle, childProc, pointerChildHandlesList);
             }
             finally
             {
@@ -67,7 +74,7 @@ namespace Frogy.Methods
             return childHandles;
         }
 
-        private bool EnumWindow(IntPtr hWnd, IntPtr lParam)
+        private static bool EnumWindow(IntPtr hWnd, IntPtr lParam)
         {
             GCHandle gcChildhandlesList = GCHandle.FromIntPtr(lParam);
 

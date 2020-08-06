@@ -11,21 +11,12 @@ namespace Frogy.Methods
     class MyProcessHelper
     {
         #region DLL导入
-        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        private static extern IntPtr GetForegroundWindow();
+
 
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         private static extern int GetWindowThreadProcessId(IntPtr hwnd, out int ID);
         #endregion
 
-        /// <summary>
-        /// 获取焦点窗口
-        /// </summary>
-        /// <returns>IntPtr</returns>
-        public static IntPtr GetFocueWindow()
-        {
-            return GetForegroundWindow();
-        }
 
 
         /// <summary>
@@ -40,6 +31,76 @@ namespace Frogy.Methods
             //result.WaitForInputIdle();
 
             return result;
+        }
+
+        /// <summary>
+        /// 获取进程名称
+        /// </summary>
+        /// <param name="process">进程</param>
+        /// <returns>进程名称</returns>
+        public static string GetProcessName(Process process)
+        {
+            bool isUWP = MyProcessHelper.IsProcessUWP(process);
+
+            string applicationName = "";
+            if (isUWP)
+            {
+                try
+                {
+                    List<IntPtr> allChildWindows = MyWindowHelper.GetAllChildHandles(process.MainWindowHandle);
+                    foreach (IntPtr ptr in allChildWindows)
+                    {
+                        Process uwpProcess = MyProcessHelper.GetWindowPID(ptr);
+                        if (uwpProcess.MainModule.ModuleName != "ApplicationFrameHost.exe")
+                        {
+                            applicationName = MyAppxPackageHelper.GetAppDisplayNameFromProcess(uwpProcess);
+                            break;
+                        }
+                    }
+                }
+                catch { applicationName = null; }
+            }
+            else
+            {
+                applicationName = process.MainModule.FileVersionInfo.FileDescription;
+
+                if (string.IsNullOrEmpty(applicationName))
+                    applicationName = process.ProcessName;
+            }
+
+            return applicationName;
+        }
+
+        public static string GetProcessPath(Process process)
+        {
+            bool isUWP = MyProcessHelper.IsProcessUWP(process);
+
+            string applicationPath = "";
+            if (isUWP)
+            {
+                try
+                {
+                    List<IntPtr> allChildWindows = MyWindowHelper.GetAllChildHandles(process.MainWindowHandle);
+                    foreach (IntPtr ptr in allChildWindows)
+                    {
+                        Process uwpProcess = MyProcessHelper.GetWindowPID(ptr);
+                        if (uwpProcess.MainModule.ModuleName != "ApplicationFrameHost.exe")
+                            applicationPath = uwpProcess.MainModule.FileName;
+                    }
+                }
+                catch { applicationPath = null; }
+            }
+            else
+            {
+                applicationPath = process.MainModule.FileName;
+            }
+
+            return applicationPath;
+        }
+
+        public static bool IsProcessUWP(Process process)
+        {
+            return process.MainModule.FileVersionInfo.FileDescription == "Application Frame Host";
         }
     }
 }
