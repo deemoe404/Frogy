@@ -18,7 +18,7 @@ namespace Frogy.Models
         /// <summary>
         /// 所有时间线 key为日期(DateTime),value为MyDay
         /// </summary>
-        public Dictionary<DateTime,MyDay> AppData_AllTimeLines { get; set; } = new Dictionary<DateTime, MyDay>();
+        public Dictionary<DateTime,MyDay> AllDays { get; set; } = new Dictionary<DateTime, MyDay>();
 
         /// <summary>
         /// 保存应用数据
@@ -26,7 +26,7 @@ namespace Frogy.Models
         /// <param name="URL">文件路径</param>
         public void Save(string URL)
         {
-            string Content = MyDataHelper.CoverObjectToJson(AppData_AllTimeLines);
+            string Content = MyDataHelper.CoverObjectToJson(AllDays);
             MyDataHelper.WriteFile(URL, Content);
         }
 
@@ -37,7 +37,7 @@ namespace Frogy.Models
         public void Load(string URL)
         {
             string Json = MyDataHelper.ReadFile(URL);
-            AppData_AllTimeLines = MyDataHelper.CoverJsonToObject<Dictionary<DateTime, MyDay>>(Json);
+            AllDays = MyDataHelper.CoverJsonToObject<Dictionary<DateTime, MyDay>>(Json);
         }
     }
 }

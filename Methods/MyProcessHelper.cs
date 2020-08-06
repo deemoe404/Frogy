@@ -36,8 +36,10 @@ namespace Frogy.Methods
         public static Process GetWindowPID(IntPtr hWnd)
         {
             GetWindowThreadProcessId(hWnd, out int calcID);
+            Process result = Process.GetProcessById(calcID);
+            //result.WaitForInputIdle();
 
-            return Process.GetProcessById(calcID);
+            return result;
         }
     }
 }
