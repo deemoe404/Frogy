@@ -20,11 +20,17 @@ namespace Frogy.Views
     /// </summary>
     public partial class MainPage : Window
     {
+        MainPageViewModel viewModel = new MainPageViewModel();
+        
         public MainPage()
         {
             InitializeComponent();
 
-            this.DataContext = new MainPageViewModel();
+            this.DataContext = viewModel;
+
+            this.Closing += viewModel.MainPage_Closing;
         }
+
+
     }
 }

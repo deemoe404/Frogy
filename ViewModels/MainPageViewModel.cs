@@ -16,7 +16,9 @@ namespace Frogy.ViewModels
     public class MainPageViewModel : INotifyPropertyChanged
     {
         private MyAppData appData = new MyAppData();
+
         private DispatcherTimer timer = new DispatcherTimer();
+        private DispatcherTimer saver = new DispatcherTimer();
 
         /// <summary>
         /// 加载App数据
@@ -134,7 +136,10 @@ namespace Frogy.ViewModels
             appData.AllDays[nowDate].TimeLine = todayTimeLine;
             Overview = PrintOverview(appData.AllDays[DateTime.Today].OverView);
             SourceData = PrintSourceData(appData.AllDays[DateTime.Today].TimeLine);
+        }
 
+        private void Saver_Tick(object sender, EventArgs e)
+        {
             appData.Save(appDataPath);
         }
 
@@ -179,6 +184,10 @@ namespace Frogy.ViewModels
             timer.Interval = new TimeSpan(10000000);
             timer.Tick += Timer_Tick;
             timer.Start();
+
+            saver.Interval = new TimeSpan(600000000);
+            saver.Tick += Saver_Tick;
+            saver.Start();
         }
 
         /// <summary>
@@ -230,6 +239,14 @@ namespace Frogy.ViewModels
                 appDataPath = value;
                 OnPropertyChanged();
             }
+        }
+
+        public void MainPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            timer.Stop();
+            saver.Stop();
+
+            appData.Save(appDataPath);
         }
 
         #region INotifyPropertyChanged

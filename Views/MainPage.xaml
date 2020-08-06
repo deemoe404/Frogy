@@ -14,5 +14,6 @@
 
         <ListView ItemsSource="{Binding Path=Overview}"/>
         <ListView ItemsSource="{Binding Path=SourceData}" Grid.Column="1"/>
+
     </Grid>
 </Window>
