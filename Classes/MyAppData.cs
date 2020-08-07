@@ -8,7 +8,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Frogy.Models
+namespace Frogy.Classes
 {
     /// <summary>
     /// 应用数据类
@@ -24,20 +24,27 @@ namespace Frogy.Models
         /// 保存应用数据
         /// </summary>
         /// <param name="URL">文件路径</param>
-        public void Save(string URL)
+        public void Save(string SavePath, DateTime SaveDate)
         {
-            string Content = MyDataHelper.CoverObjectToJson(AllDays);
-            MyDataHelper.WriteFile(URL, Content);
+            string savePath = SavePath + (SavePath.EndsWith("//") ? "" : "//") + SaveDate.ToString("yyyyMMdd") + ".json";
+            string Content = MyDataHelper.CoverObjectToJson(AllDays[SaveDate]);
+
+            MyDataHelper.WriteFile(savePath, Content);
         }
 
         /// <summary>
         /// 读取应用数据
         /// </summary>
         /// <param name="URL">文件路径</param>
-        public void Load(string URL)
+        public void Load(string LoadPath, DateTime LoadDate)
         {
-            string Json = MyDataHelper.ReadFile(URL);
-            AllDays = MyDataHelper.CoverJsonToObject<Dictionary<DateTime, MyDay>>(Json);
+            string loadPath = LoadPath + (LoadPath.EndsWith("//") ? "" : "//") + LoadDate.ToString("yyyyMMdd") + ".json";
+            string Json = MyDataHelper.ReadFile(loadPath);
+
+            if(!AllDays.ContainsKey(LoadDate))
+                AllDays.Add(LoadDate, MyDataHelper.CoverJsonToObject<MyDay>(Json));
+            else
+                AllDays[LoadDate] = MyDataHelper.CoverJsonToObject<MyDay>(Json);
         }
     }
 }

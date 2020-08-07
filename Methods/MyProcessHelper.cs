@@ -11,13 +11,9 @@ namespace Frogy.Methods
     class MyProcessHelper
     {
         #region DLL导入
-
-
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         private static extern int GetWindowThreadProcessId(IntPtr hwnd, out int ID);
         #endregion
-
-
 
         /// <summary>
         /// 获取窗口对应的进程PID
@@ -71,6 +67,11 @@ namespace Frogy.Methods
             return applicationName;
         }
 
+        /// <summary>
+        /// 获取进程路径
+        /// </summary>
+        /// <param name="process">进程</param>
+        /// <returns>进程路径</returns>
         public static string GetProcessPath(Process process)
         {
             bool isUWP = MyProcessHelper.IsProcessUWP(process);
@@ -98,9 +99,21 @@ namespace Frogy.Methods
             return applicationPath;
         }
 
+        /// <summary>
+        /// 判断进程是否为UWP
+        /// </summary>
+        /// <param name="process">进程</param>
+        /// <returns>bool</returns>
         public static bool IsProcessUWP(Process process)
         {
-            return process.MainModule.FileVersionInfo.FileDescription == "Application Frame Host";
+            try
+            {
+                return process.MainModule.FileVersionInfo.FileDescription == "Application Frame Host";
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

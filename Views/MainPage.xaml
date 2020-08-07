@@ -12,8 +12,14 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+        
         <ListView ItemsSource="{Binding Path=Overview}"/>
-        <!--<ListView ItemsSource="{Binding Path=SourceData}" Grid.Column="1"/>-->
+        <ListView ItemsSource="{Binding Path=SourceData}" Grid.Column="1"/>
 
+        <DatePicker SelectedDate="{Binding Path=DisplayDate}" Grid.Row="1"/>
     </Grid>
 </Window>

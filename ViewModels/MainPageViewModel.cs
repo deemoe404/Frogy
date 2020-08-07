@@ -1,5 +1,5 @@
 ﻿using Frogy.Methods;
-using Frogy.Models;
+using Frogy.Classes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +16,7 @@ namespace Frogy.ViewModels
     public class MainPageViewModel : INotifyPropertyChanged
     {
         private MyAppData appData = new MyAppData();
+        private DateTime nowDate = DateTime.Today;
 
         private DispatcherTimer timer = new DispatcherTimer();
         private DispatcherTimer saver = new DispatcherTimer();
@@ -23,15 +24,15 @@ namespace Frogy.ViewModels
         /// <summary>
         /// 加载App数据
         /// </summary>
-        private void LoadAppData()
+        private void LoadAppData(DateTime loadDateTime)
         {
             try
             {
-                appData.Load(appDataPath);
-                if (!appData.AllDays.ContainsKey(DateTime.Today))
-                    appData.AllDays.Add(DateTime.Today, new MyDay());
+                appData.Load(appDataPath, loadDateTime);
+                if (!appData.AllDays.ContainsKey(loadDateTime))
+                    appData.AllDays.Add(loadDateTime, new MyDay());
             }
-            catch{ appData.AllDays.Add(DateTime.Today, new MyDay()); }
+            catch{ appData.AllDays.Add(loadDateTime, new MyDay()); }
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -41,20 +42,20 @@ namespace Frogy.ViewModels
                 DateTime.Now.Minute,
                 DateTime.Now.Second);
 
-            DateTime nowDate = DateTime.Today;
+            nowDate = DateTime.Today;
 
             if (!appData.AllDays.ContainsKey(nowDate)) appData.AllDays.Add(nowDate, new MyDay());
             List<MyTimeDuration> todayTimeLine = appData.AllDays[nowDate].TimeLine;
 
             //如果设备处于锁定状态
-            if (MyDeviceHelper.DeviceState == 0)
+            if (MyDeviceHelper.DeviceState != 1)
             {
                 todayTimeLine.Last().StopTime = nowTimeSpan;
-                if (!(todayTimeLine.Last().TimeDurationTask.ComputerStatus == 0))
+                if (!(todayTimeLine.Last().TimeDurationTask.ComputerStatus == MyDeviceHelper.DeviceState))
                     todayTimeLine.Add(new MyTimeDuration()
                     {
                         StartTime = nowTimeSpan,
-                        TimeDurationTask = new MyTask() { ComputerStatus = 0 },
+                        TimeDurationTask = new MyTask() { ComputerStatus = MyDeviceHelper.DeviceState },
                         StopTime = nowTimeSpan
                     });
                 return;
@@ -101,13 +102,18 @@ namespace Frogy.ViewModels
             }
 
             appData.AllDays[nowDate].TimeLine = todayTimeLine;
-            Overview = PrintOverview(appData.AllDays[DateTime.Today].OverView);
-            //SourceData = PrintSourceData(appData.AllDays[DateTime.Today].TimeLine);
+
+            try
+            {
+                Overview = PrintOverview(appData.AllDays[DisplayDate].OverView);
+                SourceData = PrintSourceData(appData.AllDays[DisplayDate].TimeLine);
+            }
+            catch { LoadAppData(displayDate); }
         }
 
         private void Saver_Tick(object sender, EventArgs e)
         {
-            appData.Save(appDataPath);
+            appData.Save(appDataPath, nowDate);
         }
 
         /// <summary>
@@ -151,7 +157,7 @@ namespace Frogy.ViewModels
 
         public MainPageViewModel()
         {
-            LoadAppData();
+            LoadAppData(nowDate);
 
             timer.Interval = new TimeSpan(10000000);
             timer.Tick += Timer_Tick;
@@ -199,7 +205,7 @@ namespace Frogy.ViewModels
         /// <summary>
         /// 应用数据路径
         /// </summary>
-        private string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "//data.txt";
+        private string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         public string AppDataPath
         {
             get
@@ -213,12 +219,27 @@ namespace Frogy.ViewModels
             }
         }
 
+
+        private DateTime displayDate = DateTime.Today;
+        public DateTime DisplayDate
+        {
+            get
+            {
+                return displayDate;
+            }
+            set
+            {
+                displayDate = value;
+                OnPropertyChanged();
+            }
+        }
+
         public void MainPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             timer.Stop();
             saver.Stop();
 
-            appData.Save(appDataPath);
+            appData.Save(appDataPath, nowDate);
         }
 
         #region INotifyPropertyChanged
