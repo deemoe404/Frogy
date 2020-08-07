@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using Frogy.Views;
+using System.Windows;
 
 namespace Frogy.ViewModels
 {
@@ -35,6 +37,11 @@ namespace Frogy.ViewModels
             catch{ appData.AllDays.Add(loadDateTime, new MyDay()); }
         }
 
+        /// <summary>
+        /// 定时记录
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Timer_Tick(object sender, EventArgs e)
         {
             TimeSpan nowTimeSpan = new TimeSpan(
@@ -111,6 +118,11 @@ namespace Frogy.ViewModels
             catch { LoadAppData(displayDate); }
         }
 
+        /// <summary>
+        /// 定时保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Saver_Tick(object sender, EventArgs e)
         {
             appData.Save(appDataPath, nowDate);
@@ -219,7 +231,9 @@ namespace Frogy.ViewModels
             }
         }
 
-
+        /// <summary>
+        /// 显示数据日期
+        /// </summary>
         private DateTime displayDate = DateTime.Today;
         public DateTime DisplayDate
         {
@@ -238,6 +252,9 @@ namespace Frogy.ViewModels
         {
             timer.Stop();
             saver.Stop();
+
+            e.Cancel = true;
+            ((MainPage)sender).Visibility = Visibility.Hidden;
 
             appData.Save(appDataPath, nowDate);
         }
