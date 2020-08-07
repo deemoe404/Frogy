@@ -2,49 +2,186 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace Frogy.Classes
 {
     /// <summary>
-    /// 应用数据类
+    /// Interaction logic for AppData Class
     /// </summary>
-    class MyAppData
+    public class MyAppData
     {
+        private DispatcherTimer mainLogicLoop = new DispatcherTimer() { Interval = new TimeSpan(10000000) };
+        private DispatcherTimer savingLogicLoop = new DispatcherTimer() { Interval = new TimeSpan(600000000) };
+
+        public MyAppData()
+        {
+            Load(DateTime.Today);
+
+            mainLogicLoop.Tick += MainLogicLoop_Tick;
+            savingLogicLoop.Tick += SavingLogicLoop_Tick;
+        }
+
+        private void SavingLogicLoop_Tick(object sender, EventArgs e)
+        {
+            Save();
+        }
+
+        private void MainLogicLoop_Tick(object sender, EventArgs e)
+        {
+            TimeSpan now = new TimeSpan(
+                DateTime.Now.Hour,
+                DateTime.Now.Minute,
+                DateTime.Now.Second);
+
+            DateTime today = DateTime.Today;
+
+            //运行时遇到日期变更，则增加新key
+            if (!AllDays.ContainsKey(today)) 
+                AllDays.Add(today, new MyDay());
+
+            List<MyTimeDuration> todayTimeLine = AllDays[today].TimeLine;
+
+            //如果设备状态不为1（运行中）
+            if (MyDeviceHelper.DeviceState != 1)
+            {
+                if (todayTimeLine.Count == 0 || todayTimeLine.Last().TimeDurationTask.ComputerStatus != MyDeviceHelper.DeviceState)
+                {
+                    MyTimeDuration duration = new MyTimeDuration()
+                    {
+                        StartTime = now,
+                        TimeDurationTask = new MyTask() { ComputerStatus = MyDeviceHelper.DeviceState },
+                        StopTime = now
+                    };
+
+                    todayTimeLine.Add(duration);
+                }
+                else
+                {
+                    todayTimeLine.Last().StopTime = now;
+                }
+                AllDays[today].TimeLine = todayTimeLine;
+                return;
+            }
+
+            IntPtr nowFocusWindow = MyWindowHelper.GetFocusWindow();
+            string nowFocusWindowTitle = MyWindowHelper.GetWindowTitle(nowFocusWindow);
+
+            //如果今天还未记录到任务 或 切换了任务
+            if(todayTimeLine.Count == 0 || todayTimeLine.Last().TimeDurationTask.FormName != nowFocusWindowTitle)
+            {
+                Process nowFocusProcess = MyProcessHelper.GetWindowPID(nowFocusWindow);
+                if (nowFocusProcess.Id == 0) return;
+
+                string nowFocusProcessName = MyProcessHelper.GetProcessName(nowFocusProcess);
+                if (string.IsNullOrEmpty(nowFocusProcessName)) return;
+
+                MyTask nowFocusTask =
+                    new MyTask()
+                    {
+                        ApplicationName = nowFocusProcessName,
+                        ApplicationFilePath = MyProcessHelper.GetProcessPath(nowFocusProcess),
+                        FormName = MyWindowHelper.GetWindowTitle(nowFocusWindow)
+                    };
+
+                MyTimeDuration nowTimeDuration =
+                    new MyTimeDuration()
+                    {
+                        StartTime = now,
+                        StopTime = now,
+                        TimeDurationTask = nowFocusTask
+                    };
+
+                if (todayTimeLine.Count != 0)
+                    todayTimeLine.Last().StopTime = now;
+
+                todayTimeLine.Add(nowTimeDuration);
+            }
+            else
+            {
+                todayTimeLine.Last().StopTime = now;
+            }
+
+            AllDays[today].TimeLine = todayTimeLine;
+        }
+
+
+
         /// <summary>
-        /// 所有时间线 key为日期(DateTime),value为MyDay
+        /// 所有时间线
         /// </summary>
-        public Dictionary<DateTime,MyDay> AllDays { get; set; } = new Dictionary<DateTime, MyDay>();
+        public Dictionary<DateTime,MyDay> AllDays = new Dictionary<DateTime, MyDay>();
+        //= Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
+        /// <summary>
+        /// 应用数据存储路径
+        /// </summary>
+        private string storagePath = System.IO.Directory.Exists(Properties.Settings.Default.AppDataPath) ?
+            Properties.Settings.Default.AppDataPath : Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+        public string StoragePath
+        {
+            get { return storagePath; }
+            set
+            {
+                if (System.IO.Directory.Exists(value))
+                {
+                    storagePath = value;
+                    Properties.Settings.Default.AppDataPath = value;
+                    Properties.Settings.Default.Save();
+                }
+                else
+                {
+                    throw new ArgumentException("Illegal path");
+                }
+            }
+        }
 
         /// <summary>
         /// 保存应用数据
         /// </summary>
-        /// <param name="URL">文件路径</param>
-        public void Save(string SavePath, DateTime SaveDate)
+        public void Save()
         {
-            string savePath = SavePath + (SavePath.EndsWith("//") ? "" : "//") + SaveDate.ToString("yyyyMMdd") + ".json";
-            string Content = MyDataHelper.CoverObjectToJson(AllDays[SaveDate]);
+            string savePath = StoragePath + (StoragePath.EndsWith("//") ? "" : "//") + DateTime.Today.ToString("yyyyMMdd") + ".json";
+            string Content = MyDataHelper.CoverObjectToJson(AllDays[DateTime.Today]);
 
             MyDataHelper.WriteFile(savePath, Content);
         }
 
         /// <summary>
-        /// 读取应用数据
+        /// 加载应用数据
         /// </summary>
-        /// <param name="URL">文件路径</param>
-        public void Load(string LoadPath, DateTime LoadDate)
+        /// <param name="LoadDate">日期</param>
+        public void Load(DateTime LoadDate)
         {
-            string loadPath = LoadPath + (LoadPath.EndsWith("//") ? "" : "//") + LoadDate.ToString("yyyyMMdd") + ".json";
-            string Json = MyDataHelper.ReadFile(loadPath);
+            try
+            {
+                string loadPath = StoragePath + (StoragePath.EndsWith("//") ? "" : "//") + LoadDate.ToString("yyyyMMdd") + ".json";
+                string Json = MyDataHelper.ReadFile(loadPath);
 
-            if(!AllDays.ContainsKey(LoadDate))
-                AllDays.Add(LoadDate, MyDataHelper.CoverJsonToObject<MyDay>(Json));
-            else
-                AllDays[LoadDate] = MyDataHelper.CoverJsonToObject<MyDay>(Json);
+                if (!AllDays.ContainsKey(LoadDate))
+                    AllDays.Add(LoadDate, MyDataHelper.CoverJsonToObject<MyDay>(Json));
+                else
+                    AllDays[LoadDate] = MyDataHelper.CoverJsonToObject<MyDay>(Json);
+            }
+            catch
+            {
+                AllDays.Add(LoadDate, new MyDay());
+            }
+        }
+
+        /// <summary>
+        /// 开始运行软件主逻辑
+        /// </summary>
+        public void StartLogic()
+        {
+            mainLogicLoop.Start();
+            savingLogicLoop.Start();
         }
     }
 }

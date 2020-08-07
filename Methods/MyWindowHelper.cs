@@ -45,7 +45,7 @@ namespace Frogy.Methods
         /// 获取焦点窗口
         /// </summary>
         /// <returns>IntPtr</returns>
-        public static IntPtr GetFocueWindow()
+        public static IntPtr GetFocusWindow()
         {
             return GetForegroundWindow();
         }

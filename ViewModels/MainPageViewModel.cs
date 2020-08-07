@@ -12,121 +12,15 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using Frogy.Views;
 using System.Windows;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Windows.Interop;
+using System.Windows.Input;
 
 namespace Frogy.ViewModels
 {
     public class MainPageViewModel : INotifyPropertyChanged
     {
-        private MyAppData appData = new MyAppData();
-        private DateTime nowDate = DateTime.Today;
-
-        private DispatcherTimer timer = new DispatcherTimer();
-        private DispatcherTimer saver = new DispatcherTimer();
-
-        /// <summary>
-        /// 加载App数据
-        /// </summary>
-        private void LoadAppData(DateTime loadDateTime)
-        {
-            try
-            {
-                appData.Load(appDataPath, loadDateTime);
-                if (!appData.AllDays.ContainsKey(loadDateTime))
-                    appData.AllDays.Add(loadDateTime, new MyDay());
-            }
-            catch{ appData.AllDays.Add(loadDateTime, new MyDay()); }
-        }
-
-        /// <summary>
-        /// 定时记录
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            TimeSpan nowTimeSpan = new TimeSpan(
-                DateTime.Now.Hour,
-                DateTime.Now.Minute,
-                DateTime.Now.Second);
-
-            nowDate = DateTime.Today;
-
-            if (!appData.AllDays.ContainsKey(nowDate)) appData.AllDays.Add(nowDate, new MyDay());
-            List<MyTimeDuration> todayTimeLine = appData.AllDays[nowDate].TimeLine;
-
-            //如果设备处于锁定状态
-            if (MyDeviceHelper.DeviceState != 1)
-            {
-                todayTimeLine.Last().StopTime = nowTimeSpan;
-                if (!(todayTimeLine.Last().TimeDurationTask.ComputerStatus == MyDeviceHelper.DeviceState))
-                    todayTimeLine.Add(new MyTimeDuration()
-                    {
-                        StartTime = nowTimeSpan,
-                        TimeDurationTask = new MyTask() { ComputerStatus = MyDeviceHelper.DeviceState },
-                        StopTime = nowTimeSpan
-                    });
-                return;
-            }
-
-            IntPtr nowFoucsWindow = MyWindowHelper.GetFocueWindow();
-            string nowFoucsWindowTitle = MyWindowHelper.GetWindowTitle(nowFoucsWindow);
-
-            if (todayTimeLine.Count == 0 || todayTimeLine.Last().TimeDurationTask.FormName != nowFoucsWindowTitle)
-            {
-                Process nowFocusProcess = MyProcessHelper.GetWindowPID(nowFoucsWindow);
-
-                if (nowFocusProcess.Id == 0) return;
-
-                string nowFocusProcessName = MyProcessHelper.GetProcessName(nowFocusProcess);
-
-                if (string.IsNullOrEmpty(nowFocusProcessName)) return;
-
-                MyTask nowFocusTask =
-                    new MyTask()
-                    {
-                        ApplicationName = nowFocusProcessName,
-                        ApplicationFilePath = MyProcessHelper.GetProcessPath(nowFocusProcess),
-                        FormName = MyWindowHelper.GetWindowTitle(nowFoucsWindow)
-                    };
-
-                MyTimeDuration nowTimeDuration =
-                    new MyTimeDuration()
-                    {
-                        StartTime = nowTimeSpan,
-                        StopTime = nowTimeSpan,
-                        TimeDurationTask = nowFocusTask
-                    };
-
-                if (todayTimeLine.Count != 0)
-                    todayTimeLine.Last().StopTime = nowTimeSpan;
-
-                todayTimeLine.Add(nowTimeDuration);
-
-            }
-            else
-            {
-                todayTimeLine.Last().StopTime = nowTimeSpan;
-            }
-
-            appData.AllDays[nowDate].TimeLine = todayTimeLine;
-
-            try
-            {
-                Overview = PrintOverview(appData.AllDays[DisplayDate].OverView);
-                SourceData = PrintSourceData(appData.AllDays[DisplayDate].TimeLine);
-            }
-            catch { LoadAppData(displayDate); }
-        }
-
-        /// <summary>
-        /// 定时保存
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Saver_Tick(object sender, EventArgs e)
-        {
-            appData.Save(appDataPath, nowDate);
-        }
+        private DispatcherTimer timer = new DispatcherTimer() { Interval = new TimeSpan(10000000) };
 
         /// <summary>
         /// 按顺序打印概览视图
@@ -169,15 +63,19 @@ namespace Frogy.ViewModels
 
         public MainPageViewModel()
         {
-            LoadAppData(nowDate);
+            DataPath = ((App)Application.Current).appData.StoragePath;
 
-            timer.Interval = new TimeSpan(10000000);
             timer.Tick += Timer_Tick;
             timer.Start();
+        }
 
-            saver.Interval = new TimeSpan(600000000);
-            saver.Tick += Saver_Tick;
-            saver.Start();
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            if (!((App)Application.Current).appData.AllDays.ContainsKey(displayDate))
+                ((App)Application.Current).appData.Load(displayDate);
+
+            Overview = PrintOverview(((App)Application.Current).appData.AllDays[displayDate].OverView);
+            SourceData = PrintSourceData(((App)Application.Current).appData.AllDays[displayDate].TimeLine);
         }
 
         /// <summary>
@@ -215,23 +113,6 @@ namespace Frogy.ViewModels
         }
 
         /// <summary>
-        /// 应用数据路径
-        /// </summary>
-        private string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-        public string AppDataPath
-        {
-            get
-            {
-                return appDataPath;
-            }
-            set
-            {
-                appDataPath = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
         /// 显示数据日期
         /// </summary>
         private DateTime displayDate = DateTime.Today;
@@ -248,15 +129,51 @@ namespace Frogy.ViewModels
             }
         }
 
-        public void MainPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private string dataPath = "";
+        public string DataPath
         {
-            timer.Stop();
-            saver.Stop();
+            get
+            {
+                return dataPath;
+            }
+            set
+            {
+                dataPath = value;
+                OnPropertyChanged();
+            }
+        }
 
-            e.Cancel = true;
-            ((MainPage)sender).Visibility = Visibility.Hidden;
+        private ICommand button_Click;
+        public ICommand Button_Click
+        {
+            get
+            {
+                if (button_Click == null)
+                {
+                    button_Click = new RelayCommand(
+                        param => this.ChangeDataPath(),
+                        param => true
+                    );
+                }
+                return button_Click;
+            }
+        }
 
-            appData.Save(appDataPath, nowDate);
+        private void ChangeDataPath()
+        {
+            try
+            {
+                var dialog = new CommonOpenFileDialog();
+                dialog.IsFolderPicker = true;
+
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+                    ((App)Application.Current).appData.StoragePath = dialog.FileName;
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message);
+            }
+            DataPath = ((App)Application.Current).appData.StoragePath;
         }
 
         #region INotifyPropertyChanged

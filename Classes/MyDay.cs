@@ -12,7 +12,7 @@ namespace Frogy.Classes
     /// 时间线
     /// </summary>
     [Serializable]
-    class MyDay
+    public class MyDay
     {
         /// <summary>
         /// 今日时间线
@@ -50,7 +50,7 @@ namespace Frogy.Classes
     /// 时间段
     /// </summary>
     [Serializable]
-    class MyTimeDuration
+    public class MyTimeDuration
     {
         /// <summary>
         /// 第一次记录到当前任务启动的时间
@@ -83,7 +83,7 @@ namespace Frogy.Classes
     /// 任务
     /// </summary>
     [Serializable]
-    class MyTask
+    public class MyTask
     {
         /// <summary>
         /// 任务软件名称
