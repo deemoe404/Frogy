@@ -23,7 +23,9 @@
                     <GridViewColumn Header="Icon">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Image Source="{Binding Path=AppIcon}"/>
+                                <Image Source="{Binding Path=AppIcon}"
+                                       Width="15"
+                                       Height="15"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

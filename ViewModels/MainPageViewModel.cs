@@ -183,6 +183,11 @@ namespace Frogy.ViewModels
             DataPath = ((App)Application.Current).appData.StoragePath;
         }
 
+        public void MainPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            timer.Stop();
+        }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)

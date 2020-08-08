@@ -84,7 +84,7 @@ namespace Frogy.Classes
             string nowFocusWindowTitle = MyWindowHelper.GetWindowTitle(nowFocusWindow);
 
             //如果今天还未记录到任务 或 切换了任务
-            if(todayTimeLine.Count == 0 || todayTimeLine.Last().TimeDurationTask.ApplicationTitle != nowFocusWindowTitle)
+            if (todayTimeLine.Count == 0 || todayTimeLine.Last().TimeDurationTask.ApplicationTitle != nowFocusWindowTitle)
             {
                 Process nowFocusProcess = MyProcessHelper.GetWindowPID(nowFocusWindow);
                 if (nowFocusProcess.Id == 0) return;

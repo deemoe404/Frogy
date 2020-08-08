@@ -13,8 +13,11 @@ namespace Frogy.Views
         public MainPage()
         {
             this.DataContext = viewModel;
+            this.Closing += viewModel.MainPage_Closing;
 
             InitializeComponent();
         }
+
+
     }
 }
