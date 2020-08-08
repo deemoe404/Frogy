@@ -1,11 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace Frogy.Methods
 {
@@ -68,6 +71,70 @@ namespace Frogy.Methods
             }
             streamReader.Close();
             return Content;
+        }
+
+        /// <summary>
+        /// 将图片转码位Base64
+        /// </summary>
+        /// <param name="bmp">Bitmap</param>
+        /// <returns>Base64</returns>
+        public static string ImgToBase64String(Bitmap bmp)
+        {
+            try
+            {
+                MemoryStream ms = new MemoryStream();
+                bmp.Save(ms, ImageFormat.Png);
+                byte[] arr = new byte[ms.Length];
+                ms.Position = 0;
+                ms.Read(arr, 0, (int)ms.Length);
+                ms.Close();
+                return Convert.ToBase64String(arr);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 将Base64转码为图片
+        /// </summary>
+        /// <param name="strbase64">Base64</param>
+        /// <returns>Bitmap</returns>
+        public static Bitmap Base64StringToImage(string strbase64)
+        {
+            try
+            {
+                byte[] arr = Convert.FromBase64String(strbase64);
+                MemoryStream ms = new MemoryStream(arr);
+                Bitmap bmp = new Bitmap(ms);
+                ms.Close();
+                return bmp;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 将Bitmap转换为BitmapImage
+        /// </summary>
+        /// <param name="bitmap">Bitmap</param>
+        /// <returns>BitmapImage</returns>
+        public static BitmapImage BitmapToBitmapImage(Bitmap bitmap)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Png);
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = ms;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze();
+            }
+            return bitmapImage;
         }
     }
 }

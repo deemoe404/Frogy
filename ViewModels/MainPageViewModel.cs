@@ -15,6 +15,7 @@ using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Windows.Interop;
 using System.Windows.Input;
+using Frogy.Models;
 
 namespace Frogy.ViewModels
 {
@@ -27,14 +28,20 @@ namespace Frogy.ViewModels
         /// </summary>
         /// <param name="keyValuePairs">Overview</param>
         /// <returns>List<string></returns>
-        private List<string> PrintOverview(Dictionary<string, TimeSpan> keyValuePairs)
+        private List<OverViewItem> PrintOverview(Dictionary<string, Software> keyValuePairs)
         {
-            List<string> result = new List<string>();
-            var dicSort = from objDic in keyValuePairs orderby objDic.Value descending select objDic;
+            List<OverViewItem> result = new List<OverViewItem>();
+            var dicSort = from objDic in keyValuePairs orderby objDic.Value.Duration descending select objDic;
 
-            foreach (KeyValuePair<string, TimeSpan> kvp in dicSort)
+            foreach (KeyValuePair<string, Software> kvp in dicSort)
             {
-                string tmp = kvp.Key + "：" + kvp.Value;
+                OverViewItem tmp = 
+                    new OverViewItem() 
+                    {
+                        AppName=kvp.Key,
+                        AppDuration=kvp.Value.Duration.ToString(),
+                        AppIcon=kvp.Value.Icon 
+                    };
                 result.Add(tmp);
             }
             return result;
@@ -52,7 +59,7 @@ namespace Frogy.ViewModels
             {
                 string tmp = timeSpan.TimeDurationTask.ComputerStatus.ToString() + "  " + 
                     timeSpan.TimeDurationTask.ApplicationName + "    " + 
-                    timeSpan.TimeDurationTask.FormName + "    " + 
+                    timeSpan.TimeDurationTask.ApplicationTitle + "    " + 
                     timeSpan.StartTime + "    " + 
                     timeSpan.StopTime + "    " + 
                     timeSpan.TimeDurationTask.ApplicationFilePath;
@@ -81,8 +88,8 @@ namespace Frogy.ViewModels
         /// <summary>
         /// 整体视图
         /// </summary>
-        private List<string> overview;
-        public List<string> Overview 
+        private List<OverViewItem> overview;
+        public List<OverViewItem> Overview 
         { 
             get
             {

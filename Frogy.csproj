@@ -143,6 +143,7 @@
     <Compile Include="AppViewModel.cs" />
     <Compile Include="Methods\MyAppxPackageHelper.cs" />
     <Compile Include="Methods\MyEventHelper.cs" />
+    <Compile Include="Models\MainPageModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -203,9 +204,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Resource Include="Assets\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Defalt.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

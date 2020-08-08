@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Frogy.Methods;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace Frogy.Classes
 {
@@ -23,11 +25,11 @@ namespace Frogy.Classes
         /// 获取今日小结，即为时间线内相同软件使用时间合并后的列表
         /// </summary>
         /// <returns>今日小结 - Dictionary<string, TimeSpan></returns>
-        public Dictionary<string, TimeSpan> OverView 
+        public Dictionary<string, Software> OverView 
         { 
             get
             {
-                Dictionary<string, TimeSpan> overView = new Dictionary<string, TimeSpan>();
+                Dictionary<string, Software> overView = new Dictionary<string, Software>();
 
                 foreach (MyTimeDuration item in TimeLine)
                 {
@@ -35,10 +37,21 @@ namespace Frogy.Classes
                     if (string.IsNullOrEmpty(nowAppName)) continue;
 
                     TimeSpan duration = item.Duration;
+
                     if (overView.ContainsKey(nowAppName))
-                        overView[nowAppName] += duration;
+                        overView[nowAppName].Duration += duration;
                     else
-                        overView.Add(nowAppName, duration);
+                    {
+                        Software result =
+                            new Software()
+                            {
+                                Duration = item.Duration,
+                                Name = nowAppName,
+                                Icon = MyDataHelper.BitmapToBitmapImage(
+                                    MyDataHelper.Base64StringToImage(item.TimeDurationTask.ApplicationIcon_Base64))
+                            };
+                        overView.Add(nowAppName, result);
+                    }
                 }
 
                 return overView;
@@ -93,7 +106,7 @@ namespace Frogy.Classes
         /// <summary>
         /// 任务窗口名
         /// </summary>
-        public string FormName { get; set; }
+        public string ApplicationTitle { get; set; }
 
         /// <summary>
         /// 程序EXE路径名
@@ -101,8 +114,23 @@ namespace Frogy.Classes
         public string ApplicationFilePath { get; set; }
 
         /// <summary>
+        /// 程序图标
+        /// </summary>
+        public string ApplicationIcon_Base64 { get; set; }
+
+        /// <summary>
         /// 电脑状态。1=活动，0=锁定。
         /// </summary>
         public int ComputerStatus { get; set; } = 1;
+    }
+
+    /// <summary>
+    /// 软件
+    /// </summary>
+    public class Software
+    {
+        public string Name { get; set; }
+        public TimeSpan Duration { get; set; }
+        public BitmapImage Icon { get; set; }
     }
 }

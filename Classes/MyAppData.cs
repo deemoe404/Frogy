@@ -28,11 +28,21 @@ namespace Frogy.Classes
             savingLogicLoop.Tick += SavingLogicLoop_Tick;
         }
 
+        /// <summary>
+        /// 定时保存应用数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SavingLogicLoop_Tick(object sender, EventArgs e)
         {
             Save();
         }
 
+        /// <summary>
+        /// 主逻辑
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainLogicLoop_Tick(object sender, EventArgs e)
         {
             TimeSpan now = new TimeSpan(
@@ -74,7 +84,7 @@ namespace Frogy.Classes
             string nowFocusWindowTitle = MyWindowHelper.GetWindowTitle(nowFocusWindow);
 
             //如果今天还未记录到任务 或 切换了任务
-            if(todayTimeLine.Count == 0 || todayTimeLine.Last().TimeDurationTask.FormName != nowFocusWindowTitle)
+            if(todayTimeLine.Count == 0 || todayTimeLine.Last().TimeDurationTask.ApplicationTitle != nowFocusWindowTitle)
             {
                 Process nowFocusProcess = MyProcessHelper.GetWindowPID(nowFocusWindow);
                 if (nowFocusProcess.Id == 0) return;
@@ -87,7 +97,8 @@ namespace Frogy.Classes
                     {
                         ApplicationName = nowFocusProcessName,
                         ApplicationFilePath = MyProcessHelper.GetProcessPath(nowFocusProcess),
-                        FormName = MyWindowHelper.GetWindowTitle(nowFocusWindow)
+                        ApplicationTitle = MyWindowHelper.GetWindowTitle(nowFocusWindow),
+                        ApplicationIcon_Base64 = MyDataHelper.ImgToBase64String(MyProcessHelper.GetProcessIcon(nowFocusProcess))
                     };
 
                 MyTimeDuration nowTimeDuration =
@@ -111,13 +122,10 @@ namespace Frogy.Classes
             AllDays[today].TimeLine = todayTimeLine;
         }
 
-
-
         /// <summary>
         /// 所有时间线
         /// </summary>
         public Dictionary<DateTime,MyDay> AllDays = new Dictionary<DateTime, MyDay>();
-        //= Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
         /// <summary>
         /// 应用数据存储路径

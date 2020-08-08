@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Drawing;
+using System.Windows.Media.Imaging;
 
 namespace Frogy.Methods
 {
@@ -24,7 +26,6 @@ namespace Frogy.Methods
         {
             GetWindowThreadProcessId(hWnd, out int calcID);
             Process result = Process.GetProcessById(calcID);
-            //result.WaitForInputIdle();
 
             return result;
         }
@@ -97,6 +98,41 @@ namespace Frogy.Methods
             }
 
             return applicationPath;
+        }
+
+        /// <summary>
+        /// 获取进程图标
+        /// </summary>
+        /// <param name="process">进程</param>
+        /// <returns>图标</returns>
+        public static Bitmap GetProcessIcon(Process process)
+        {
+            bool isUWP = MyProcessHelper.IsProcessUWP(process);
+
+            Bitmap result = new Bitmap(Properties.Resources.Default.ToBitmap());
+            if (isUWP)
+            {
+                try
+                {
+                    List<IntPtr> allChildWindows = MyWindowHelper.GetAllChildHandles(process.MainWindowHandle);
+                    foreach (IntPtr ptr in allChildWindows)
+                    {
+                        Process uwpProcess = MyProcessHelper.GetWindowPID(ptr);
+                        if (uwpProcess.MainModule.ModuleName != "ApplicationFrameHost.exe")
+                        {
+                            AppxPackage package = AppxPackage.FromProcess(uwpProcess);
+                            result = new Bitmap(package.FindHighestScaleQualifiedImagePath(package.Logo));
+                        }
+                    }
+                }
+                catch { result = new Bitmap(Properties.Resources.Default.ToBitmap()); }
+            }
+            else
+            {
+                result = Icon.ExtractAssociatedIcon(GetProcessPath(process)).ToBitmap();
+            }
+
+            return result;
         }
 
         /// <summary>

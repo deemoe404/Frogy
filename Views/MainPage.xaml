@@ -16,8 +16,28 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
-        
-        <ListView ItemsSource="{Binding Path=Overview}"/>
+
+        <ListView ItemsSource="{Binding Path=Overview}" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Icon">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding Path=AppIcon}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=AppName}">
+                        <GridViewColumnHeader>Software Title</GridViewColumnHeader>
+                    </GridViewColumn>
+
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=AppDuration}">
+                        <GridViewColumnHeader>Time Duration</GridViewColumnHeader>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
         <ListView ItemsSource="{Binding Path=SourceData}" Grid.Column="1"/>
 
         <DatePicker SelectedDate="{Binding Path=DisplayDate}" Grid.Row="1"/>
