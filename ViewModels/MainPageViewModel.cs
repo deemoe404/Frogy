@@ -81,7 +81,7 @@ namespace Frogy.ViewModels
             if (!((App)Application.Current).appData.AllDays.ContainsKey(displayDate))
                 ((App)Application.Current).appData.Load(displayDate);
 
-            Overview = PrintOverview(((App)Application.Current).appData.AllDays[displayDate].OverView);
+            Overview = PrintOverview(((App)Application.Current).appData.AllDays[displayDate].GetOverView());
             SourceData = PrintSourceData(((App)Application.Current).appData.AllDays[displayDate].TimeLine);
         }
 

@@ -155,7 +155,7 @@ namespace Frogy.Classes
         /// </summary>
         public void Save()
         {
-            string savePath = StoragePath + (StoragePath.EndsWith("//") ? "" : "//") + DateTime.Today.ToString("yyyyMMdd") + ".json";
+            string savePath = StoragePath + (StoragePath.EndsWith("\\") ? "" : "\\") + DateTime.Today.ToString("yyyyMMdd") + ".json";
             string Content = MyDataHelper.CoverObjectToJson(AllDays[DateTime.Today]);
 
             MyDataHelper.WriteFile(savePath, Content);
@@ -169,7 +169,7 @@ namespace Frogy.Classes
         {
             try
             {
-                string loadPath = StoragePath + (StoragePath.EndsWith("//") ? "" : "//") + LoadDate.ToString("yyyyMMdd") + ".json";
+                string loadPath = StoragePath + (StoragePath.EndsWith("\\") ? "" : "\\") + LoadDate.ToString("yyyyMMdd") + ".json";
                 string Json = MyDataHelper.ReadFile(loadPath);
 
                 if (!AllDays.ContainsKey(LoadDate))

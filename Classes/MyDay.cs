@@ -25,37 +25,34 @@ namespace Frogy.Classes
         /// 获取今日小结，即为时间线内相同软件使用时间合并后的列表
         /// </summary>
         /// <returns>今日小结 - Dictionary<string, TimeSpan></returns>
-        public Dictionary<string, Software> OverView 
-        { 
-            get
+        public Dictionary<string, Software> GetOverView()
+        {
+            Dictionary<string, Software> overView = new Dictionary<string, Software>();
+
+            foreach (MyTimeDuration item in TimeLine)
             {
-                Dictionary<string, Software> overView = new Dictionary<string, Software>();
+                string nowAppName = item.TimeDurationTask.ApplicationName;
+                if (string.IsNullOrEmpty(nowAppName)) continue;
 
-                foreach (MyTimeDuration item in TimeLine)
+                TimeSpan duration = item.Duration;
+
+                if (overView.ContainsKey(nowAppName))
+                    overView[nowAppName].Duration += duration;
+                else
                 {
-                    string nowAppName = item.TimeDurationTask.ApplicationName;
-                    if (string.IsNullOrEmpty(nowAppName)) continue;
-
-                    TimeSpan duration = item.Duration;
-
-                    if (overView.ContainsKey(nowAppName))
-                        overView[nowAppName].Duration += duration;
-                    else
-                    {
-                        Software result =
-                            new Software()
-                            {
-                                Duration = item.Duration,
-                                Name = nowAppName,
-                                Icon = MyDataHelper.BitmapToBitmapImage(
-                                    MyDataHelper.Base64StringToImage(item.TimeDurationTask.ApplicationIcon_Base64))
-                            };
-                        overView.Add(nowAppName, result);
-                    }
+                    Software result =
+                        new Software()
+                        {
+                            Duration = item.Duration,
+                            Name = nowAppName,
+                            Icon = MyDataHelper.BitmapToBitmapImage(
+                                MyDataHelper.Base64StringToImage(item.TimeDurationTask.ApplicationIcon_Base64))
+                        };
+                    overView.Add(nowAppName, result);
                 }
-
-                return overView;
             }
+
+            return overView;
         }
     }
 
