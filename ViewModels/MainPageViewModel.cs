@@ -60,10 +60,10 @@ namespace Frogy.ViewModels
             foreach (MyTimeDuration duration in tmp)
             {
                 string appName = duration.TimeDurationTask.ApplicationName;
-                if (string.IsNullOrEmpty(appName)) continue;
+                if (string.IsNullOrEmpty(appName) || appName == "Frogy") continue;
 
                 if (!tmpdic.ContainsKey(appName)) tmpdic.Add(appName,
-                    new ChartValues<double> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+                    new ChartValues<double> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 
                 TimeSpan start = duration.StartTime;
                 TimeSpan stop = duration.StopTime;
@@ -71,26 +71,27 @@ namespace Frogy.ViewModels
 
                 if (start.Hours == stop.Hours)
                 {
-                    tmpdic[appName][start.Hours - 1] += Math.Round(spent.TotalMinutes, 2);
+                    tmpdic[appName][start.Hours] += Math.Round(spent.TotalMinutes, 2);
                 }
                 else
                 {
-                    if (stop.Hours - start.Hours < 2)
+                    if (stop.Hours - start.Hours == 1)
                     {
-                        tmpdic[appName][start.Hours - 1] += Math.Round((60d - start.Minutes), 2);
-                        tmpdic[appName][stop.Hours - 1] += stop.Minutes;
+                        tmpdic[appName][start.Hours] += Math.Round((59.59d - start.Minutes), 2);
+                        tmpdic[appName][stop.Hours] += stop.Minutes;
                     }
                     else
                     {
                         if (stop.Hours - start.Hours > 1)
                         {
                             int tmpint = stop.Hours - start.Hours;
-                            tmpdic[appName][start.Hours - 1] += Math.Round((60d - start.Minutes), 2);
-                            tmpdic[appName][stop.Hours - 1] += stop.Minutes;
+
+                            tmpdic[appName][start.Hours] += Math.Round((59.59d - start.Minutes), 2);
+                            tmpdic[appName][stop.Hours] += stop.Minutes;
 
                             for (int i = 1; i <= tmpint; i++)
                             {
-                                tmpdic[appName][start.Hours + i - 1] = 60d;
+                                tmpdic[appName][start.Hours + i] = 59.59d;
                             }
                         }
                     }
@@ -104,7 +105,9 @@ namespace Frogy.ViewModels
                     {
                         Values = tmpdic[key],
                         DataLabels = true,
-                        Title = key
+                        Title = key,
+                        IsHitTestVisible = false,
+                        FontSize = 0.1
                     });
                 }
             });
@@ -114,30 +117,23 @@ namespace Frogy.ViewModels
 
         public MainPageViewModel()
         {
-            DataPath = ((App)Application.Current).appData.StoragePath;
-
             Update();
 
             OverviewChartLables = new string[] { "0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00",
             "7:00", "8:00", "9:00", "10:00", "11:00", "12:00",
             "13:00", "14:00", "15:00", "16:00", "17:00", "18:00",
-            "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"};
-
+            "19:00", "20:00", "21:00", "22:00", "23:00"};
+            DataPath = ((App)Application.Current).appData.StoragePath;
             OverviewChartFormatter = value => value + "min";
         }
 
         private async void Update()
         {
-            IsDisabled = Visibility.Visible;
-
             await Task.Run(() => { ((App)Application.Current).appData.Load(displayDate); });
-            
             MyDay tmp = ((App)Application.Current).appData.AllDays[displayDate];
 
             Overview = await Task.Run(() => { return PrintOverview(tmp.GetOverView()); });
             OverviewChart = await Task.Run(() => { return PrintOverviewChart(tmp.TimeLine); });
-
-            IsDisabled = Visibility.Hidden;
         }
 
         /// <summary>

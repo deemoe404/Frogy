@@ -46,14 +46,18 @@ namespace Frogy.Methods
         /// <param name="Content">文件内容</param>
         public static void WriteFile(string Path,string Content)
         {
-            FileStream fileStream = new FileStream(Path, FileMode.Create);
-            StreamWriter streamWriter = new StreamWriter(fileStream);
-            
-            streamWriter.Write(Content);
-            streamWriter.Flush();
+            try
+            {
+                FileStream fileStream = new FileStream(Path, FileMode.Create);
+                StreamWriter streamWriter = new StreamWriter(fileStream);
 
-            streamWriter.Close();
-            fileStream.Close();
+                streamWriter.Write(Content);
+                streamWriter.Flush();
+
+                streamWriter.Close();
+                fileStream.Close();
+            }
+            catch(Exception e) { throw e; }
         }
 
         /// <summary>
@@ -63,14 +67,20 @@ namespace Frogy.Methods
         /// <returns>文件内容</returns>
         public static string ReadFile(string Path)
         {
-            StreamReader streamReader = new StreamReader(Path, Encoding.Default);
-            string line, Content = "";
-            while ((line = streamReader.ReadLine()) != null)
+            if (File.Exists(Path))
             {
-                Content += (line.ToString() + Environment.NewLine);
+                FileStream fileStream = new FileStream(Path, FileMode.Open, FileAccess.Read);
+                byte[] bytes = new byte[fileStream.Length];
+                fileStream.Read(bytes, 0, bytes.Length);
+                char[] content = Encoding.UTF8.GetChars(bytes);
+                fileStream.Close();
+
+                return new string(content);
             }
-            streamReader.Close();
-            return Content;
+            else
+            {
+                throw new DirectoryNotFoundException("The file could not be found.");
+            }
         }
 
         /// <summary>

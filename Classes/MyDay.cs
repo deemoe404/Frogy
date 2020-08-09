@@ -29,9 +29,10 @@ namespace Frogy.Classes
         /// <returns>今日小结 - Dictionary<string, TimeSpan></returns>
         public Dictionary<string, Software> GetOverView()
         {
+            List<MyTimeDuration> myTimeDurations = TimeLine;
             Dictionary<string, Software> overView = new Dictionary<string, Software>();
 
-            foreach (MyTimeDuration item in TimeLine)
+            foreach (MyTimeDuration item in myTimeDurations)
             {
                 string nowAppName = item.TimeDurationTask.ApplicationName;
                 if (string.IsNullOrEmpty(nowAppName)) continue;

@@ -190,7 +190,11 @@ namespace Frogy.Classes
         {
             string savePath = StoragePath + (StoragePath.EndsWith("\\") ? "" : "\\") + DateTime.Today.ToString("yyyyMMdd") + ".json";
             string Content = MyDataHelper.CoverObjectToJson(AllDays[DateTime.Today]);
-            MyDataHelper.WriteFile(savePath, Content);
+            try
+            {
+                MyDataHelper.WriteFile(savePath, Content);
+            }
+            catch { }
         }
 
         /// <summary>
@@ -202,16 +206,16 @@ namespace Frogy.Classes
             try
             {
                 string loadPath = StoragePath + (StoragePath.EndsWith("\\") ? "" : "\\") + LoadDate.ToString("yyyyMMdd") + ".json";
-                string Json = MyDataHelper.ReadFile(loadPath);
-
                 if (!AllDays.ContainsKey(LoadDate))
+                {
+                    string Json = MyDataHelper.ReadFile(loadPath);
                     AllDays.Add(LoadDate, MyDataHelper.CoverJsonToObject<MyDay>(Json));
-                //else
-                //    AllDays[LoadDate] = MyDataHelper.CoverJsonToObject<MyDay>(Json);
+                }
             }
             catch
             {
-                AllDays.Add(LoadDate, new MyDay());
+                if (!AllDays.ContainsKey(LoadDate))
+                    AllDays.Add(LoadDate, new MyDay());
             }
         }
 

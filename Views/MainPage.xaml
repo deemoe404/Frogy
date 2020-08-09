@@ -26,19 +26,40 @@
 
                 <ScrollViewer>
                     <StackPanel>
-                        <DatePicker SelectedDate="{Binding Path=DisplayDate}" Grid.Row="1"/>
+                        <Grid>
+                            <TextBlock Style="{StaticResource TextBlockTitleBold}" 
+                                       Text="Chart"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Margin="25,25,25,25"/>
 
-                        <!--<lvc:CartesianChart Series="{Binding OverviewChart}" Height="370"/>-->
 
-                        <lvc:CartesianChart Series="{Binding OverviewChart}" Height="370" LegendLocation="Bottom">
+                            <DatePicker SelectedDate="{Binding Path=DisplayDate}" 
+                                        Width="120" 
+                                        Margin="10,10,10,10"
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Right"/>
+                        </Grid>
+
+                        <lvc:CartesianChart Series="{Binding OverviewChart}" 
+                                            Height="300" 
+                                            LegendLocation="Bottom"
+                                            Margin="5,5,5,5">
                             <lvc:CartesianChart.AxisX>
-                                <lvc:Axis Title="Summary" Labels="{Binding OverviewChartLables}" FontSize="14"></lvc:Axis>
+                                <lvc:Axis Title="Summary" Labels="{Binding OverviewChartLables}"/>
                             </lvc:CartesianChart.AxisX>
                             
                             <lvc:CartesianChart.AxisY>
-                                <lvc:Axis LabelFormatter="{Binding OverviewChartFormatter}" Foreground="DodgerBlue" FontSize="14" />
+                                <lvc:Axis LabelFormatter="{Binding OverviewChartFormatter}"/>
                             </lvc:CartesianChart.AxisY>
                         </lvc:CartesianChart>
+
+                        <TextBlock Style="{StaticResource TextBlockTitleBold}" 
+                                       Text="Details"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Margin="25,25,25,25"/>
 
                         <ListView ItemsSource="{Binding Path=Overview}"
                                   SelectionMode="Extended"
@@ -49,7 +70,7 @@
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <Image Source="{Binding Path=AppIcon}"
-                                                       Width="15"
+                                                       Width="20"
                                                        Height="15"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
