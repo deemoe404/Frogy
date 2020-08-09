@@ -22,7 +22,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>-->
-
+                
 
                 <ScrollViewer>
                     <StackPanel>
@@ -77,7 +77,7 @@
                     </ListView.View>
                 </ListView>-->
 
-
+                <!--<Grid Background="Red" Visibility="{Binding IsDisabled}"/>-->
             </Grid>
             
         </TabItem>

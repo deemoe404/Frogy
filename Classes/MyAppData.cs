@@ -206,8 +206,8 @@ namespace Frogy.Classes
 
                 if (!AllDays.ContainsKey(LoadDate))
                     AllDays.Add(LoadDate, MyDataHelper.CoverJsonToObject<MyDay>(Json));
-                else
-                    AllDays[LoadDate] = MyDataHelper.CoverJsonToObject<MyDay>(Json);
+                //else
+                //    AllDays[LoadDate] = MyDataHelper.CoverJsonToObject<MyDay>(Json);
             }
             catch
             {
