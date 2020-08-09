@@ -19,18 +19,27 @@ namespace Frogy
     public partial class App : Application
     {
         private TaskbarIcon taskbarIcon;
+        private static System.Threading.Mutex mutex;
 
         public MyAppData appData = new MyAppData();
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            taskbarIcon = (TaskbarIcon)FindResource("icon");
+            mutex = new System.Threading.Mutex(true, "FrogyMainProgram");
+            if (mutex.WaitOne(0, false))
+            {
+                taskbarIcon = (TaskbarIcon)FindResource("icon");
+                taskbarIcon.ShowBalloonTip("Frogy MainProgram", "Frogy is now running. Enjoy your time!", BalloonIcon.Info);
 
-            taskbarIcon.ShowBalloonTip("Frogy MainProgram", "Frogy is now running. Enjoy your time!", BalloonIcon.Info);
+                appData.StartLogic();
 
-            appData.StartLogic();
-
-            base.OnStartup(e);
+                base.OnStartup(e);
+            }
+            else
+            {
+                new TaskbarIcon().ShowBalloonTip("Frogy MainProgram", "Frogy is already running. Go check your taskbar icon!", BalloonIcon.Warning);
+                Current.Shutdown();
+            }
         }
 
         protected override void OnExit(ExitEventArgs e)

@@ -98,7 +98,8 @@ namespace Frogy.ViewModels
                 }
             }
 
-            Application.Current.Dispatcher.Invoke((Action)delegate {
+            Application.Current.Dispatcher.Invoke(delegate
+            {
                 foreach (string key in tmpdic.Keys)
                 {
                     result.Add(new StackedColumnSeries

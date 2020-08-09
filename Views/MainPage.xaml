@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:hc="https://handyorg.github.io/handycontrol"
-        Title="MainPage" Height="450" Width="800">
+        Title="Frogy - Dashboard" Height="450" Width="800">
 
     <TabControl Margin="10" Style="{StaticResource TabControlCapsuleSolid}">
         <TabItem Header="OverView">
@@ -44,6 +44,7 @@
 
                         <lvc:CartesianChart Series="{Binding OverviewChart}" 
                                             Height="300" 
+                                            IsHitTestVisible="False"
                                             LegendLocation="Bottom"
                                             Margin="5,5,5,5">
                             <lvc:CartesianChart.AxisX>
