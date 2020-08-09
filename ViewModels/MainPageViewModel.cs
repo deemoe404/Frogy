@@ -16,13 +16,14 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Windows.Interop;
 using System.Windows.Input;
 using Frogy.Models;
+using LiveCharts;
+using LiveCharts.Wpf;
+using LiveCharts.Defaults;
 
 namespace Frogy.ViewModels
 {
     public class MainPageViewModel : INotifyPropertyChanged
     {
-        private DispatcherTimer timer = new DispatcherTimer() { Interval = new TimeSpan(10000000) };
-
         /// <summary>
         /// 按顺序打印概览视图
         /// </summary>
@@ -48,41 +49,87 @@ namespace Frogy.ViewModels
         }
 
         /// <summary>
-        /// 打印元数据
+        /// 打印表格
         /// </summary>
-        /// <param name="durations"></param>
-        /// <returns></returns>
-        private List<string> PrintSourceData(List<MyTimeDuration> durations)
+        /// <param name="mies"></param>
+        private async void PrintOverviewChart(List<MyTimeDuration> tmp)
         {
-            List<string> result = new List<string>();
-            foreach (MyTimeDuration timeSpan in durations)
+            SeriesCollection result = new SeriesCollection { };
+
+            Dictionary<string, ChartValues<double>> r = await Task.Run(() => 
             {
-                string tmp = timeSpan.TimeDurationTask.ComputerStatus.ToString() + "  " + 
-                    timeSpan.TimeDurationTask.ApplicationName + "    " + 
-                    timeSpan.TimeDurationTask.ApplicationTitle + "    " + 
-                    timeSpan.StartTime + "    " + 
-                    timeSpan.StopTime + "    " + 
-                    timeSpan.TimeDurationTask.ApplicationFilePath;
-                result.Add(tmp);
+                Dictionary<string, ChartValues<double>> tmpdic = new Dictionary<string, ChartValues<double>>();
+                foreach (MyTimeDuration duration in tmp)
+                {
+                    string appName = duration.TimeDurationTask.ApplicationName;
+                    if (string.IsNullOrEmpty(appName)) continue;
+
+                    if (!tmpdic.ContainsKey(appName)) tmpdic.Add(appName,
+                        new ChartValues<double> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+
+                    TimeSpan start = duration.StartTime;
+                    TimeSpan stop = duration.StopTime;
+                    TimeSpan spent = duration.Duration;
+
+                    if (start.Hours == stop.Hours)
+                    {
+                        tmpdic[appName][start.Hours - 1] += Math.Round(spent.TotalMinutes, 2);
+                    }
+                    else
+                    {
+                        if (stop.Hours - start.Hours < 2)
+                        {
+                            tmpdic[appName][start.Hours - 1] += Math.Round((60d - start.Minutes), 2);
+                            tmpdic[appName][stop.Hours - 1] += stop.Minutes;
+                        }
+                        else
+                        {
+                            if (stop.Hours - start.Hours > 1)
+                            {
+                                int tmpint = stop.Hours - start.Hours;
+                                tmpdic[appName][start.Hours - 1] += Math.Round((60d - start.Minutes), 2);
+                                tmpdic[appName][stop.Hours - 1] += stop.Minutes;
+
+                                for (int i = 1; i <= tmpint; i++)
+                                {
+                                    tmpdic[appName][start.Hours + i - 1] = 60d;
+                                }
+                            }
+                        }
+                    }
+                }
+                return tmpdic;
+            });
+
+            foreach (string key in r.Keys)
+            {
+                result.Add(new StackedColumnSeries
+                {
+                    Values = r[key],
+                    DataLabels = true,
+                    Title = key
+                });
             }
-            return result;
+
+            OverviewChart = result;
+
+
         }
 
         public MainPageViewModel()
         {
             DataPath = ((App)Application.Current).appData.StoragePath;
 
-            timer.Tick += Timer_Tick;
-            timer.Start();
+            Update();
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void Update()
         {
             if (!((App)Application.Current).appData.AllDays.ContainsKey(displayDate))
                 ((App)Application.Current).appData.Load(displayDate);
 
             Overview = PrintOverview(((App)Application.Current).appData.AllDays[displayDate].GetOverView());
-            SourceData = PrintSourceData(((App)Application.Current).appData.AllDays[displayDate].TimeLine);
+            PrintOverviewChart(((App)Application.Current).appData.AllDays[displayDate].TimeLine);
         }
 
         /// <summary>
@@ -103,23 +150,6 @@ namespace Frogy.ViewModels
         }
 
         /// <summary>
-        /// 元数据
-        /// </summary>
-        private List<string> sourceData;
-        public List<string> SourceData
-        {
-            get
-            {
-                return sourceData;
-            }
-            set
-            {
-                sourceData = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
         /// 显示数据日期
         /// </summary>
         private DateTime displayDate = DateTime.Today;
@@ -132,10 +162,14 @@ namespace Frogy.ViewModels
             set
             {
                 displayDate = value;
+                Update();
                 OnPropertyChanged();
             }
         }
 
+        /// <summary>
+        /// 数据保存路径
+        /// </summary>
         private string dataPath = "";
         public string DataPath
         {
@@ -149,6 +183,43 @@ namespace Frogy.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private bool isDisabled = false;
+        public bool IsDisabled
+        {
+            get { return isDisabled; }
+            set
+            {
+                isDisabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #region 表格
+        /// <summary>
+        /// 表格
+        /// </summary>
+        private SeriesCollection overviewChart = new SeriesCollection();
+        public SeriesCollection OverviewChart
+        {
+            get
+            {
+                return overviewChart;
+            }
+            set
+            {
+                overviewChart = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string[] OverviewChartLables = new string[] { "0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00",
+            "7:00", "8:00", "9:00", "10:00", "11:00", "12:00",
+            "13:00", "14:00", "15:00", "16:00", "17:00", "18:00",
+            "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"};
+
+        public Func<double, string> OverviewChartFormatter = value => value + "min";
+        #endregion
 
         private ICommand button_Click;
         public ICommand Button_Click
@@ -165,7 +236,6 @@ namespace Frogy.ViewModels
                 return button_Click;
             }
         }
-
         private void ChangeDataPath()
         {
             try
@@ -183,9 +253,9 @@ namespace Frogy.ViewModels
             DataPath = ((App)Application.Current).appData.StoragePath;
         }
 
-        public void MainPage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        public void MainPage_Closing(object sender, CancelEventArgs e)
         {
-            timer.Stop();
+            
         }
 
         #region INotifyPropertyChanged

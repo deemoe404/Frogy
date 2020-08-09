@@ -25,6 +25,7 @@ namespace Frogy
         protected override void OnStartup(StartupEventArgs e)
         {
             taskbarIcon = (TaskbarIcon)FindResource("icon");
+
             taskbarIcon.ShowBalloonTip("Frogy MainProgram", "Frogy is now running. Enjoy your time!", BalloonIcon.Info);
 
             appData.StartLogic();

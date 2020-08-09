@@ -63,6 +63,16 @@ namespace Frogy.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon App {
+            get {
+                object obj = ResourceManager.GetObject("App", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon Default {
             get {
                 object obj = ResourceManager.GetObject("Default", resourceCulture);

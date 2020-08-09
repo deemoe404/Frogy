@@ -8,22 +8,29 @@
     <!--StartupUri="Views/MainPage.xaml"-->
 
     <Application.Resources>
-        <ContextMenu x:Shared="false" x:Key="SysTrayMenu">
-            <MenuItem Header="Dashboard" Command="{Binding ShowWindowCommand}" />
-            <!--<MenuItem Header="Close Dashboard" Command="{Binding HideWindowCommand}" />-->
-            <Separator />
-            <MenuItem Header="Exit Program" Command="{Binding ExitApplicationCommand}" />
-        </ContextMenu>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <tb:TaskbarIcon x:Key="icon"
+            <ContextMenu x:Shared="false" x:Key="SysTrayMenu">
+                <MenuItem Header="Dashboard" Command="{Binding ShowWindowCommand}" />
+                <!--<MenuItem Header="Close Dashboard" Command="{Binding HideWindowCommand}" />-->
+                <Separator />
+                <MenuItem Header="Exit Program" Command="{Binding ExitApplicationCommand}" />
+            </ContextMenu>
+
+            <tb:TaskbarIcon x:Key="icon"
                         ToolTipText="Frogy"
                         ContextMenu="{StaticResource SysTrayMenu}"
                         DoubleClickCommand="{Binding ShowWindowCommand}"
-                        IconSource="Assets/icon.ico">
-            <tb:TaskbarIcon.DataContext>
-                <local:AppViewModel/>
-            </tb:TaskbarIcon.DataContext>
-        </tb:TaskbarIcon>
+                        IconSource="Resources/App.ico">
+                <tb:TaskbarIcon.DataContext>
+                    <local:AppViewModel/>
+                </tb:TaskbarIcon.DataContext>
+            </tb:TaskbarIcon>
+        </ResourceDictionary>
     </Application.Resources>
     
 </Application>

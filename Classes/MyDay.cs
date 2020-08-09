@@ -21,6 +21,8 @@ namespace Frogy.Classes
         /// </summary>
         public List<MyTimeDuration> TimeLine = new List<MyTimeDuration>();
 
+
+
         /// <summary>
         /// 获取今日小结，即为时间线内相同软件使用时间合并后的列表
         /// </summary>

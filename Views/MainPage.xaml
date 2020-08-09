@@ -5,55 +5,94 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Frogy.Views"
         mc:Ignorable="d"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
         Title="MainPage" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="25"/>
-        </Grid.RowDefinitions>
+    <TabControl Margin="10" Style="{StaticResource TabControlCapsuleSolid}">
+        <TabItem Header="OverView">
+            
+            <Grid>
+                <!--<Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>-->
 
-        <ListView ItemsSource="{Binding Path=Overview}" >
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Icon">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Image Source="{Binding Path=AppIcon}"
-                                       Width="15"
-                                       Height="15"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
+                <!--<Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>-->
 
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=AppName}">
-                        <GridViewColumnHeader>Software Title</GridViewColumnHeader>
-                    </GridViewColumn>
 
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=AppDuration}">
-                        <GridViewColumnHeader>Time Duration</GridViewColumnHeader>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <ListView ItemsSource="{Binding Path=SourceData}" Grid.Column="1"/>
+                <ScrollViewer>
+                    <StackPanel>
+                        <DatePicker SelectedDate="{Binding Path=DisplayDate}" Grid.Row="1"/>
 
-        <DatePicker SelectedDate="{Binding Path=DisplayDate}" Grid.Row="1"/>
+                        <!--<lvc:CartesianChart Series="{Binding OverviewChart}" Height="370"/>-->
+
+                        <lvc:CartesianChart Series="{Binding OverviewChart}" Height="370" LegendLocation="Bottom">
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis Title="Summary" Labels="{Binding OverviewChartLables}" FontSize="14"></lvc:Axis>
+                            </lvc:CartesianChart.AxisX>
+                            
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis LabelFormatter="{Binding OverviewChartFormatter}" Foreground="DodgerBlue" FontSize="14" />
+                            </lvc:CartesianChart.AxisY>
+                        </lvc:CartesianChart>
+
+                        <ListView ItemsSource="{Binding Path=Overview}"
+                                  SelectionMode="Extended"
+                                  PreviewMouseWheel="ListView_PreviewMouseWheel">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Icon">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Image Source="{Binding Path=AppIcon}"
+                                                       Width="15"
+                                                       Height="15"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=AppName}">
+                                        <GridViewColumnHeader>Software Title</GridViewColumnHeader>
+                                    </GridViewColumn>
+
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=AppDuration}">
+                                        <GridViewColumnHeader>Time Duration</GridViewColumnHeader>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        
+                    </StackPanel>
+                </ScrollViewer>
+                
+                <!--<ListView ItemsSource="{Binding Path=SourceData}" Grid.Column="1">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Data" DisplayMemberBinding="{Binding}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>-->
+
+
+            </Grid>
+            
+        </TabItem>
         
-        
+        <TabItem Header="Option">
+            <Grid Grid.Row="1" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="55"/>
+                </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="55"/>
-            </Grid.ColumnDefinitions>
+                <Button Content="DataPath" Command="{Binding Button_Click}"  Grid.Column="1" />
+                <TextBlock Text="{Binding Path=DataPath}"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
 
-            <Button Content="DataPath" Command="{Binding Button_Click}"  Grid.Column="1" />
-            <TextBlock Text="{Binding Path=DataPath}"/>
-        </Grid>
-    </Grid>
 </Window>

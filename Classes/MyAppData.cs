@@ -7,7 +7,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows.Threading;
 
 namespace Frogy.Classes
@@ -22,7 +24,36 @@ namespace Frogy.Classes
 
         public MyAppData()
         {
-            Load(DateTime.Today);
+            DateTime today = DateTime.Today;
+
+            //默认退出时间为今天上午0点，启动时间为现在
+            TimeSpan ExitTime = new TimeSpan(0, 0, 0),
+                LoginTime = new TimeSpan(
+                DateTime.Now.Hour,
+                DateTime.Now.Minute,
+                DateTime.Now.Second
+                ); ;
+
+            Load(today);
+
+            //如果时间线不为空，则认为软件是从最后一个软件stop退出的
+            //否则认为今日0点退出
+            if (AllDays[today].TimeLine.Count != 0)
+                ExitTime = AllDays[today].TimeLine.Last().StopTime;
+
+            //计算软件离线时间
+            AllDays[today].TimeLine.Add(
+                new MyTimeDuration()
+                {
+                    StartTime = ExitTime,
+                    StopTime = LoginTime,
+                    TimeDurationTask =
+                    new MyTask()
+                    {
+                        ComputerStatus = 2
+                    }
+                });
+
 
             mainLogicLoop.Tick += MainLogicLoop_Tick;
             savingLogicLoop.Tick += SavingLogicLoop_Tick;
@@ -131,7 +162,7 @@ namespace Frogy.Classes
         /// 应用数据存储路径
         /// </summary>
         private string storagePath = System.IO.Directory.Exists(Properties.Settings.Default.AppDataPath) ?
-            Properties.Settings.Default.AppDataPath : Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            Properties.Settings.Default.AppDataPath : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         public string StoragePath
         {
             get { return storagePath; }
@@ -142,6 +173,8 @@ namespace Frogy.Classes
                     storagePath = value;
                     Properties.Settings.Default.AppDataPath = value;
                     Properties.Settings.Default.Save();
+
+                    Save();
                 }
                 else
                 {
@@ -157,7 +190,6 @@ namespace Frogy.Classes
         {
             string savePath = StoragePath + (StoragePath.EndsWith("\\") ? "" : "\\") + DateTime.Today.ToString("yyyyMMdd") + ".json";
             string Content = MyDataHelper.CoverObjectToJson(AllDays[DateTime.Today]);
-
             MyDataHelper.WriteFile(savePath, Content);
         }
 
