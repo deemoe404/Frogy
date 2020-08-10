@@ -19,9 +19,10 @@ namespace Frogy.Methods
         public static string GetAppDisplayNameFromProcess(Process process)
         {
             AppxPackage appxPackage = AppxPackage.FromProcess(process);
+
             string result = appxPackage.LoadResourceString(AppxPackage.FromProcess(process).Apps[0].DisplayName);
 
-            if (string.IsNullOrEmpty(result)) result = AppxPackage.FromProcess(process).Apps[0].DisplayName;
+            if (string.IsNullOrEmpty(result)) result = null; /*AppxPackage.FromProcess(process).Apps[0].DisplayName;*/
 
             return result;
         }

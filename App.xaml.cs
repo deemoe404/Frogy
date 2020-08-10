@@ -2,6 +2,7 @@
 using Frogy.Views;
 using Hardcodet.Wpf.TaskbarNotification;
 using Hardcodet.Wpf.TaskbarNotification.Interop;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -33,12 +34,27 @@ namespace Frogy
 
                 appData.StartLogic();
 
+                SystemEvents.SessionEnding += new SessionEndingEventHandler(SystemEvents_SessionEnding);
+
                 base.OnStartup(e);
             }
             else
             {
                 new TaskbarIcon().ShowBalloonTip("Frogy MainProgram", "Frogy is already running. Go check your taskbar icon!", BalloonIcon.Warning);
                 Current.Shutdown();
+            }
+        }
+
+        private void SystemEvents_SessionEnding(object sender, SessionEndingEventArgs e)
+        {
+            appData.Save();
+            SessionEndReasons reason = e.Reason;
+            switch (reason)
+            {
+                case SessionEndReasons.Logoff:
+                    break;
+                case SessionEndReasons.SystemShutdown:
+                    break;
             }
         }
 

@@ -55,7 +55,6 @@ namespace Frogy.ViewModels
         private SeriesCollection PrintOverviewChart(List<MyTimeDuration> tmp)
         {
             SeriesCollection result = new SeriesCollection { };
-
             Dictionary<string, ChartValues<double>> tmpdic = new Dictionary<string, ChartValues<double>>();
             foreach (MyTimeDuration duration in tmp)
             {
@@ -134,7 +133,18 @@ namespace Frogy.ViewModels
             MyDay tmp = ((App)Application.Current).appData.AllDays[displayDate];
 
             Overview = await Task.Run(() => { return PrintOverview(tmp.GetOverView()); });
-            OverviewChart = await Task.Run(() => { return PrintOverviewChart(tmp.TimeLine); });
+            //SeriesCollection OverviewChart_tmp = await Task.Run(() => { return PrintOverviewChart(tmp.TimeLine); });
+
+            OverviewChart.Clear();
+            await Task.Run(() =>
+            {
+                SeriesCollection OverviewChart_tmp = PrintOverviewChart(tmp.TimeLine);
+                foreach (StackedColumnSeries i in OverviewChart_tmp)
+                {
+                    OverviewChart.Add(i);
+                    Thread.Sleep(220);
+                }
+            });
         }
 
         /// <summary>

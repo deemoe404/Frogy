@@ -51,6 +51,8 @@ namespace Frogy.Methods
                         if (uwpProcess.MainModule.ModuleName != "ApplicationFrameHost.exe")
                         {
                             applicationName = MyAppxPackageHelper.GetAppDisplayNameFromProcess(uwpProcess);
+                            if (string.IsNullOrEmpty(applicationName)) 
+                                applicationName = MyWindowHelper.GetWindowTitle(ptr);
                             break;
                         }
                     }

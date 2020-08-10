@@ -43,7 +43,7 @@
                         </Grid>
 
                         <lvc:CartesianChart Series="{Binding OverviewChart}" 
-                                            Height="300" 
+                                            Height="300"
                                             IsHitTestVisible="False"
                                             LegendLocation="Bottom"
                                             Margin="5,5,5,5">
@@ -105,15 +105,39 @@
         </TabItem>
         
         <TabItem Header="Option">
-            <Grid Grid.Row="1" Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="55"/>
-                </Grid.ColumnDefinitions>
 
-                <Button Content="DataPath" Command="{Binding Button_Click}"  Grid.Column="1" />
-                <TextBlock Text="{Binding Path=DataPath}"/>
-            </Grid>
+            <ScrollViewer>
+                <StackPanel>
+
+                    <TextBlock Style="{StaticResource TextBlockSubTitleBold}"
+                               Text="Application data path"
+                               Margin="10,10,10,0"
+                               HorizontalAlignment="Left"/>
+                    <Grid Margin="10,0,15,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="95"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Content="Change" 
+                                Command="{Binding Button_Click}"  
+                                Grid.Column="1"
+                                Margin="5,5,5,0"/>
+                        <TextBlock Text="{Binding Path=DataPath}"
+                                   VerticalAlignment="Center"
+                                   Margin="2,5,5,0"/>
+                    </Grid>
+                    
+                    <Separator/>
+
+                    <TextBlock Style="{StaticResource TextBlockSubTitleBold}"
+                               Text="About"
+                               Margin="10,10,10,0"
+                               HorizontalAlignment="Left"/>
+                    <TextBlock Text="No about to show here~"/>
+
+                </StackPanel>
+            </ScrollViewer>
+            
         </TabItem>
     </TabControl>
 
