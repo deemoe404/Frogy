@@ -19,6 +19,7 @@ using Frogy.Models;
 using LiveCharts;
 using LiveCharts.Wpf;
 using LiveCharts.Defaults;
+using System.Collections.ObjectModel;
 
 namespace Frogy.ViewModels
 {
@@ -104,10 +105,9 @@ namespace Frogy.ViewModels
                     result.Add(new StackedColumnSeries
                     {
                         Values = tmpdic[key],
-                        DataLabels = true,
+                        DataLabels = false,
                         Title = key,
-                        IsHitTestVisible = false,
-                        FontSize = 0.1
+                        IsHitTestVisible = false
                     });
                 }
             });
@@ -132,7 +132,7 @@ namespace Frogy.ViewModels
             await Task.Run(() => { ((App)Application.Current).appData.Load(displayDate); });
             MyDay tmp = ((App)Application.Current).appData.AllDays[displayDate];
 
-            Overview = await Task.Run(() => { return PrintOverview(tmp.GetOverView()); });
+            Overview = /*await Task.Run(() => { return */PrintOverview(tmp.GetOverView());/* });*/
             //SeriesCollection OverviewChart_tmp = await Task.Run(() => { return PrintOverviewChart(tmp.TimeLine); });
 
             OverviewChart.Clear();

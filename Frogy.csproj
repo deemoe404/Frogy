@@ -226,6 +226,5 @@
   <ItemGroup>
     <None Include="Resources\Default.ico" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

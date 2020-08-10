@@ -35,7 +35,7 @@ namespace Frogy.Classes
             foreach (MyTimeDuration item in myTimeDurations)
             {
                 string nowAppName = item.TimeDurationTask.ApplicationName;
-                if (string.IsNullOrEmpty(nowAppName)) continue;
+                if (string.IsNullOrEmpty(nowAppName) || nowAppName == "Frogy") continue;
 
                 TimeSpan duration = item.Duration;
 
@@ -54,7 +54,6 @@ namespace Frogy.Classes
                     overView.Add(nowAppName, result);
                 }
             }
-
             return overView;
         }
     }
