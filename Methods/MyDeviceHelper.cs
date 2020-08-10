@@ -62,6 +62,7 @@ namespace Frogy.Methods
             WTSDown,                // WinStation is down due to error
             WTSInit,                // WinStation in initialization
         }
+
         [StructLayout(LayoutKind.Sequential)]
         private struct WTSINFOEXW
         {

@@ -24,7 +24,7 @@ namespace Frogy
                     CommandAction = () =>
                     {
                         if (Application.Current.MainWindow == null)
-                            Application.Current.MainWindow = new MainPage();
+                            Application.Current.MainWindow = new DashboardView();
 
                         Application.Current.MainWindow.Show();
                         Application.Current.MainWindow.Activate();

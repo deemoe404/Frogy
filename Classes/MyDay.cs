@@ -21,7 +21,10 @@ namespace Frogy.Classes
         /// </summary>
         public List<MyTimeDuration> TimeLine = new List<MyTimeDuration>();
 
-
+        /// <summary>
+        /// 今日App计时器 Key为AppName+AppPath, Value为今日剩余时间
+        /// </summary>
+        //public Dictionary<string, TimeSpan> AppTimers = new Dictionary<string, TimeSpan>();
 
         /// <summary>
         /// 获取今日小结，即为时间线内相同软件使用时间合并后的列表
@@ -38,9 +41,9 @@ namespace Frogy.Classes
                 if (string.IsNullOrEmpty(nowAppName) || nowAppName == "Frogy") continue;
 
                 TimeSpan duration = item.Duration;
-
                 if (overView.ContainsKey(nowAppName))
                     overView[nowAppName].Duration += duration;
+
                 else
                 {
                     Software result =

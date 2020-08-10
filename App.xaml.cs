@@ -34,18 +34,19 @@ namespace Frogy
 
                 appData.StartLogic();
 
-                SystemEvents.SessionEnding += new SessionEndingEventHandler(SystemEvents_SessionEnding);
+                SystemEvents.SessionEnded += SystemEvents_SessionEnded;
 
                 base.OnStartup(e);
             }
             else
             {
-                new TaskbarIcon().ShowBalloonTip("Frogy MainProgram", "Frogy is already running. Go check your taskbar icon!", BalloonIcon.Warning);
+                MessageBox.Show("Frogy is already running. Go check your taskbar icon!", "Frogy MainProgram", MessageBoxButton.OK,MessageBoxImage.Warning);
                 Current.Shutdown();
             }
+            
         }
 
-        private void SystemEvents_SessionEnding(object sender, SessionEndingEventArgs e)
+        private void SystemEvents_SessionEnded(object sender, SessionEndedEventArgs e)
         {
             appData.Save();
             SessionEndReasons reason = e.Reason;

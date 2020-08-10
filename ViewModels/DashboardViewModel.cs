@@ -23,7 +23,7 @@ using System.Collections.ObjectModel;
 
 namespace Frogy.ViewModels
 {
-    public class MainPageViewModel : INotifyPropertyChanged
+    public class DashboardViewModel : INotifyPropertyChanged
     {
         /// <summary>
         /// 按顺序打印概览视图
@@ -115,7 +115,7 @@ namespace Frogy.ViewModels
             return result;
         }
 
-        public MainPageViewModel()
+        public DashboardViewModel()
         {
             Update();
 
@@ -266,6 +266,26 @@ namespace Frogy.ViewModels
                 MessageBox.Show(exp.Message);
             }
             DataPath = ((App)Application.Current).appData.StoragePath;
+        }
+
+        private ICommand refresh;
+        public ICommand Refresh
+        {
+            get
+            {
+                if (refresh == null)
+                {
+                    refresh = new RelayCommand(
+                        param => this.RefreshButton_Click(),
+                        param => true
+                    );
+                }
+                return refresh;
+            }
+        }
+        private void RefreshButton_Click()
+        {
+            Update();
         }
 
         public void MainPage_Closing(object sender, CancelEventArgs e)

@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 
 namespace Frogy.Models
 {
-    class MainPageModel
+    class DashboardModel
     {
 
     }

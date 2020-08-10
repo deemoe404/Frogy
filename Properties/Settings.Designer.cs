@@ -34,5 +34,17 @@ namespace Frogy.Properties {
                 this["AppDataPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AppTimer {
+            get {
+                return ((string)(this["AppTimer"]));
+            }
+            set {
+                this["AppTimer"] = value;
+            }
+        }
     }
 }

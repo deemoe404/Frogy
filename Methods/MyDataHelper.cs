@@ -67,20 +67,13 @@ namespace Frogy.Methods
         /// <returns>文件内容</returns>
         public static string ReadFile(string Path)
         {
-            if (File.Exists(Path))
-            {
-                FileStream fileStream = new FileStream(Path, FileMode.Open, FileAccess.Read);
-                byte[] bytes = new byte[fileStream.Length];
-                fileStream.Read(bytes, 0, bytes.Length);
-                char[] content = Encoding.UTF8.GetChars(bytes);
-                fileStream.Close();
+            FileStream fileStream = new FileStream(Path, FileMode.Open, FileAccess.Read);
+            byte[] bytes = new byte[fileStream.Length];
+            fileStream.Read(bytes, 0, bytes.Length);
+            char[] content = Encoding.UTF8.GetChars(bytes);
+            fileStream.Close();
 
-                return new string(content);
-            }
-            else
-            {
-                throw new DirectoryNotFoundException("The file could not be found.");
-            }
+            return new string(content);
         }
 
         /// <summary>

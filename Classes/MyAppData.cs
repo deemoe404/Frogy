@@ -22,6 +22,11 @@ namespace Frogy.Classes
         private DispatcherTimer mainLogicLoop = new DispatcherTimer() { Interval = new TimeSpan(10000000) };
         private DispatcherTimer savingLogicLoop = new DispatcherTimer() { Interval = new TimeSpan(600000000) };
 
+        /// <summary>
+        /// 所有时间线
+        /// </summary>
+        public Dictionary<DateTime, MyDay> AllDays = new Dictionary<DateTime, MyDay>();
+
         public MyAppData()
         {
             DateTime today = DateTime.Today;
@@ -154,11 +159,6 @@ namespace Frogy.Classes
         }
 
         /// <summary>
-        /// 所有时间线
-        /// </summary>
-        public Dictionary<DateTime,MyDay> AllDays = new Dictionary<DateTime, MyDay>();
-
-        /// <summary>
         /// 应用数据存储路径
         /// </summary>
         private string storagePath = System.IO.Directory.Exists(Properties.Settings.Default.AppDataPath) ?
@@ -203,6 +203,7 @@ namespace Frogy.Classes
         /// <param name="LoadDate">日期</param>
         public void Load(DateTime LoadDate)
         {
+            //加载时间线数据
             try
             {
                 string loadPath = StoragePath + (StoragePath.EndsWith("\\") ? "" : "\\") + LoadDate.ToString("yyyyMMdd") + ".json";
@@ -217,6 +218,8 @@ namespace Frogy.Classes
                 if (!AllDays.ContainsKey(LoadDate))
                     AllDays.Add(LoadDate, new MyDay());
             }
+            //加载App计时器数据
+            //if(AllDays[LoadDate].)
         }
 
         /// <summary>
