@@ -5,6 +5,7 @@
 
 ****
 <br>
+
 # TimeFrogy - ScreenTime
 Frogy is a Windows app inspired by iOS "screen time" (or Android "digital health"). The functions that currently implemented are:
 * Record the usage of the apps
