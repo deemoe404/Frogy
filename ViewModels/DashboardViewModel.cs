@@ -115,6 +115,26 @@ namespace Frogy.ViewModels
             return result;
         }
 
+        /// <summary>
+        /// 打印元数据
+        /// </summary>
+        /// <param name="durations"></param>
+        /// <returns></returns>
+        private List<string> PrintSourceData(List<MyTimeDuration> durations)
+        {
+            List<string> result = new List<string>();
+            foreach (MyTimeDuration timeSpan in durations)
+            {
+                string tmp = timeSpan.TimeDurationTask.ComputerStatus.ToString() + "  " +
+                    timeSpan.TimeDurationTask.ApplicationName + "    " +
+                    timeSpan.TimeDurationTask.ApplicationTitle + "    " +
+                    timeSpan.StartTime + "    " +
+                    timeSpan.StopTime;
+                result.Add(tmp);
+            }
+            return result;
+        }
+
         public DashboardViewModel()
         {
             Update();
@@ -135,6 +155,8 @@ namespace Frogy.ViewModels
             Overview = /*await Task.Run(() => { return */PrintOverview(tmp.GetOverView());/* });*/
             //SeriesCollection OverviewChart_tmp = await Task.Run(() => { return PrintOverviewChart(tmp.TimeLine); });
 
+            //RawData = PrintSourceData(tmp.TimeLine);
+
             OverviewChart.Clear();
             await Task.Run(() =>
             {
@@ -145,6 +167,23 @@ namespace Frogy.ViewModels
                     Thread.Sleep(220);
                 }
             });
+        }
+
+        /// <summary>
+        /// 元数据
+        /// </summary>
+        private List<string> rawData;
+        public List<string> RawData
+        {
+            get
+            {
+                return rawData;
+            }
+            set
+            {
+                rawData = value;
+                OnPropertyChanged();
+            }
         }
 
         /// <summary>

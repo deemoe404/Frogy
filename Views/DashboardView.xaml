@@ -24,7 +24,8 @@
                 </Grid.RowDefinitions>-->
                 
 
-                <ScrollViewer HorizontalScrollBarVisibility="Visible">
+                <ScrollViewer HorizontalScrollBarVisibility="Visible"
+                              PanningMode="VerticalFirst">
                     <StackPanel>
 
                         <Grid>
@@ -106,8 +107,7 @@
                                        Margin="25,25,25,25"/>
 
                         <ListView ItemsSource="{Binding Path=Overview}"
-                                  SelectionMode="Extended"
-                                  PreviewMouseWheel="ListView_PreviewMouseWheel">
+                                  IsEnabled="False">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="Icon">
@@ -130,7 +130,18 @@
                                 </GridView>
                             </ListView.View>
                         </ListView>
-                        
+
+                        <!--<Separator/>
+
+                        <TextBlock Style="{StaticResource TextBlockTitleBold}" 
+                                       Text="RawData"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Margin="25,25,25,25"/>
+
+                        <ListBox ItemsSource="{Binding RawData}"
+                                 IsEnabled="False"/>-->
+
                     </StackPanel>
                 </ScrollViewer>
                 
