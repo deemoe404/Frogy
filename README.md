@@ -7,7 +7,7 @@
 <br>
 
 # TimeFrogy - ScreenTime
-Frogy is a Windows app inspired by iOS "screen time" (or Android "digital health"). The functions that currently implemented are:
+Frogy is a Windows app inspired by iOS "screen time" (or Android "digital wellbeing"). The functions that currently implemented are:
 * Record the usage of the apps
 * Show the app usage at different times of the day in the form of graphs
 
