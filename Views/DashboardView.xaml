@@ -131,7 +131,7 @@
                             </ListView.View>
                         </ListView>
 
-                        <!--<Separator/>
+                        <Separator/>
 
                         <TextBlock Style="{StaticResource TextBlockTitleBold}" 
                                        Text="RawData"
@@ -140,7 +140,7 @@
                                        Margin="25,25,25,25"/>
 
                         <ListBox ItemsSource="{Binding RawData}"
-                                 IsEnabled="False"/>-->
+                                 IsEnabled="False"/>
 
                     </StackPanel>
                 </ScrollViewer>

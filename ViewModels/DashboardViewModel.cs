@@ -155,7 +155,7 @@ namespace Frogy.ViewModels
             Overview = /*await Task.Run(() => { return */PrintOverview(tmp.GetOverView());/* });*/
             //SeriesCollection OverviewChart_tmp = await Task.Run(() => { return PrintOverviewChart(tmp.TimeLine); });
 
-            //RawData = PrintSourceData(tmp.TimeLine);
+            RawData = PrintSourceData(tmp.TimeLine);
 
             OverviewChart.Clear();
             await Task.Run(() =>

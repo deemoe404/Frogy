@@ -23,4 +23,17 @@ namespace Frogy.Models
 
         public string AppDuration { get; set; }
     }
+
+    public class SummaryViewItem
+    {
+        public BitmapImage AppIcon { get; set; }
+
+        public string AppName { get; set; }
+
+        public string AppDuration { get; set; }
+
+        public string StartTime { get; set; }
+
+        public string EndTime { get; set; }
+    }
 }
