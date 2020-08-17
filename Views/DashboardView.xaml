@@ -121,7 +121,7 @@
                                     </GridViewColumn>
 
                                     <GridViewColumn DisplayMemberBinding="{Binding Path=AppName}">
-                                        <GridViewColumnHeader>Software Title</GridViewColumnHeader>
+                                        <GridViewColumnHeader>Software Name</GridViewColumnHeader>
                                     </GridViewColumn>
 
                                     <GridViewColumn DisplayMemberBinding="{Binding Path=AppDuration}">
@@ -134,13 +134,47 @@
                         <Separator/>
 
                         <TextBlock Style="{StaticResource TextBlockTitleBold}" 
-                                       Text="RawData"
+                                       Text="SummaryView"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Center"
                                        Margin="25,25,25,25"/>
 
-                        <ListBox ItemsSource="{Binding RawData}"
-                                 IsEnabled="False"/>
+                        <ListView ItemsSource="{Binding DetailsView}"
+                                 IsEnabled="False">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=SystemState}"
+                                                    Header="System State"/>
+
+                                    <GridViewColumn Header="Icon">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Image Source="{Binding Path=AppIcon}"
+                                                       Width="25"
+                                                       Height="25"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=AppName}"
+                                                    Header="Software Name"/>
+
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=WindowTitle}"
+                                                    Header="Window Title"/>
+
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=StartTime}"
+                                                    Header="StartTime"/>
+
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=StopTime}"
+                                                    Header="StopTime"/>
+
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=AppDuration}"
+                                                    Header="Time Duration"/>
+
+
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
 
                     </StackPanel>
                 </ScrollViewer>

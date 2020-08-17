@@ -24,7 +24,7 @@ namespace Frogy.Models
         public string AppDuration { get; set; }
     }
 
-    public class SummaryViewItem
+    public class DetailsViewItem
     {
         public BitmapImage AppIcon { get; set; }
 
@@ -34,6 +34,10 @@ namespace Frogy.Models
 
         public string StartTime { get; set; }
 
-        public string EndTime { get; set; }
+        public string StopTime { get; set; }
+
+        public string WindowTitle { get; set; }
+
+        public string SystemState { get; set; }
     }
 }

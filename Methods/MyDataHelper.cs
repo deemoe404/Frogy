@@ -124,9 +124,11 @@ namespace Frogy.Methods
         /// 将Bitmap转换为BitmapImage
         /// </summary>
         /// <param name="bitmap">Bitmap</param>
-        /// <returns>BitmapImage</returns>
+        /// <returns>BitmapImage 若bitmap为空或无效，则返回null</returns>
         public static BitmapImage BitmapToBitmapImage(Bitmap bitmap)
         {
+            if (bitmap == null) return null;
+
             BitmapImage bitmapImage = new BitmapImage();
             using (MemoryStream ms = new MemoryStream())
             {

@@ -26,14 +26,16 @@ namespace Frogy.ViewModels
     public class DashboardViewModel : INotifyPropertyChanged
     {
         /// <summary>
-        /// 按顺序打印概览视图
+        /// 按顺序打印OverView
         /// </summary>
-        /// <param name="keyValuePairs">Overview</param>
-        /// <returns>List<string></returns>
-        private List<OverViewItem> PrintOverview(Dictionary<string, Software> keyValuePairs)
+        /// <param name="TodayOverview">今日OverView</param>
+        /// <returns>List<OverViewItem></returns>
+        private List<OverViewItem> PrintOverview(Dictionary<string, Software> TodayOverview)
         {
             List<OverViewItem> result = new List<OverViewItem>();
-            var dicSort = from objDic in keyValuePairs orderby objDic.Value.Duration descending select objDic;
+
+            //排序
+            var dicSort = from objDic in TodayOverview orderby objDic.Value.Duration descending select objDic;
 
             foreach (KeyValuePair<string, Software> kvp in dicSort)
             {
@@ -46,6 +48,7 @@ namespace Frogy.ViewModels
                     };
                 result.Add(tmp);
             }
+
             return result;
         }
 
@@ -116,20 +119,45 @@ namespace Frogy.ViewModels
         }
 
         /// <summary>
-        /// 打印元数据
+        /// 打印SummaryView
         /// </summary>
-        /// <param name="durations"></param>
         /// <returns></returns>
-        private List<string> PrintSourceData(List<MyTimeDuration> durations)
+        private List<DetailsViewItem> PrintSummaryView(List<MyTimeDuration> durations)
         {
-            List<string> result = new List<string>();
+            List<DetailsViewItem> result = new List<DetailsViewItem>();
+
+            string systemState;
+
+            
+
             foreach (MyTimeDuration timeSpan in durations)
             {
-                string tmp = timeSpan.TimeDurationTask.ComputerStatus.ToString() + "  " +
-                    timeSpan.TimeDurationTask.ApplicationName + "    " +
-                    timeSpan.TimeDurationTask.ApplicationTitle + "    " +
-                    timeSpan.StartTime + "    " +
-                    timeSpan.StopTime;
+                switch (timeSpan.TimeDurationTask.ComputerStatus)
+                {
+                    case 1:
+                        systemState = "On active";
+                        break;
+
+                    case 0:
+                        systemState = "Locked";
+                        break;
+
+                    case 2:
+                        systemState = "Forgy exited";
+                        break;
+                }
+
+                DetailsViewItem tmp = new DetailsViewItem()
+                {
+                    StartTime = timeSpan.StartTime.ToString(),
+                    StopTime = timeSpan.StopTime.ToString(),
+                    AppDuration = timeSpan.Duration.ToString(),
+                    AppIcon = MyDataHelper.BitmapToBitmapImage(
+                        MyDataHelper.Base64StringToImage(timeSpan.TimeDurationTask.ApplicationIcon_Base64)),
+                    AppName = timeSpan.TimeDurationTask.ApplicationName,
+                    WindowTitle = timeSpan.TimeDurationTask.ApplicationTitle,
+                    SystemState = timeSpan.TimeDurationTask.ComputerStatus.ToString()
+                };
                 result.Add(tmp);
             }
             return result;
@@ -143,24 +171,31 @@ namespace Frogy.ViewModels
             "7:00", "8:00", "9:00", "10:00", "11:00", "12:00",
             "13:00", "14:00", "15:00", "16:00", "17:00", "18:00",
             "19:00", "20:00", "21:00", "22:00", "23:00"};
+
             DataPath = ((App)Application.Current).appData.StoragePath;
+
             OverviewChartFormatter = value => value + "min";
         }
 
         private async void Update()
         {
-            await Task.Run(() => { ((App)Application.Current).appData.Load(displayDate); });
-            MyDay tmp = ((App)Application.Current).appData.AllDays[displayDate];
+            await Task.Run(() => 
+            {
+                ((App)Application.Current).appData.Load(displayDate);
+            });
 
-            Overview = /*await Task.Run(() => { return */PrintOverview(tmp.GetOverView());/* });*/
-            //SeriesCollection OverviewChart_tmp = await Task.Run(() => { return PrintOverviewChart(tmp.TimeLine); });
+            MyDay today = ((App)Application.Current).appData.AllDays[displayDate];
 
-            RawData = PrintSourceData(tmp.TimeLine);
+            await Task.Run(() =>
+            {
+                Overview = PrintOverview(today.GetOverView());
+                DetailsView = PrintSummaryView(today.TimeLine);
+            });
 
             OverviewChart.Clear();
             await Task.Run(() =>
             {
-                SeriesCollection OverviewChart_tmp = PrintOverviewChart(tmp.TimeLine);
+                SeriesCollection OverviewChart_tmp = PrintOverviewChart(today.TimeLine);
                 foreach (StackedColumnSeries i in OverviewChart_tmp)
                 {
                     OverviewChart.Add(i);
@@ -172,16 +207,16 @@ namespace Frogy.ViewModels
         /// <summary>
         /// 元数据
         /// </summary>
-        private List<string> rawData;
-        public List<string> RawData
+        private List<DetailsViewItem> detailsView;
+        public List<DetailsViewItem> DetailsView
         {
             get
             {
-                return rawData;
+                return detailsView;
             }
             set
             {
-                rawData = value;
+                detailsView = value;
                 OnPropertyChanged();
             }
         }
