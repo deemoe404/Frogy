@@ -19,38 +19,8 @@ namespace Frogy.Views
         public DashboardView()
         {
             this.DataContext = viewModel;
-            this.Closing += viewModel.MainPage_Closing;
 
             InitializeComponent();
         }
-
-        //将ListView的鼠标滚轮事件向上发送给Grid
-        private void ListView_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
-            eventArg.RoutedEvent = MouseWheelEvent;
-            eventArg.Source = sender;
-
-            ((StackPanel)((System.Windows.Controls.ListView)sender).Parent).RaiseEvent(eventArg);
-        }
-
-        private void ListView_TouchMove(object sender, TouchEventArgs e)
-        {
-            var eventArg = new TouchEventArgs(e.TouchDevice, e.Timestamp);
-            eventArg.RoutedEvent = TouchMoveEvent;
-            eventArg.Source = sender;
-
-            ((StackPanel)((System.Windows.Controls.ListView)sender).Parent).RaiseEvent(eventArg);
-        }
-
-        //private void Button_Click(object sender, RoutedEventArgs e)
-        //{
-        //    myDatePicker.SelectedDate.Value.AddDays(-1);
-        //}
-
-        //private void Button_Click_1(object sender, RoutedEventArgs e)
-        //{
-        //    myDatePicker.SelectedDate.Value.AddDays(1);
-        //}
     }
 }

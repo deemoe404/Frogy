@@ -160,12 +160,16 @@
     <Compile Include="Methods\MyAppxPackageHelper.cs" />
     <Compile Include="Methods\MyEventHelper.cs" />
     <Compile Include="Models\DashboardModel.cs" />
+    <Compile Include="Models\OptionModel.cs" />
+    <Compile Include="Models\OverViewModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\DashboardViewModel.cs" />
+    <Compile Include="ViewModels\OptionViewModel.cs" />
+    <Compile Include="ViewModels\OverViewViewModel.cs" />
     <Compile Include="Views\DashboardView.xaml.cs">
       <DependentUpon>DashboardView.xaml</DependentUpon>
     </Compile>
@@ -174,7 +178,21 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Classes\MyAppData.cs" />
+    <Compile Include="Views\OptionView.xaml.cs">
+      <DependentUpon>OptionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OverViewView.xaml.cs">
+      <DependentUpon>OverViewView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\DashboardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OptionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OverViewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
