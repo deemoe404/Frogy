@@ -13,7 +13,7 @@
             <StackPanel>
 
                 <TextBlock Style="{StaticResource TextBlockSubTitleBold}"
-                               Text="Application data path"
+                               Text="{DynamicResource Option_DataPathTitle}"
                                Margin="10,10,10,0"
                                HorizontalAlignment="Left"/>
                 <Grid Margin="10,0,15,15">
@@ -21,7 +21,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="95"/>
                     </Grid.ColumnDefinitions>
-                    <Button Content="Change" 
+                    <Button Content="{DynamicResource Option_DataPathButton}" 
                                 Command="{Binding ChangeDataPathButton}"  
                                 Grid.Column="1"
                                 Margin="5,5,5,0"/>
@@ -33,11 +33,11 @@
                 <Separator/>
 
                 <TextBlock Style="{StaticResource TextBlockSubTitleBold}"
-                               Text="About"
+                               Text="{DynamicResource Option_AboteTitle}"
                                Margin="10,10,10,0"
                                HorizontalAlignment="Left"/>
                 <Grid Margin="10,0,15,15">
-                    <TextBlock Text="Hello there, this is an small about~ something should be shown here but it didn't. QAQ"
+                    <TextBlock Text="{DynamicResource Option_AboutContent}"
                                    VerticalAlignment="Center"
                                    Margin="2,5,5,0"/>
                 </Grid>

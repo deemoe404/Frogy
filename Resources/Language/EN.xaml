@@ -18,4 +18,9 @@
     <system:String x:Key="TaskBar_StartUp">Frogy is now running. Enjoy your time!</system:String>
     <system:String x:Key="TaskBar_Overlap">Frogy is already running. Go check your taskbar icon!</system:String>
 
+    <system:String x:Key="Option_DataPathTitle">Application data path</system:String>
+    <system:String x:Key="Option_DataPathButton">Change</system:String>
+    <system:String x:Key="Option_AboteTitle">About</system:String>
+    <system:String x:Key="Option_AboutContent">Frogy - screen time.</system:String>
+
 </ResourceDictionary>

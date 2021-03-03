@@ -14,8 +14,13 @@
     <system:String x:Key="Table_SoftwareTitle">软件标题</system:String>
     <system:String x:Key="Table_TimeDuration">持续时间</system:String>
 
-    <system:String x:Key="TaskBar_AppName">Frogy 主程序</system:String>
-    <system:String x:Key="TaskBar_StartUp">Frogy 成功启动，自由使用你的电脑吧！</system:String>
-    <system:String x:Key="TaskBar_Overlap">Frogy 已在后台运行。请检查任务栏通知区域。</system:String>
+    <system:String x:Key="TaskBar_AppName">时常主程序</system:String>
+    <system:String x:Key="TaskBar_StartUp">时常成功启动，自由使用你的电脑吧！</system:String>
+    <system:String x:Key="TaskBar_Overlap">时常已在后台运行。请检查任务栏通知区域。</system:String>
     
+    <system:String x:Key="Option_DataPathTitle">应用数据路径</system:String>
+    <system:String x:Key="Option_DataPathButton">更改</system:String>
+    <system:String x:Key="Option_AboteTitle">关于</system:String>
+    <system:String x:Key="Option_AboutContent">时常 - 屏幕使用时间.</system:String>
+
 </ResourceDictionary>

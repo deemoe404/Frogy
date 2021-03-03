@@ -1,5 +1,6 @@
 ﻿using Frogy.Classes;
 using Frogy.Views;
+using HandyControl.Tools;
 using Hardcodet.Wpf.TaskbarNotification;
 using Hardcodet.Wpf.TaskbarNotification.Interop;
 using Microsoft.Win32;
@@ -32,9 +33,11 @@ namespace Frogy
             {
                 case "en-US":
                     dict.Source = new Uri(@"Resources\Language\EN.xaml", UriKind.Relative);
+                    ConfigHelper.Instance.SetLang("en");
                     break;
                 case "zh-CN":
                     dict.Source = new Uri(@"Resources\Language\ZH.xaml", UriKind.Relative);
+                    ConfigHelper.Instance.SetLang("zh-cn");
                     break;
                 default: //english default
                     dict.Source = new Uri(@"Resources\Language\EN.xaml", UriKind.Relative);
