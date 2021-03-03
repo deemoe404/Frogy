@@ -184,6 +184,14 @@
     <Compile Include="Views\OverViewView.xaml.cs">
       <DependentUpon>OverViewView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources\Language\EN.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Language\ZH.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DashboardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

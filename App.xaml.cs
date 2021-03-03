@@ -26,11 +26,31 @@ namespace Frogy
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            //Launage switch
+            ResourceDictionary dict = new ResourceDictionary();
+            switch (System.Globalization.CultureInfo.CurrentUICulture.Name)
+            {
+                case "en-US":
+                    dict.Source = new Uri(@"Resources\Language\EN.xaml", UriKind.Relative);
+                    break;
+                case "zh-CN":
+                    dict.Source = new Uri(@"Resources\Language\ZH.xaml", UriKind.Relative);
+                    break;
+                default: //english default
+                    dict.Source = new Uri(@"Resources\Language\EN.xaml", UriKind.Relative);
+                    break;
+            }
+            Current.Resources.MergedDictionaries.Add(dict);
+
             mutex = new System.Threading.Mutex(true, "FrogyMainProgram");
             if (mutex.WaitOne(0, false))
             {
                 taskbarIcon = (TaskbarIcon)FindResource("icon");
-                taskbarIcon.ShowBalloonTip("Frogy MainProgram", "Frogy is now running. Enjoy your time!", BalloonIcon.Info);
+
+                taskbarIcon.ShowBalloonTip(
+                    dict["TaskBar_AppName"].ToString(),
+                    dict["TaskBar_StartUp"].ToString(), 
+                    BalloonIcon.Info);
 
                 appData.StartLogic();
 
@@ -40,7 +60,12 @@ namespace Frogy
             }
             else
             {
-                MessageBox.Show("Frogy is already running. Go check your taskbar icon!", "Frogy MainProgram", MessageBoxButton.OK,MessageBoxImage.Warning);
+                MessageBox.Show(
+                    dict["TaskBar_Overlap"].ToString(),
+                    dict["TaskBar_AppName"].ToString(), 
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
                 Current.Shutdown();
             }
             

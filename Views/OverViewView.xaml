@@ -24,7 +24,7 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Style="{StaticResource TextBlockTitleBold}" 
-                                   Text="ComprehensiveChart"/>
+                                   Text="{DynamicResource Chart_Title}"/>
                         <Button Grid.Column="1"
                                 Margin="5"
                                 FontFamily="Segoe MDL2 Assets"
@@ -76,7 +76,7 @@
                     </lvc:CartesianChart.Resources>
 
                     <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Title="Summary" Labels="{Binding OverviewChartLables}"/>
+                        <lvc:Axis Title="{DynamicResource Chart_Footnote}" Labels="{Binding OverviewChartLables}"/>
                     </lvc:CartesianChart.AxisX>
 
                     <lvc:CartesianChart.AxisY>
@@ -96,7 +96,7 @@
                           IsEnabled="False">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Icon">
+                            <GridViewColumn Header="{DynamicResource Table_Icon}">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Image Source="{Binding Path=AppIcon}"
@@ -107,18 +107,18 @@
                             </GridViewColumn>
 
                             <GridViewColumn DisplayMemberBinding="{Binding Path=AppName}">
-                                <GridViewColumnHeader>Software Name</GridViewColumnHeader>
+                                <GridViewColumnHeader Content="{DynamicResource Table_SoftwareTitle}"/>
                             </GridViewColumn>
 
                             <GridViewColumn DisplayMemberBinding="{Binding Path=AppDuration}">
-                                <GridViewColumnHeader>Time Duration</GridViewColumnHeader>
+                                <GridViewColumnHeader Content="{DynamicResource Table_TimeDuration}"/>
                             </GridViewColumn>
                         </GridView>
                     </ListView.View>
                 </ListView>
 
                 <Separator/>
-
+                
                 <TextBlock Style="{StaticResource TextBlockTitleBold}" 
                            Text="SummaryView"
                            HorizontalAlignment="Left"

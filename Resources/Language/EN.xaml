@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Frogy.Resources.Language" 
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="Tab_Overview">Overview</system:String>
+    <system:String x:Key="Tab_Option">Option</system:String>
+
+    <system:String x:Key="Chart_Title">Comprehensive Chart</system:String>
+    <system:String x:Key="Chart_Footnote">Summary</system:String>
+
+    <system:String x:Key="Table_Title">Details</system:String>
+    <system:String x:Key="Table_Icon">Icon</system:String>
+    <system:String x:Key="Table_SoftwareTitle">Software Title</system:String>
+    <system:String x:Key="Table_TimeDuration">Time Duration</system:String>
+
+    <system:String x:Key="TaskBar_AppName">Frogy MainProgram</system:String>
+    <system:String x:Key="TaskBar_StartUp">Frogy is now running. Enjoy your time!</system:String>
+    <system:String x:Key="TaskBar_Overlap">Frogy is already running. Go check your taskbar icon!</system:String>
+
+</ResourceDictionary>

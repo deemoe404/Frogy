@@ -10,11 +10,11 @@
         Title="Frogy - Dashboard" Height="450" Width="800">
 
     <TabControl Margin="10" Style="{StaticResource TabControlCapsuleSolid}">
-        <TabItem Header="OverView">
+        <TabItem Header="{DynamicResource Tab_Overview}">
             <Frame Source="OverViewView.xaml"/>
         </TabItem>
 
-        <TabItem Header="Option">
+        <TabItem Header="{DynamicResource Tab_Option}">
             <Frame Source="OptionView.xaml"/>
         </TabItem>
     </TabControl>
