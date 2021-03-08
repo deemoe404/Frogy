@@ -30,6 +30,15 @@
                                    Margin="2,5,5,0"/>
                 </Grid>
 
+                <TextBlock Style="{StaticResource TextBlockSubTitleBold}"
+                               Text="Launage Setting"
+                               Margin="10,10,10,0"
+                               HorizontalAlignment="Left"/>
+                
+                
+
+                <Separator/>
+                
                 <Separator/>
 
                 <TextBlock Style="{StaticResource TextBlockSubTitleBold}"

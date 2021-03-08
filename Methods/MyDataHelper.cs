@@ -141,5 +141,27 @@ namespace Frogy.Methods
             }
             return bitmapImage;
         }
+
+        public static void TransferFolder(string srcFolder, string destFolder)
+        {
+            string fileName, destFile;
+            if (Directory.Exists(srcFolder))
+            {
+                if (!Directory.Exists(destFolder)) Directory.CreateDirectory(destFolder);
+
+                string[] files = Directory.GetFiles(srcFolder);
+
+                foreach (string s in files)
+                {
+                    fileName = Path.GetFileName(s);
+                    destFile = Path.Combine(destFolder, fileName);
+                    File.Copy(s, destFile, true);
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Source folder not found!");
+            }
+        }
     }
 }

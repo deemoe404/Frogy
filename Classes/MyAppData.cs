@@ -162,7 +162,7 @@ namespace Frogy.Classes
         /// 应用数据存储路径
         /// </summary>
         private string storagePath = System.IO.Directory.Exists(Properties.Settings.Default.AppDataPath) ?
-            Properties.Settings.Default.AppDataPath : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            Properties.Settings.Default.AppDataPath : System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Frogy\\");
         public string StoragePath
         {
             get { return storagePath; }
@@ -170,6 +170,8 @@ namespace Frogy.Classes
             {
                 if (System.IO.Directory.Exists(value))
                 {
+                    MyDataHelper.TransferFolder(storagePath, value);
+
                     storagePath = value;
                     Properties.Settings.Default.AppDataPath = value;
                     Properties.Settings.Default.Save();
@@ -188,13 +190,17 @@ namespace Frogy.Classes
         /// </summary>
         public void Save()
         {
-            string savePath = StoragePath + (StoragePath.EndsWith("\\") ? "" : "\\") + DateTime.Today.ToString("yyyyMMdd") + ".json";
+            System.IO.Directory.CreateDirectory(storagePath);
+
+            string savePath = System.IO.Path.Combine(storagePath, DateTime.Today.ToString("yyyyMMdd") + ".json");
+
+            //string savePath = storagePath + (storagePath.EndsWith("\\") ? "" : "\\") + DateTime.Today.ToString("yyyyMMdd") + ".json";
             string Content = MyDataHelper.CoverObjectToJson(AllDays[DateTime.Today]);
             try
             {
                 MyDataHelper.WriteFile(savePath, Content);
             }
-            catch { }
+            catch(Exception e) { throw e; }
         }
 
         /// <summary>

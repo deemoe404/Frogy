@@ -49,10 +49,10 @@
             </ResourceDictionary.MergedDictionaries>
 
             <ContextMenu x:Shared="false" x:Key="SysTrayMenu">
-                <MenuItem Header="Dashboard" Command="{Binding ShowWindowCommand}" />
+                <MenuItem Header="{DynamicResource TrayIcon_Dashboard}" Command="{Binding ShowWindowCommand}" />
                 <!--<MenuItem Header="Close Dashboard" Command="{Binding HideWindowCommand}" />-->
                 <Separator />
-                <MenuItem Header="Exit Program" Command="{Binding ExitApplicationCommand}" />
+                <MenuItem Header="{DynamicResource TrayIcon_Exit}" Command="{Binding ExitApplicationCommand}" />
             </ContextMenu>
 
             <tb:TaskbarIcon x:Key="icon"
