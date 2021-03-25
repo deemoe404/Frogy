@@ -11,6 +11,10 @@
     <Grid>
         <ScrollViewer>
             <StackPanel>
+                <TextBlock Margin="10"
+                           Style="{StaticResource TextBlockDefaultInfo}"
+                           Visibility="{Binding Path=InfoVisibility}"
+                           Text="{DynamicResource Option_Info}"/>
 
                 <TextBlock Style="{StaticResource TextBlockSubTitleBold}"
                                Text="{DynamicResource Option_DataPathTitle}"
@@ -30,15 +34,25 @@
                                    Margin="2,5,5,0"/>
                 </Grid>
 
+                <Separator/>
+
                 <TextBlock Style="{StaticResource TextBlockSubTitleBold}"
-                               Text="Launage Setting"
+                               Text="{DynamicResource Option_LanguageTitle}"
                                Margin="10,10,10,0"
                                HorizontalAlignment="Left"/>
-                
-                
+                <StackPanel Margin="10"
+                            Orientation="Horizontal">
+                    <ComboBox Margin="5"
+                              ItemsSource="{Binding Path=LanguageList}"
+                              SelectedIndex="{Binding Path=LanguageListSelectedIndex}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
 
-                <Separator/>
-                
                 <Separator/>
 
                 <TextBlock Style="{StaticResource TextBlockSubTitleBold}"

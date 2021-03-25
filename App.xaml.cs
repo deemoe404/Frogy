@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Threading;
 
 namespace Frogy
 {
@@ -20,16 +21,15 @@ namespace Frogy
     /// </summary>
     public partial class App : Application
     {
-        private TaskbarIcon taskbarIcon;
-        private static System.Threading.Mutex mutex;
-
         public MyAppData appData = new MyAppData();
+        private TaskbarIcon taskbarIcon;
+        private static Mutex mutex;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             //Launage switch
             ResourceDictionary dict = new ResourceDictionary();
-            switch (System.Globalization.CultureInfo.CurrentUICulture.Name)
+            switch (appData.LanguageSetting)
             {
                 case "en-US":
                     dict.Source = new Uri(@"Resources\Language\EN.xaml", UriKind.Relative);
@@ -45,7 +45,7 @@ namespace Frogy
             }
             Current.Resources.MergedDictionaries.Add(dict);
 
-            mutex = new System.Threading.Mutex(true, "FrogyMainProgram");
+            mutex = new Mutex(true, "FrogyMainProgram");
             if (mutex.WaitOne(0, false))
             {
                 taskbarIcon = (TaskbarIcon)FindResource("icon");
@@ -71,7 +71,6 @@ namespace Frogy
 
                 Current.Shutdown();
             }
-            
         }
 
         private void SystemEvents_SessionEnded(object sender, SessionEndedEventArgs e)

@@ -25,5 +25,7 @@
     <system:String x:Key="Option_DataPathButton">更改</system:String>
     <system:String x:Key="Option_AboteTitle">关于</system:String>
     <system:String x:Key="Option_AboutContent">时常 - 屏幕使用时间.</system:String>
+    <system:String x:Key="Option_LanguageTitle">语言</system:String>
+    <system:String x:Key="Option_Info">*部分设置在重启 时常 后生效。</system:String>
 
 </ResourceDictionary>

@@ -2,6 +2,7 @@
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -9,6 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+
+using Frogy.Resources.Language;
+using System.Windows.Controls;
 
 namespace Frogy.ViewModels
 {
@@ -19,9 +23,18 @@ namespace Frogy.ViewModels
             DataPath = ((App)Application.Current).appData.StoragePath;
         }
 
-        /// <summary>
-        /// 数据保存路径
-        /// </summary>
+        private Visibility infoVisibility = Visibility.Collapsed;
+        public Visibility InfoVisibility
+        {
+            get { return infoVisibility; }
+            set 
+            { 
+                infoVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #region Saved data path setting
         private string dataPath = "";
         public string DataPath
         {
@@ -35,7 +48,7 @@ namespace Frogy.ViewModels
                 OnPropertyChanged();
             }
         }
-        #region 更改数据路径按钮
+
         private ICommand changeDataPathButton;
         public ICommand ChangeDataPathButton
         {
@@ -69,12 +82,42 @@ namespace Frogy.ViewModels
         }
         #endregion
 
+        #region Language setting
+        private List<string> languageList = new List<string>() 
+        { 
+            LanguageHelper.SupportedLanguage[((App)Application.Current).appData.LanguageSetting] 
+        };
+        public List<string> LanguageList
+        {
+            get 
+            {
+                foreach (KeyValuePair<string, string> pair in LanguageHelper.SupportedLanguage)
+                    if (pair.Key != ((App)Application.Current).appData.LanguageSetting)
+                        languageList.Add(pair.Value);
+                return languageList;
+            }
+        }
+
+        private int languageListSelectedIndex = 0;
+        public int LanguageListSelectedIndex
+        {
+            get { return languageListSelectedIndex; }
+            set
+            {
+                InfoVisibility = Visibility.Visible;
+                ((App)Application.Current).appData.LanguageSetting = LanguageHelper.InquireCodeName(languageList[value]);
+
+                languageListSelectedIndex = value;
+                OnPropertyChanged();
+            }
+        } 
+        #endregion
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            // Raise the PropertyChanged event, passing the name of the property whose value has changed.
-            this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
 

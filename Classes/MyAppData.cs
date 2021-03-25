@@ -11,7 +11,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Threading;
+using System.IO;
 
+
+using Frogy.Resources.Language;
 namespace Frogy.Classes
 {
     /// <summary>
@@ -53,12 +56,8 @@ namespace Frogy.Classes
                     StartTime = ExitTime,
                     StopTime = LoginTime,
                     TimeDurationTask =
-                    new MyTask()
-                    {
-                        ComputerStatus = 2
-                    }
+                    new MyTask() { ComputerStatus = 2 }
                 });
-
 
             mainLogicLoop.Tick += MainLogicLoop_Tick;
             savingLogicLoop.Tick += SavingLogicLoop_Tick;
@@ -158,17 +157,38 @@ namespace Frogy.Classes
             AllDays[today].TimeLine = todayTimeLine;
         }
 
+        
+        private string languageSetting = LanguageHelper.SupportedLanguage.ContainsKey(Properties.Settings.Default.Language) ?
+            Properties.Settings.Default.Language : System.Globalization.CultureInfo.CurrentUICulture.Name;
+        public string LanguageSetting
+        {
+            get { return languageSetting; }
+            set
+            {
+                //If dose not support input language code, try setting to UI language or default(English). 
+                if (LanguageHelper.SupportedLanguage.ContainsKey(value)) languageSetting = value;
+                else
+                {
+                    languageSetting = LanguageHelper.SupportedLanguage.ContainsKey(System.Globalization.CultureInfo.CurrentUICulture.Name) ?
+                        System.Globalization.CultureInfo.CurrentUICulture.Name : LanguageHelper.SupportedLanguage.First().Key;
+                }
+
+                Properties.Settings.Default.Language = languageSetting;
+                Properties.Settings.Default.Save();
+            }
+        }
+
         /// <summary>
         /// 应用数据存储路径
         /// </summary>
-        private string storagePath = System.IO.Directory.Exists(Properties.Settings.Default.AppDataPath) ?
-            Properties.Settings.Default.AppDataPath : System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Frogy\\");
+        private string storagePath = Directory.Exists(Properties.Settings.Default.AppDataPath) ?
+            Properties.Settings.Default.AppDataPath : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Frogy\\");
         public string StoragePath
         {
             get { return storagePath; }
             set
             {
-                if (System.IO.Directory.Exists(value))
+                if (Directory.Exists(value))
                 {
                     MyDataHelper.TransferFolder(storagePath, value);
 
@@ -190,11 +210,10 @@ namespace Frogy.Classes
         /// </summary>
         public void Save()
         {
-            System.IO.Directory.CreateDirectory(storagePath);
+            Directory.CreateDirectory(storagePath);
 
-            string savePath = System.IO.Path.Combine(storagePath, DateTime.Today.ToString("yyyyMMdd") + ".json");
+            string savePath = Path.Combine(storagePath, DateTime.Today.ToString("yyyyMMdd") + ".json");
 
-            //string savePath = storagePath + (storagePath.EndsWith("\\") ? "" : "\\") + DateTime.Today.ToString("yyyyMMdd") + ".json";
             string Content = MyDataHelper.CoverObjectToJson(AllDays[DateTime.Today]);
             try
             {

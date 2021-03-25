@@ -25,5 +25,7 @@
     <system:String x:Key="Option_DataPathButton">Change</system:String>
     <system:String x:Key="Option_AboteTitle">About</system:String>
     <system:String x:Key="Option_AboutContent">Frogy - screen time.</system:String>
+    <system:String x:Key="Option_LanguageTitle">Launage</system:String>
+    <system:String x:Key="Option_Info">*Some of the setting(s) will take effect after restarting Frogy.</system:String>
 
 </ResourceDictionary>
