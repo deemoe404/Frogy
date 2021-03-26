@@ -44,19 +44,10 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <!--<Button Click="Button_Click"
-                                        FontFamily="Segoe MDL2 Assets"
-                                        Content="&#xE72B;"/>-->
-
                         <DatePicker Name="myDatePicker" 
                                     SelectedDate="{Binding Path=DisplayDate}" 
                                     Grid.Column="1"
                                     Width="120"/>
-
-                        <!--<Button Click="Button_Click_1"
-                                        Grid.Column="2"
-                                        FontFamily="Segoe MDL2 Assets"
-                                        Content="&#xE72A;"/>-->
 
                     </Grid>
                 </Grid>
@@ -64,6 +55,7 @@
                 <lvc:CartesianChart Series="{Binding OverviewChart}" 
                                     Height="340"
                                     LegendLocation="Bottom"
+                                    Style="{DynamicResource DefaultChartStyle}"
                                     Margin="5,5,5,5">
                     <lvc:CartesianChart.Resources>
                         <Style TargetType="lvc:DefaultTooltip">
@@ -76,11 +68,14 @@
                     </lvc:CartesianChart.Resources>
 
                     <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Title="{DynamicResource Chart_Footnote}" Labels="{Binding OverviewChartLables}"/>
+                        <lvc:Axis Title="{DynamicResource Chart_Footnote}" 
+                                  Labels="{Binding OverviewChartLables}"
+                                  Style="{DynamicResource DefaultAxisStyle}"/>
                     </lvc:CartesianChart.AxisX>
 
                     <lvc:CartesianChart.AxisY>
-                        <lvc:Axis LabelFormatter="{Binding OverviewChartFormatter}"/>
+                        <lvc:Axis LabelFormatter="{Binding OverviewChartFormatter}"
+                                  Style="{DynamicResource DefaultAxisStyle}"/>
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
 

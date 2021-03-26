@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                    xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf">
+
+    <Style x:Key="DefaultChartStyle" TargetType="lvc:CartesianChart">
+        <Setter Property="Foreground" Value="Black"/>
+    </Style>
+
+    <Style x:Key="DefaultAxisStyle" TargetType="lvc:Axis">
+        <Setter Property="Foreground" Value="Black"/>
+    </Style>
+
+</ResourceDictionary>

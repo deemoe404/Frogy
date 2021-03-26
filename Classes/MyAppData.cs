@@ -178,6 +178,23 @@ namespace Frogy.Classes
             }
         }
 
+        private int themeSetting = (Properties.Settings.Default.Theme) >= 0 && (Properties.Settings.Default.Theme) <= 2 ?
+            Properties.Settings.Default.Theme : 0;
+        public int ThemeSetting
+        {
+            get { return themeSetting; }
+            set
+            {
+                //If input out of range, ignore.
+                if(value>=0 && value <= 1)
+                {
+                    themeSetting = value;
+                    Properties.Settings.Default.Theme = value;
+                    Properties.Settings.Default.Save();
+                }
+            }
+        }
+
         /// <summary>
         /// 应用数据存储路径
         /// </summary>

@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Input;
 
 using Frogy.Resources.Language;
+using Frogy.Resources.Theme;
 using System.Windows.Controls;
 
 namespace Frogy.ViewModels
@@ -83,17 +84,18 @@ namespace Frogy.ViewModels
         #endregion
 
         #region Language setting
-        private List<string> languageList = new List<string>() 
-        { 
-            LanguageHelper.SupportedLanguage[((App)Application.Current).appData.LanguageSetting] 
-        };
+        private List<string> languageList = new List<string>();
         public List<string> LanguageList
         {
             get 
             {
+                languageList.Clear();
+                languageList.Add(LanguageHelper.SupportedLanguage[((App)Application.Current).appData.LanguageSetting]);
+
                 foreach (KeyValuePair<string, string> pair in LanguageHelper.SupportedLanguage)
                     if (pair.Key != ((App)Application.Current).appData.LanguageSetting)
                         languageList.Add(pair.Value);
+
                 return languageList;
             }
         }
@@ -110,7 +112,39 @@ namespace Frogy.ViewModels
                 languageListSelectedIndex = value;
                 OnPropertyChanged();
             }
-        } 
+        }
+        #endregion
+
+        #region Theme setting
+        private List<string> themeList = new List<string>();
+        public List<string> ThemeList
+        {
+            get
+            {
+                themeList.Clear();
+
+                foreach (KeyValuePair<int, string> pair in ThemeHelper.ThemeSets)
+                    themeList.Add(pair.Value);
+
+                return themeList;
+            }
+        }
+
+        private int themeListSelectedIndex = ((App)Application.Current).appData.ThemeSetting >= 0 && ((App)Application.Current).appData.ThemeSetting <= 1 ?
+            ((App)Application.Current).appData.ThemeSetting : 0;
+        public int ThemeListSelectedIndex
+        {
+            get { return themeListSelectedIndex; }
+            set
+            {
+                InfoVisibility = Visibility.Visible;
+                if (value >= 0 && value <= 1)
+                    ((App)Application.Current).appData.ThemeSetting = value;
+
+                themeListSelectedIndex = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
 
         #region INotifyPropertyChanged

@@ -45,6 +45,26 @@ namespace Frogy
             }
             Current.Resources.MergedDictionaries.Add(dict);
 
+            ResourceDictionary themeDictionary = new ResourceDictionary();
+            ResourceDictionary chartDictionary = new ResourceDictionary();
+            switch (appData.ThemeSetting)
+            {
+                case 0:
+                    themeDictionary.Source = new Uri(@"pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml", UriKind.Absolute);
+                    chartDictionary.Source = new Uri(@"Resources\Theme\DefaultTheme.xaml", UriKind.Relative);
+                    break;
+                case 1:
+                    themeDictionary.Source = new Uri(@"pack://application:,,,/HandyControl;component/Themes/SkinDark.xaml", UriKind.Absolute);
+                    chartDictionary.Source = new Uri(@"Resources\Theme\DarkTheme.xaml", UriKind.Relative);
+                    break;
+                default: //bright default
+                    themeDictionary.Source = new Uri(@"pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml", UriKind.Absolute);
+                    chartDictionary.Source = new Uri(@"Resources\Theme\DefaultTheme.xaml", UriKind.Relative);
+                    break;
+            }
+            Current.Resources.MergedDictionaries.Add(themeDictionary);
+            Current.Resources.MergedDictionaries.Add(chartDictionary);
+
             mutex = new Mutex(true, "FrogyMainProgram");
             if (mutex.WaitOne(0, false))
             {

@@ -9,7 +9,7 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         Title="Frogy - Dashboard" Height="450" Width="800">
 
-    <TabControl Margin="10" Style="{StaticResource TabControlCapsuleSolid}">
+    <TabControl Margin="5" Style="{StaticResource TabControlCapsuleSolid}">
         <TabItem Header="{DynamicResource Tab_Overview}">
             <Frame Source="OverViewView.xaml"/>
         </TabItem>
