@@ -32,19 +32,20 @@ namespace Frogy
             switch (appData.LanguageSetting)
             {
                 case "en-US":
-                    dict.Source = new Uri(@"Resources\Language\EN.xaml", UriKind.Relative);
+                    dict.Source = new Uri(@"Resources\Language\en-US.xaml", UriKind.Relative);
                     ConfigHelper.Instance.SetLang("en");
                     break;
                 case "zh-CN":
-                    dict.Source = new Uri(@"Resources\Language\ZH.xaml", UriKind.Relative);
+                    dict.Source = new Uri(@"Resources\Language\zh-CN.xaml", UriKind.Relative);
                     ConfigHelper.Instance.SetLang("zh-cn");
                     break;
                 default: //english default
-                    dict.Source = new Uri(@"Resources\Language\EN.xaml", UriKind.Relative);
+                    dict.Source = new Uri(@"Resources\Language\en-US.xaml", UriKind.Relative);
                     break;
             }
             Current.Resources.MergedDictionaries.Add(dict);
 
+            //theme switch
             ResourceDictionary themeDictionary = new ResourceDictionary();
             ResourceDictionary chartDictionary = new ResourceDictionary();
             switch (appData.ThemeSetting)
@@ -65,6 +66,7 @@ namespace Frogy
             Current.Resources.MergedDictionaries.Add(themeDictionary);
             Current.Resources.MergedDictionaries.Add(chartDictionary);
 
+            //tray icon
             mutex = new Mutex(true, "FrogyMainProgram");
             if (mutex.WaitOne(0, false))
             {
