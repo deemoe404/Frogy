@@ -77,7 +77,9 @@ namespace Frogy
 
             //tray icon
             mutex = new Mutex(true, "FrogyMainProgram");
-            if (mutex.WaitOne(0, false) || e.Args[0] == "restart")
+            string startupArg = e.Args.Count() > 0 ? e.Args[0] : null;
+                
+            if (mutex.WaitOne(0, false) || startupArg == "restart")
             {
                 taskbarIcon = (TaskbarIcon)FindResource("icon");
 
