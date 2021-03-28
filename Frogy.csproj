@@ -168,7 +168,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\Language\LanguageHelper.cs" />
-    <Compile Include="Resources\Theme\ThemeHelper.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\OptionViewModel.cs" />
     <Compile Include="ViewModels\OverViewViewModel.cs" />

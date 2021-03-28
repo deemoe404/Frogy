@@ -28,5 +28,7 @@
     <system:String x:Key="Option_LanguageTitle">Launage</system:String>
     <system:String x:Key="Option_Info">*Some of the setting(s) will take effect after restarting Frogy.</system:String>
     <system:String x:Key="Option_ThemeTitle">Theme</system:String>
+    <system:String x:Key="Option_ThemeDefault">Default</system:String>
+    <system:String x:Key="Option_ThemeNight">Night</system:String>
 
 </ResourceDictionary>

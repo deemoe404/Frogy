@@ -41,6 +41,7 @@ namespace Frogy
                     break;
                 default: //english default
                     dict.Source = new Uri(@"Resources\Language\en-US.xaml", UriKind.Relative);
+                    ConfigHelper.Instance.SetLang("en");
                     break;
             }
             Current.Resources.MergedDictionaries.Add(dict);
