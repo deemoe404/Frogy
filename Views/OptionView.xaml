@@ -65,16 +65,24 @@
                 <StackPanel Margin="10"
                             Orientation="Horizontal">
                     <ComboBox Margin="5"
-                              ItemsSource="{Binding Path=ThemeList}"
                               SelectedIndex="{Binding Path=ThemeListSelectedIndex}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
+                        <ComboBoxItem Content="{DynamicResource Option_ThemeDefault}"/>
+                        <ComboBoxItem Content="{DynamicResource Option_ThemeNight}"/>
                     </ComboBox>
                 </StackPanel>
 
+                <Separator/>
+                
+                <TextBlock Style="{StaticResource TextBlockSubTitleBold}"
+                           Text="{DynamicResource Option_SystemTitle}"
+                           Margin="10,10,10,0"
+                           HorizontalAlignment="Left"/>
+                <StackPanel Margin="10"
+                            HorizontalAlignment="Left">
+                    <CheckBox Content="{DynamicResource Option_Startup}" 
+                              IsChecked="{Binding Path=StartupStatus}"/>
+                </StackPanel>
+                
                 <Separator/>
 
                 <TextBlock Style="{StaticResource TextBlockSubTitleBold}"
