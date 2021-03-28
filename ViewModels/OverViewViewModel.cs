@@ -120,32 +120,14 @@ namespace Frogy.ViewModels
         {
             List<DetailViewItem> result = new List<DetailViewItem>();
 
-            string systemState;
-
             foreach (MyTimeDuration timeSpan in durations)
             {
-                switch (timeSpan.TimeDurationTask.ComputerStatus)
-                {
-                    case 1:
-                        systemState = "On active";
-                        break;
-
-                    case 0:
-                        systemState = "Locked";
-                        break;
-
-                    case 2:
-                        systemState = "Forgy exited";
-                        break;
-                }
-
                 DetailViewItem tmp = new DetailViewItem()
                 {
                     StartTime = timeSpan.StartTime.ToString(),
                     StopTime = timeSpan.StopTime.ToString(),
                     AppDuration = timeSpan.Duration.ToString(),
-                    AppIcon = MyDataHelper.BitmapToBitmapImage(
-                        MyDataHelper.Base64StringToImage(timeSpan.TimeDurationTask.ApplicationIcon_Base64)),
+                    AppIcon = MyDataHelper.BitmapToBitmapImage(MyDataHelper.Base64StringToImage(timeSpan.TimeDurationTask.ApplicationIcon_Base64)),
                     AppName = timeSpan.TimeDurationTask.ApplicationName,
                     WindowTitle = timeSpan.TimeDurationTask.ApplicationTitle,
                     SystemState = timeSpan.TimeDurationTask.ComputerStatus.ToString()
@@ -164,18 +146,12 @@ namespace Frogy.ViewModels
             "13:00", "14:00", "15:00", "16:00", "17:00", "18:00",
             "19:00", "20:00", "21:00", "22:00", "23:00"};
 
-            
-
             OverviewChartFormatter = value => value + "min";
         }
 
         private async void Update()
         {
-            await Task.Run(() =>
-            {
-                ((App)Application.Current).appData.Load(displayDate);
-            });
-
+            ((App)Application.Current).appData.Load(displayDate);
             MyDay today = ((App)Application.Current).appData.AllDays[displayDate];
 
             await Task.Run(() =>
@@ -191,7 +167,7 @@ namespace Frogy.ViewModels
                 foreach (StackedColumnSeries i in OverviewChart_tmp)
                 {
                     OverviewChart.Add(i);
-                    Thread.Sleep(220);
+                    Thread.Sleep(20);
                 }
             });
         }

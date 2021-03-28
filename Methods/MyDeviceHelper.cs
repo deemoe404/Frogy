@@ -1,11 +1,13 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Frogy.Methods
 {
@@ -181,6 +183,23 @@ namespace Frogy.Methods
             catch { }
 
             return result;
+        }
+
+        public static void PromotePermission()
+        {
+            ProcessStartInfo psi = new ProcessStartInfo();
+            Assembly curAssembly = Assembly.GetExecutingAssembly();
+
+            psi.FileName = curAssembly.Location;
+            psi.Verb = "runas";
+            psi.Arguments = "restart";
+
+            try
+            {
+                Process.Start(psi);
+                Environment.Exit(1);
+            }
+            catch { }
         }
     }
 }

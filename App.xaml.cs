@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Threading;
+using System.Security.Principal;
+
+using Frogy.Methods;
 
 namespace Frogy
 {
@@ -27,6 +30,11 @@ namespace Frogy
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            //Promote permission if not Administrator
+            var principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+            if (!principal.IsInRole(WindowsBuiltInRole.Administrator))
+                MyDeviceHelper.PromotePermission();
+
             //Launage switch
             ResourceDictionary dict = new ResourceDictionary();
             switch (appData.LanguageSetting)
@@ -69,7 +77,7 @@ namespace Frogy
 
             //tray icon
             mutex = new Mutex(true, "FrogyMainProgram");
-            if (mutex.WaitOne(0, false))
+            if (mutex.WaitOne(0, false) || e.Args[0] == "restart")
             {
                 taskbarIcon = (TaskbarIcon)FindResource("icon");
 
@@ -92,9 +100,10 @@ namespace Frogy
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning);
 
-                Current.Shutdown();
+                Environment.Exit(1);
             }
         }
+
 
         private void SystemEvents_SessionEnded(object sender, SessionEndedEventArgs e)
         {

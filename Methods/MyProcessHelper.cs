@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Windows.Media.Imaging;
+using System.Windows;
 
 namespace Frogy.Methods
 {
@@ -150,7 +151,7 @@ namespace Frogy.Methods
             }
             catch(Exception e)
             {
-                throw e;
+                throw (e);
             }
         }
     }
