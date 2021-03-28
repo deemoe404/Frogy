@@ -132,6 +132,23 @@ namespace Frogy.ViewModels
         }
         #endregion
 
+        #region
+        private bool startupStatus = MyDeviceHelper.GetStartupStatus();
+        public bool StartupStatus
+        {
+            get { return startupStatus; }
+            set
+            {
+                if (value)
+                    MyDeviceHelper.RegisterStartup();
+                else
+                    MyDeviceHelper.DeregisterStartup();
+
+                startupStatus = value;
+            }
+        }
+        #endregion
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)

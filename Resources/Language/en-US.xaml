@@ -30,5 +30,7 @@
     <system:String x:Key="Option_ThemeTitle">Theme</system:String>
     <system:String x:Key="Option_ThemeDefault">Default</system:String>
     <system:String x:Key="Option_ThemeNight">Night</system:String>
+    <system:String x:Key="Option_SystemTitle">System</system:String>
+    <system:String x:Key="Option_Startup">Start with windows</system:String>
 
 </ResourceDictionary>

@@ -72,6 +72,18 @@
                 </StackPanel>
 
                 <Separator/>
+                
+                <TextBlock Style="{StaticResource TextBlockSubTitleBold}"
+                           Text="{DynamicResource Option_SystemTitle}"
+                           Margin="10,10,10,0"
+                           HorizontalAlignment="Left"/>
+                <StackPanel Margin="10"
+                            HorizontalAlignment="Left">
+                    <CheckBox Content="{DynamicResource Option_Startup}" 
+                              IsChecked="{Binding Path=StartupStatus}"/>
+                </StackPanel>
+                
+                <Separator/>
 
                 <TextBlock Style="{StaticResource TextBlockSubTitleBold}"
                            Text="{DynamicResource Option_AboteTitle}"

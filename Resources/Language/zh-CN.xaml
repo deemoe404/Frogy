@@ -30,5 +30,7 @@
     <system:String x:Key="Option_ThemeTitle">主题</system:String>
     <system:String x:Key="Option_ThemeDefault">默认</system:String>
     <system:String x:Key="Option_ThemeNight">夜晚</system:String>
+    <system:String x:Key="Option_SystemTitle">系统</system:String>
+    <system:String x:Key="Option_Startup">开机自启</system:String>
 
 </ResourceDictionary>

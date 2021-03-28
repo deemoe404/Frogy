@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -110,7 +111,6 @@ namespace Frogy.Methods
             readonly long QuadPart;
         }
 
-
         /// <summary>
         /// 读取设备状态
         /// 0 代表锁定
@@ -137,6 +137,50 @@ namespace Frogy.Methods
 
                 return dwFlags;
             }
+        }
+
+        public static void RegisterStartup()
+        {
+            try
+            {
+                RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true) ?? 
+                    Registry.CurrentUser.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
+
+                Assembly curAssembly = Assembly.GetExecutingAssembly();
+                key.SetValue(curAssembly.GetName().Name, curAssembly.Location);
+            }
+            catch { }
+        }
+
+        public static void DeregisterStartup()
+        {
+            try
+            {
+                RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true) ?? 
+                    Registry.CurrentUser.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
+
+                Assembly curAssembly = Assembly.GetExecutingAssembly();
+                key.DeleteValue(curAssembly.GetName().Name);
+            }
+            catch { }
+        }
+
+        public static bool GetStartupStatus()
+        {
+            bool result = false;
+            try
+            {
+                RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true) ?? 
+                    Registry.CurrentUser.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
+
+                Assembly curAssembly = Assembly.GetExecutingAssembly();
+
+                string[] values = key.GetValueNames();
+                foreach(string s in values) if (s == curAssembly.GetName().Name) result = true;
+            }
+            catch { }
+
+            return result;
         }
     }
 }
