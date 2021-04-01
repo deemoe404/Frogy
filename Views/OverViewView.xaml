@@ -15,8 +15,7 @@
                          IsInertiaEnabled="True"
                          PanningMode="VerticalFirst"
                          Name="View">
-
-                <StackPanel>
+            <StackPanel>
 
                     <Grid>
                         <Grid HorizontalAlignment="Left"
@@ -91,10 +90,12 @@
                            VerticalAlignment="Center"
                            Margin="25,25,25,25"/>
 
-                    <ListView ItemsSource="{Binding Path=Overview}"
-                              IsEnabled="True"
-                              PreviewMouseWheel="ListView_PreviewMouseWheel"
-                              PreviewTouchMove="ListView_PreviewTouchMove">
+                    <ListView ItemsSource="{Binding Path=Overview}">
+                    <ListView.Template>
+                        <ControlTemplate>
+                            <ItemsPresenter></ItemsPresenter>
+                        </ControlTemplate>
+                    </ListView.Template>
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="{DynamicResource Table_Icon}">
