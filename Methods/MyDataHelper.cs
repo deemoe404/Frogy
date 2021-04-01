@@ -46,18 +46,14 @@ namespace Frogy.Methods
         /// <param name="Content">文件内容</param>
         public static void WriteFile(string Path,string Content)
         {
-            try
-            {
-                FileStream fileStream = new FileStream(Path, FileMode.Create);
-                StreamWriter streamWriter = new StreamWriter(fileStream);
+            FileStream fileStream = new FileStream(Path, FileMode.Create);
+            StreamWriter streamWriter = new StreamWriter(fileStream);
 
-                streamWriter.Write(Content);
-                streamWriter.Flush();
+            streamWriter.Write(Content);
+            streamWriter.Flush();
 
-                streamWriter.Close();
-                fileStream.Close();
-            }
-            catch(Exception e) { throw e; }
+            streamWriter.Close();
+            fileStream.Close();
         }
 
         /// <summary>

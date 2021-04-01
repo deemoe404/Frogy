@@ -6,13 +6,14 @@ using LiveCharts;
 using LiveCharts.Wpf;
 using System.Windows.Input;
 using System;
+using HandyControl.Controls;
 
 namespace Frogy.Views
 {
     /// <summary>
     /// Interaction logic for DashboardView.xaml
     /// </summary>
-    public partial class DashboardView : Window
+    public partial class DashboardView : GlowWindow
     {
         DashboardViewModel viewModel = new DashboardViewModel();
 

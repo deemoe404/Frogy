@@ -45,7 +45,6 @@ namespace Frogy.Classes
             Load(today);
 
             //如果时间线不为空，则认为软件是从最后一个软件stop退出的
-            //否则认为今日0点退出
             if (AllDays[today].TimeLine.Count != 0)
                 ExitTime = AllDays[today].TimeLine.Last().StopTime;
 
@@ -56,7 +55,10 @@ namespace Frogy.Classes
                     StartTime = ExitTime,
                     StopTime = LoginTime,
                     TimeDurationTask =
-                    new MyTask() { ComputerStatus = 2 }
+                    new MyTask() 
+                    { 
+                        ComputerStatus = 2 //software offline
+                    }
                 });
 
             mainLogicLoop.Tick += MainLogicLoop_Tick;
@@ -93,7 +95,7 @@ namespace Frogy.Classes
 
             List<MyTimeDuration> todayTimeLine = AllDays[today].TimeLine;
 
-            //如果设备状态不为1（运行中）
+            //如果设备状态不为1
             if (MyDeviceHelper.DeviceState != 1)
             {
                 if (todayTimeLine.Count == 0 || todayTimeLine.Last().TimeDurationTask.ComputerStatus != MyDeviceHelper.DeviceState)
@@ -122,10 +124,12 @@ namespace Frogy.Classes
             if (todayTimeLine.Count == 0 || todayTimeLine.Last().TimeDurationTask.ApplicationTitle != nowFocusWindowTitle)
             {
                 Process nowFocusProcess = MyProcessHelper.GetWindowPID(nowFocusWindow);
-                if (nowFocusProcess.Id == 0) return;
+                if (nowFocusProcess.Id == 0) 
+                    return;
 
                 string nowFocusProcessName = MyProcessHelper.GetProcessName(nowFocusProcess);
-                if (string.IsNullOrEmpty(nowFocusProcessName)) return;
+                if (string.IsNullOrEmpty(nowFocusProcessName)) 
+                    return;
 
                 MyTask nowFocusTask =
                     new MyTask()
@@ -150,14 +154,14 @@ namespace Frogy.Classes
                 todayTimeLine.Add(nowTimeDuration);
             }
             else
-            {
                 todayTimeLine.Last().StopTime = now;
-            }
 
             AllDays[today].TimeLine = todayTimeLine;
         }
 
-        
+        /// <summary>
+        /// App language
+        /// </summary>
         private string languageSetting = LanguageHelper.SupportedLanguage.ContainsKey(Properties.Settings.Default.Language) ?
             Properties.Settings.Default.Language : System.Globalization.CultureInfo.CurrentUICulture.Name;
         public string LanguageSetting
@@ -166,7 +170,8 @@ namespace Frogy.Classes
             set
             {
                 //If dose not support input language code, try setting to UI language or default(English). 
-                if (LanguageHelper.SupportedLanguage.ContainsKey(value)) languageSetting = value;
+                if (LanguageHelper.SupportedLanguage.ContainsKey(value)) 
+                    languageSetting = value;
                 else
                 {
                     languageSetting = LanguageHelper.SupportedLanguage.ContainsKey(System.Globalization.CultureInfo.CurrentUICulture.Name) ?
@@ -178,6 +183,9 @@ namespace Frogy.Classes
             }
         }
 
+        /// <summary>
+        /// App theme
+        /// </summary>
         private int themeSetting = (Properties.Settings.Default.Theme) >= 0 && (Properties.Settings.Default.Theme) <= 2 ?
             Properties.Settings.Default.Theme : 0;
         public int ThemeSetting
@@ -186,7 +194,7 @@ namespace Frogy.Classes
             set
             {
                 //If input out of range, ignore.
-                if(value>=0 && value <= 1)
+                if (value >= 0 && value <= 1)
                 {
                     themeSetting = value;
                     Properties.Settings.Default.Theme = value;
@@ -196,7 +204,7 @@ namespace Frogy.Classes
         }
 
         /// <summary>
-        /// 应用数据存储路径
+        /// App data path
         /// </summary>
         private string storagePath = Directory.Exists(Properties.Settings.Default.AppDataPath) ?
             Properties.Settings.Default.AppDataPath : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Frogy\\");
@@ -215,57 +223,43 @@ namespace Frogy.Classes
 
                     Save();
                 }
-                else
-                {
-                    throw new ArgumentException("Illegal path");
-                }
             }
         }
 
         /// <summary>
-        /// 保存应用数据
+        /// Save daily activity
         /// </summary>
         public void Save()
         {
             Directory.CreateDirectory(storagePath);
 
             string savePath = Path.Combine(storagePath, DateTime.Today.ToString("yyyyMMdd") + ".json");
-
-            string Content = MyDataHelper.CoverObjectToJson(AllDays[DateTime.Today]);
-            try
-            {
-                MyDataHelper.WriteFile(savePath, Content);
-            }
-            catch(Exception e) { throw e; }
+            string content = MyDataHelper.CoverObjectToJson(AllDays[DateTime.Today]);
+            
+            MyDataHelper.WriteFile(savePath, content);
         }
 
         /// <summary>
-        /// 加载应用数据
+        /// Load daily activity
         /// </summary>
-        /// <param name="LoadDate">日期</param>
-        public void Load(DateTime LoadDate)
+        /// <param name="LoadDate">date</param>
+        public void Load(DateTime date)
         {
-            //加载时间线数据
-            try
+            if (!AllDays.ContainsKey(date))
             {
-                string loadPath = StoragePath + (StoragePath.EndsWith("\\") ? "" : "\\") + LoadDate.ToString("yyyyMMdd") + ".json";
-                if (!AllDays.ContainsKey(LoadDate))
+                string loadPath = Path.Combine(storagePath, date.ToString("yyyyMMdd") + ".json");
+                if (File.Exists(loadPath))
                 {
                     string Json = MyDataHelper.ReadFile(loadPath);
-                    AllDays.Add(LoadDate, MyDataHelper.CoverJsonToObject<MyDay>(Json));
+                    AllDays.Add(date, MyDataHelper.CoverJsonToObject<MyDay>(Json));
                 }
+                else
+                    AllDays.Add(date, new MyDay());
             }
-            catch
-            {
-                if (!AllDays.ContainsKey(LoadDate))
-                    AllDays.Add(LoadDate, new MyDay());
-            }
-            //加载App计时器数据
-            //if(AllDays[LoadDate].)
         }
 
         /// <summary>
-        /// 开始运行软件主逻辑
+        /// Start main logic
         /// </summary>
         public void StartLogic()
         {

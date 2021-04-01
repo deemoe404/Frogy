@@ -29,5 +29,24 @@ namespace Frogy.Views
 
             InitializeComponent();
         }
+
+        private void ListView_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+
+            var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+            eventArg.RoutedEvent = MouseWheelEvent;
+            eventArg.Source = sender;
+
+            ((StackPanel)((ListView)sender).Parent).RaiseEvent(eventArg);
+        }
+
+        private void ListView_PreviewTouchMove(object sender, TouchEventArgs e)
+        {
+            var evenArg = new TouchEventArgs(e.TouchDevice, e.Timestamp);
+            evenArg.RoutedEvent = TouchMoveEvent;
+            evenArg.Source = sender;
+
+            ((StackPanel)((ListView)sender).Parent).RaiseEvent(evenArg);
+        }
     }
 }

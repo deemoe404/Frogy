@@ -59,6 +59,11 @@ namespace Frogy.Classes
             }
             return overView;
         }
+
+        public List<MyTimeDuration> GetTimeline()
+        {
+            return new List<MyTimeDuration>(TimeLine.ToArray());
+        }
     }
 
     /// <summary>

@@ -35,6 +35,7 @@ namespace Frogy.Methods
 
         private AppxPackage()
         {
+
         }
 
         public string FullName { get; private set; }

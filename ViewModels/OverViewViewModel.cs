@@ -1,6 +1,7 @@
 ﻿using Frogy.Classes;
 using Frogy.Methods;
 using Frogy.Models;
+using HandyControl.Controls;
 using LiveCharts;
 using LiveCharts.Wpf;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -14,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace Frogy.ViewModels
 {
@@ -27,7 +29,6 @@ namespace Frogy.ViewModels
         private List<OverViewItem> PrintOverview(Dictionary<string, Software> TodayOverview)
         {
             List<OverViewItem> result = new List<OverViewItem>();
-
             //排序
             var dicSort = from objDic in TodayOverview orderby objDic.Value.Duration descending select objDic;
 
@@ -67,9 +68,7 @@ namespace Frogy.ViewModels
                 TimeSpan spent = duration.Duration;
 
                 if (start.Hours == stop.Hours)
-                {
                     tmpdic[appName][start.Hours] += Math.Round(spent.TotalMinutes, 2);
-                }
                 else
                 {
                     if (stop.Hours - start.Hours == 1)
@@ -87,9 +86,7 @@ namespace Frogy.ViewModels
                             tmpdic[appName][stop.Hours] += stop.Minutes;
 
                             for (int i = 1; i <= tmpint; i++)
-                            {
                                 tmpdic[appName][start.Hours + i] = 59.59d;
-                            }
                         }
                     }
                 }
@@ -157,7 +154,10 @@ namespace Frogy.ViewModels
             await Task.Run(() =>
             {
                 Overview = PrintOverview(today.GetOverView());
-                DetailView = PrintSummaryView(today.TimeLine);
+
+                #if DEBUG
+                DetailView = PrintSummaryView(today.GetTimeline());
+                #endif
             });
 
             OverviewChart.Clear();
@@ -167,7 +167,7 @@ namespace Frogy.ViewModels
                 foreach (StackedColumnSeries i in OverviewChart_tmp)
                 {
                     OverviewChart.Add(i);
-                    Thread.Sleep(20);
+                    //Thread.Sleep(20);
                 }
             });
         }
