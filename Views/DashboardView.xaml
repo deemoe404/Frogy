@@ -10,7 +10,7 @@
                Title="Frogy - Dashboard" Height="450" Width="800"
                ActiveGlowColor="{DynamicResource PrimaryColor}">
 
-    <hc:TabControl Margin="5" Style="{StaticResource TabControlCapsuleSolid}">
+    <hc:TabControl Style="{StaticResource TabControlCapsuleSolid}">
         <hc:TabItem Header="{DynamicResource Tab_Overview}">
             <Frame Source="OverViewView.xaml"/>
         </hc:TabItem>

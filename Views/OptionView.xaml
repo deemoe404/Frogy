@@ -29,6 +29,7 @@
                         <ColumnDefinition Width="95"/>
                     </Grid.ColumnDefinitions>
                     <Button Content="{DynamicResource Option_DataPathButton}" 
+                            Style="{StaticResource ButtonPrimary}"
                             Command="{Binding ChangeDataPathButton}"  
                             Grid.Column="1"
                             Margin="5,5,5,0"/>
