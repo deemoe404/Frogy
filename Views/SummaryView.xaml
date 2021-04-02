@@ -12,7 +12,8 @@
 
     <Grid>
         <hc:ScrollViewer IsInertiaEnabled="True"
-                         PanningMode="VerticalFirst">
+                         PanningMode="VerticalFirst"
+                         Name="View">
             <StackPanel>
                 
                 <Grid>
@@ -24,9 +25,15 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Style="{StaticResource TextBlockTitleBold}" 
-                                   Text="daily avg:"/>
-
+                        <StackPanel Orientation="Vertical"
+                                    VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource TextBlockDefault}" 
+                                       HorizontalAlignment="Left"
+                                       Text="{DynamicResource Summary_DailyAverage}"/>
+                            <TextBlock Style="{StaticResource TextBlockTitleBold}"
+                                       Text="{Binding AverageDailyTime}"/>
+                        </StackPanel>
+                        
                         <Button Grid.Column="1"
                                 Margin="5"
                                 FontFamily="Segoe MDL2 Assets"
@@ -70,7 +77,7 @@
                             Margin="5,5,5,5">
                     <lvc:CartesianChart.Resources>
                         <Style TargetType="{x:Type lvc:DefaultTooltip}">
-                            <Setter Property="Background" Value="DarkOrange"/>
+                            <Setter Property="Background" Value="#326CF3"/>
                             <Setter Property="Foreground" Value="White"/>
                             <Setter Property="ShowTitle" Value="True"/>
                             <Setter Property="SelectionMode" Value="OnlySender"/>
@@ -93,7 +100,7 @@
                 <Separator/>
 
                 <TextBlock Style="{StaticResource TextBlockTitleBold}" 
-                           Text="Weekly summary"
+                           Text="{DynamicResource Summary_WeeklySummary}"
                            HorizontalAlignment="Left"
                            Margin="25,25,25,25"/>
                 
@@ -123,5 +130,13 @@
                 </ListView>
             </StackPanel>
         </hc:ScrollViewer>
+
+        <hc:GotoTop Animated="True"
+                    AutoHiding="True" 
+                    AnimationTime="500" 
+                    Target="{Binding ElementName=View}"
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Bottom" 
+                    Margin="0,0,20,20"/>
     </Grid>
 </Page>

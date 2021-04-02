@@ -11,7 +11,7 @@
                ActiveGlowColor="{DynamicResource PrimaryColor}">
 
     <hc:TabControl Style="{StaticResource TabControlCapsuleSolid}">
-        <hc:TabItem Header="sum">
+        <hc:TabItem Header="{DynamicResource Tab_Summary}">
             <Frame Source="SummaryView.xaml"/>
         </hc:TabItem>
 

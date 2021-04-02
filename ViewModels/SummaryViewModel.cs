@@ -13,6 +13,7 @@ using LiveCharts.Wpf;
 using static Frogy.Models.SummaryModel;
 using System.Windows.Input;
 using Frogy.Methods;
+using Frogy.Resources.Language;
 
 namespace Frogy.ViewModels
 {
@@ -20,22 +21,23 @@ namespace Frogy.ViewModels
     {
         public SummaryViewModel()
         {
-            SummaryChart = generateChart();
-            SummaryList = generateList();
-            OverviewChartLables = generateChartLables();
+            update();
 
-            OverviewChartFormatter = value => value + "min";
+            OverviewChartFormatter = value => value + LanguageHelper.InquireLocalizedWord("General_Minute");
         }
 
         void update()
         {
-            SummaryChart = generateChart();
-            SummaryList = generateList();
+            DateTime firstDay = selectedDate.AddDays(-(int)selectedDate.DayOfWeek);
+
+            SummaryChart = generateChart(firstDay);
+            SummaryList = generateList(firstDay);
+            OverviewChartLables = generateChartLables(firstDay);
+            AverageDailyTime = generateAverageDailyTime((ChartValues<double>)SummaryChart[0].Values);
         }
 
-        private SeriesCollection generateChart()
+        private SeriesCollection generateChart(DateTime firstDay)
         {
-            DateTime firstDay = selectedDate.AddDays(-(int)selectedDate.DayOfWeek);
             SeriesCollection result = new SeriesCollection { };
             ChartValues<double> values = new ChartValues<double>();
 
@@ -60,7 +62,7 @@ namespace Frogy.ViewModels
 
             result.Add(new StackedColumnSeries
             {
-                Title = "Total",
+                Title = LanguageHelper.InquireLocalizedWord("General_Total"),
                 DataLabels = false,
                 Values = values,
                 IsHitTestVisible = false
@@ -69,12 +71,9 @@ namespace Frogy.ViewModels
             return result;
         }
 
-        private List<SummaryListItem> generateList()
+        private List<SummaryListItem> generateList(DateTime firstDay)
         {
             List<SummaryListItem> result = new List<SummaryListItem>();
-
-            DateTime firstDay = selectedDate.AddDays(-(int)selectedDate.DayOfWeek);
-
             Dictionary<string, Software> sumData = new Dictionary<string, Software>();
 
             for (int i = 0; i < 7; i++)
@@ -108,11 +107,9 @@ namespace Frogy.ViewModels
             return result;
         }
 
-        private string[] generateChartLables()
+        private string[] generateChartLables(DateTime firstDay)
         {
             string[] result = new string[7];
-
-            DateTime firstDay = selectedDate.AddDays(-(int)selectedDate.DayOfWeek);
 
             for (int i = 0; i < 7; i++)
             {
@@ -120,6 +117,21 @@ namespace Frogy.ViewModels
                 result[i] = day.Date.ToString("M.d");
             }
             
+            return result;
+        }
+
+        private string generateAverageDailyTime(ChartValues<double> weeklyData)
+        {
+            string result;
+            double sum = 0;
+            int avg;
+
+            for(int i = 0; i < weeklyData.Count; i++)
+                sum += weeklyData[i];
+
+            avg = (int)(sum / (weeklyData.Count));
+            result = (avg / 60).ToString() + LanguageHelper.InquireLocalizedWord("General_Hour") +
+                (avg - (avg / 60 * 60)).ToString() + LanguageHelper.InquireLocalizedWord("General_Minute");
             return result;
         }
 
@@ -171,6 +183,20 @@ namespace Frogy.ViewModels
         {
             get { return overviewChartFormatter; }
             set { overviewChartFormatter = value; OnPropertyChanged(); }
+        }
+
+        private string averageDailyTime;
+        public string AverageDailyTime
+        {
+            get
+            {
+                return averageDailyTime;
+            }
+            set
+            {
+                averageDailyTime = value;
+                OnPropertyChanged();
+            }
         }
 
         #region 刷新按钮

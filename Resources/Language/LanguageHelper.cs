@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Frogy.Resources.Language
 {
@@ -13,6 +14,7 @@ namespace Frogy.Resources.Language
             { "en-US", "English" },
             { "zh-CN", "简体中文" }
         };
+
         static public Dictionary<string, string> SupportedLanguage
         {
             get { return supportedLanguage; }
@@ -37,6 +39,37 @@ namespace Frogy.Resources.Language
             }
 
             return null;
+        }
+
+        static public string SystemLanguage
+        {
+            get
+            {
+                return System.Globalization.CultureInfo.CurrentUICulture.Name;
+            }
+        }
+
+        static public string PreferenceLanguage
+        {
+            get
+            {
+                return SupportedLanguage.ContainsKey(Properties.Settings.Default.Language) ?
+                    Properties.Settings.Default.Language : SystemLanguage;
+            }
+        }
+
+        static public string InquireLocalizedWord(string inquireKey)
+        {
+            ResourceDictionary dict = new ResourceDictionary();
+            if (SupportedLanguage.ContainsKey(PreferenceLanguage))
+                dict.Source = new Uri(@"Resources\Language\"+ PreferenceLanguage + ".xaml", UriKind.Relative);
+            else
+                dict.Source = new Uri(@"Resources\Language\en-US.xaml", UriKind.Relative);
+
+            if (dict.Contains(inquireKey))
+                return dict[inquireKey].ToString();
+            else 
+                return null;
         }
     }
 }

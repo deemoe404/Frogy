@@ -3,6 +3,7 @@
                     xmlns:local="clr-namespace:Frogy.Resources.Language" 
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
+    <system:String x:Key="Tab_Summary">周报</system:String>
     <system:String x:Key="Tab_Overview">概览</system:String>
     <system:String x:Key="Tab_Option">选项</system:String>
 
@@ -32,5 +33,13 @@
     <system:String x:Key="Option_ThemeNight">夜晚</system:String>
     <system:String x:Key="Option_SystemTitle">系统</system:String>
     <system:String x:Key="Option_Startup">开机自启</system:String>
+
+    <system:String x:Key="General_Hour">小时</system:String>
+    <system:String x:Key="General_Minute">分钟</system:String>
+    <system:String x:Key="General_Second">秒</system:String>
+    <system:String x:Key="General_Total">总和</system:String>
+
+    <system:String x:Key="Summary_DailyAverage">日均</system:String>
+    <system:String x:Key="Summary_WeeklySummary">本周详情</system:String>
 
 </ResourceDictionary>

@@ -28,7 +28,8 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Style="{StaticResource TextBlockTitleBold}" 
+                        <TextBlock VerticalAlignment="Center"
+                                   Style="{StaticResource TextBlockTitleBold}" 
                                    Text="{DynamicResource Chart_Title}"/>
 
                         <Button Grid.Column="1"
@@ -75,7 +76,7 @@
                                     Margin="5,5,5,5">
                     <lvc:CartesianChart.Resources>
                         <Style TargetType="{x:Type lvc:DefaultTooltip}">
-                            <Setter Property="Background" Value="DarkOrange"/>
+                            <Setter Property="Background" Value="#326CF3"/>
                             <Setter Property="Foreground" Value="White"/>
                             <Setter Property="ShowTitle" Value="True"/>
                             <Setter Property="SelectionMode" Value="OnlySender"/>
