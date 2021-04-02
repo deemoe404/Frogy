@@ -1,6 +1,7 @@
 ﻿using Frogy.Classes;
 using Frogy.Methods;
 using Frogy.Models;
+using Frogy.Resources.Language;
 using HandyControl.Controls;
 using LiveCharts;
 using LiveCharts.Wpf;
@@ -143,7 +144,7 @@ namespace Frogy.ViewModels
             "13:00", "14:00", "15:00", "16:00", "17:00", "18:00",
             "19:00", "20:00", "21:00", "22:00", "23:00"};
 
-            OverviewChartFormatter = value => value + "min";
+            OverviewChartFormatter = value => value + LanguageHelper.InquireLocalizedWord("General_Minute");
         }
 
         private async void Update()
@@ -163,13 +164,15 @@ namespace Frogy.ViewModels
             OverviewChart.Clear();
             await Task.Run(() =>
             {
-                SeriesCollection OverviewChart_tmp = PrintOverviewChart(today.TimeLine);
+                SeriesCollection OverviewChart_tmp = PrintOverviewChart(today.GetTimeline());
                 foreach (StackedColumnSeries i in OverviewChart_tmp)
                 {
                     OverviewChart.Add(i);
                     //Thread.Sleep(20);
                 }
             });
+
+            UpdateTime = DateTime.Now.ToString("H:mm");
         }
 
         /// <summary>
@@ -220,6 +223,20 @@ namespace Frogy.ViewModels
             {
                 displayDate = value;
                 Update();
+                OnPropertyChanged();
+            }
+        }
+
+        private string updateTime = DateTime.Now.ToString("H:mm");
+        public string UpdateTime
+        {
+            get
+            {
+                return updateTime;
+            }
+            set
+            {
+                updateTime = value;
                 OnPropertyChanged();
             }
         }
@@ -315,7 +332,6 @@ namespace Frogy.ViewModels
             DisplayDate = displayDate.AddDays(1);
         }
         #endregion
-
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged = delegate { };

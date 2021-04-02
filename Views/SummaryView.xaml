@@ -1,24 +1,21 @@
-﻿<Page
+﻿<Page x:Class="Frogy.Views.SummaryView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Frogy.ViewModels"
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       xmlns:hc="https://handyorg.github.io/handycontrol"
-      xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" x:Class="Frogy.Views.OverViewView"
+      xmlns:local="clr-namespace:Frogy.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="OverView">
+      Title="SummaryView">
 
     <Grid>
-        <hc:ScrollViewer HorizontalScrollBarVisibility="Auto"
-                         Background="Transparent"
-                         IsInertiaEnabled="True"
+        <hc:ScrollViewer IsInertiaEnabled="True"
                          PanningMode="VerticalFirst"
-                         x:Name="View">
+                         Name="View">
             <StackPanel>
-
+                
                 <Grid>
                     <Grid HorizontalAlignment="Left"
                           VerticalAlignment="Center"
@@ -28,15 +25,19 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock VerticalAlignment="Center"
-                                   Style="{StaticResource TextBlockTitleBold}" 
-                                   Text="{DynamicResource Chart_Title}"/>
-
+                        <StackPanel Orientation="Vertical"
+                                    VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource TextBlockDefault}" 
+                                       HorizontalAlignment="Left"
+                                       Text="{DynamicResource Summary_DailyAverage}"/>
+                            <TextBlock Style="{StaticResource TextBlockTitleBold}"
+                                       Text="{Binding AverageDailyTime}"/>
+                        </StackPanel>
+                        
                         <Button Grid.Column="1"
                                 Margin="5"
                                 FontFamily="Segoe MDL2 Assets"
-                                Content="&#xE72C;"
-                                Command="{Binding Refresh}"/>
+                                Content="&#xE72C;"/>
                     </Grid>
 
 
@@ -62,18 +63,18 @@
                                 Content="&#xE761;"
                                 Command="{Binding NextDay}"/>
                         <hc:DatePicker x:Name="myDatePicker" 
-                                       SelectedDate="{Binding DisplayDate}" 
+                                       SelectedDate="{Binding SelectedDate}" 
                                        Grid.Column="3"
                                        Width="190"/>
 
                     </Grid>
                 </Grid>
 
-                <lvc:CartesianChart Series="{Binding OverviewChart}" 
-                                    Height="340"
-                                    LegendLocation="Bottom"
-                                    Style="{DynamicResource DefaultChartStyle}"
-                                    Margin="5,5,5,5">
+                <lvc:CartesianChart Series="{Binding SummaryChart}"  
+                            Height="340"
+                            LegendLocation="Bottom"
+                            Style="{DynamicResource DefaultChartStyle}"
+                            Margin="5,5,5,5">
                     <lvc:CartesianChart.Resources>
                         <Style TargetType="{x:Type lvc:DefaultTooltip}">
                             <Setter Property="Background" Value="#326CF3"/>
@@ -81,12 +82,12 @@
                             <Setter Property="ShowTitle" Value="True"/>
                             <Setter Property="SelectionMode" Value="OnlySender"/>
                             <Setter Property="ShowSeries" Value="True"/>
+                            <Setter Property="ShowTitle" Value="False"/>
                         </Style>
                     </lvc:CartesianChart.Resources>
 
                     <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Title="{DynamicResource Chart_Footnote}" 
-                                  Labels="{Binding OverviewChartLables}"
+                        <lvc:Axis Labels="{Binding OverviewChartLables}"
                                   Style="{DynamicResource DefaultAxisStyle}"/>
                     </lvc:CartesianChart.AxisX>
 
@@ -95,18 +96,15 @@
                                   Style="{DynamicResource DefaultAxisStyle}"/>
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
-                
-                <TextBlock Text="{Binding UpdateTime}"/>
 
                 <Separator/>
 
                 <TextBlock Style="{StaticResource TextBlockTitleBold}" 
-                           Text="{DynamicResource Table_Title}"
+                           Text="{DynamicResource Summary_WeeklySummary}"
                            HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
                            Margin="25,25,25,25"/>
-
-                <ListView ItemsSource="{Binding Overview}"
+                
+                <ListView ItemsSource="{Binding SummaryList}"
                           IsEnabled="False">
                     <ListView.View>
                         <GridView>
@@ -130,50 +128,6 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-
-                <Separator/>
-
-                <!--<TextBlock Style="{StaticResource TextBlockTitleBold}" 
-                           Text="SummaryView"
-                           HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           Margin="25,25,25,25"/>-->
-
-                <ListView ItemsSource="{Binding DetailView}"
-                          IsEnabled="False">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn DisplayMemberBinding="{Binding SystemState}"
-                                            Header="System State"/>
-
-                            <GridViewColumn Header="Icon">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Image Source="{Binding AppIcon}"
-                                               Width="25"
-                                               Height="25"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-
-                            <GridViewColumn DisplayMemberBinding="{Binding AppName}"
-                                            Header="Software Name"/>
-
-                            <GridViewColumn DisplayMemberBinding="{Binding WindowTitle}"
-                                            Header="Window Title"/>
-
-                            <GridViewColumn DisplayMemberBinding="{Binding StartTime}"
-                                            Header="StartTime"/>
-
-                            <GridViewColumn DisplayMemberBinding="{Binding StopTime}"
-                                            Header="StopTime"/>
-
-                            <GridViewColumn DisplayMemberBinding="{Binding AppDuration}"
-                                            Header="Time Duration"/>
-
-                        </GridView>
-                    </ListView.View>
-                </ListView>
             </StackPanel>
         </hc:ScrollViewer>
 
@@ -185,5 +139,4 @@
                     VerticalAlignment="Bottom" 
                     Margin="0,0,20,20"/>
     </Grid>
-
 </Page>
