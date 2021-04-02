@@ -163,7 +163,7 @@ namespace Frogy.ViewModels
             OverviewChart.Clear();
             await Task.Run(() =>
             {
-                SeriesCollection OverviewChart_tmp = PrintOverviewChart(today.TimeLine);
+                SeriesCollection OverviewChart_tmp = PrintOverviewChart(today.GetTimeline());
                 foreach (StackedColumnSeries i in OverviewChart_tmp)
                 {
                     OverviewChart.Add(i);
@@ -315,7 +315,6 @@ namespace Frogy.ViewModels
             DisplayDate = displayDate.AddDays(1);
         }
         #endregion
-
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
