@@ -94,6 +94,8 @@
                                   Style="{DynamicResource DefaultAxisStyle}"/>
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
+                
+                <TextBlock Text="{Binding UpdateTime}"/>
 
                 <Separator/>
 

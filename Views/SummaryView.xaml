@@ -11,12 +11,58 @@
       Title="SummaryView">
 
     <Grid>
-        <hc:ScrollViewer HorizontalScrollBarVisibility="Auto"
-                         Background="Transparent"
-                         IsInertiaEnabled="True"
+        <hc:ScrollViewer IsInertiaEnabled="True"
                          PanningMode="VerticalFirst">
             <StackPanel>
-                <hc:DatePicker/>
+                
+                <Grid>
+                    <Grid HorizontalAlignment="Left"
+                          VerticalAlignment="Center"
+                          Margin="25,25,25,25">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Style="{StaticResource TextBlockTitleBold}" 
+                                   Text="daily avg:"/>
+
+                        <Button Grid.Column="1"
+                                Margin="5"
+                                FontFamily="Segoe MDL2 Assets"
+                                Content="&#xE72C;"/>
+                    </Grid>
+
+
+                    <Grid Grid.Column="1"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Right"
+                          Margin="25">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="2"
+                                FontFamily="Segoe MDL2 Assets"
+                                Content="&#xE760;"
+                                Command="{Binding PreDay}"/>
+                        <Button Grid.Column="4"
+                                FontFamily="Segoe MDL2 Assets"
+                                Content="&#xE761;"
+                                Command="{Binding NextDay}"/>
+                        <hc:DatePicker x:Name="myDatePicker" 
+                                       SelectedDate="{Binding SelectedDate}" 
+                                       Grid.Column="3"
+                                       Width="190"/>
+
+                    </Grid>
+                </Grid>
+
                 <lvc:CartesianChart Series="{Binding SummaryChart}"  
                             Height="340"
                             LegendLocation="Bottom"
@@ -34,17 +80,47 @@
                     </lvc:CartesianChart.Resources>
 
                     <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Title="x" 
-                          Labels="{Binding OverviewChartLables}"
-                          Style="{DynamicResource DefaultAxisStyle}"/>
+                        <lvc:Axis Labels="{Binding OverviewChartLables}"
+                                  Style="{DynamicResource DefaultAxisStyle}"/>
                     </lvc:CartesianChart.AxisX>
 
                     <lvc:CartesianChart.AxisY>
                         <lvc:Axis LabelFormatter="{Binding OverviewChartFormatter}"
-                          Style="{DynamicResource DefaultAxisStyle}"/>
+                                  Style="{DynamicResource DefaultAxisStyle}"/>
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
 
+                <Separator/>
+
+                <TextBlock Style="{StaticResource TextBlockTitleBold}" 
+                           Text="Weekly summary"
+                           HorizontalAlignment="Left"
+                           Margin="25,25,25,25"/>
+                
+                <ListView ItemsSource="{Binding SummaryList}"
+                          IsEnabled="False">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="{DynamicResource Table_Icon}">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding AppIcon}"
+                                               Width="25"
+                                               Height="25"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <GridViewColumn DisplayMemberBinding="{Binding AppName}">
+                                <GridViewColumnHeader Content="{DynamicResource Table_SoftwareTitle}"/>
+                            </GridViewColumn>
+
+                            <GridViewColumn DisplayMemberBinding="{Binding AppDuration}">
+                                <GridViewColumnHeader Content="{DynamicResource Table_TimeDuration}"/>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </StackPanel>
         </hc:ScrollViewer>
     </Grid>

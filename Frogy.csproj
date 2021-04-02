@@ -162,6 +162,7 @@
     <Compile Include="Models\DashboardModel.cs" />
     <Compile Include="Models\OptionModel.cs" />
     <Compile Include="Models\OverViewModel.cs" />
+    <Compile Include="Models\SummaryModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

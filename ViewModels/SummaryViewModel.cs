@@ -10,6 +10,9 @@ using System.Windows;
 using Frogy.Models;
 using Frogy.Classes;
 using LiveCharts.Wpf;
+using static Frogy.Models.SummaryModel;
+using System.Windows.Input;
+using Frogy.Methods;
 
 namespace Frogy.ViewModels
 {
@@ -18,10 +21,16 @@ namespace Frogy.ViewModels
         public SummaryViewModel()
         {
             SummaryChart = generateChart();
-
-            OverviewChartLables = new string[] { "sun", "mon", "tus", "the", "wen", "fri", "sat"};
+            SummaryList = generateList();
+            OverviewChartLables = generateChartLables();
 
             OverviewChartFormatter = value => value + "min";
+        }
+
+        void update()
+        {
+            SummaryChart = generateChart();
+            SummaryList = generateList();
         }
 
         private SeriesCollection generateChart()
@@ -60,6 +69,60 @@ namespace Frogy.ViewModels
             return result;
         }
 
+        private List<SummaryListItem> generateList()
+        {
+            List<SummaryListItem> result = new List<SummaryListItem>();
+
+            DateTime firstDay = selectedDate.AddDays(-(int)selectedDate.DayOfWeek);
+
+            Dictionary<string, Software> sumData = new Dictionary<string, Software>();
+
+            for (int i = 0; i < 7; i++)
+            {
+                DateTime day = firstDay.AddDays(i);
+                ((App)Application.Current).appData.Load(day);
+
+                foreach(KeyValuePair<string,Software> kvp in ((App)Application.Current).appData.AllDays[day].GetOverView())
+                {
+                    if (sumData.ContainsKey(kvp.Key))
+                        sumData[kvp.Key].Duration += kvp.Value.Duration;
+                    else
+                        sumData.Add(kvp.Key, kvp.Value);
+                }
+            }
+
+            var dicSort = from objDic in sumData orderby objDic.Value.Duration descending select objDic;
+
+            foreach (KeyValuePair<string, Software> kvp in dicSort)
+            {
+                SummaryListItem tmp =
+                    new SummaryListItem()
+                    {
+                        AppName = kvp.Key,
+                        AppDuration = kvp.Value.Duration.ToString(),
+                        AppIcon = kvp.Value.Icon
+                    };
+                result.Add(tmp);
+            }
+
+            return result;
+        }
+
+        private string[] generateChartLables()
+        {
+            string[] result = new string[7];
+
+            DateTime firstDay = selectedDate.AddDays(-(int)selectedDate.DayOfWeek);
+
+            for (int i = 0; i < 7; i++)
+            {
+                DateTime day = firstDay.AddDays(i);
+                result[i] = day.Date.ToString("M.d");
+            }
+            
+            return result;
+        }
+
         private DateTime selectedDate = DateTime.Today;
         public DateTime SelectedDate
         {
@@ -70,6 +133,7 @@ namespace Frogy.ViewModels
             set
             {
                 selectedDate = value;
+                update();
                 OnPropertyChanged();
             }
         }
@@ -79,6 +143,20 @@ namespace Frogy.ViewModels
         {
             get { return summaryChart; }
             set { summaryChart = value; OnPropertyChanged(); }
+        }
+
+        private List<SummaryListItem> summaryList = new List<SummaryListItem>();
+        public List<SummaryListItem> SummaryList
+        {
+            get
+            {
+                return summaryList;
+            }
+            set
+            {
+                summaryList = value;
+                OnPropertyChanged();
+            }
         }
 
         private string[] overviewChartLables;
@@ -94,6 +172,72 @@ namespace Frogy.ViewModels
             get { return overviewChartFormatter; }
             set { overviewChartFormatter = value; OnPropertyChanged(); }
         }
+
+        #region 刷新按钮
+        private ICommand refresh;
+        public ICommand Refresh
+        {
+            get
+            {
+                if (refresh == null)
+                {
+                    refresh = new RelayCommand(
+                        param => this.RefreshButton_Click(),
+                        param => true
+                    );
+                }
+                return refresh;
+            }
+        }
+        private void RefreshButton_Click()
+        {
+            update();
+        }
+        #endregion
+
+        #region Yesterday button
+        private ICommand preDay;
+        public ICommand PreDay
+        {
+            get
+            {
+                if (preDay == null)
+                {
+                    preDay = new RelayCommand(
+                        param => this.PreDayButton_Click(),
+                        param => true
+                    );
+                }
+                return preDay;
+            }
+        }
+        private void PreDayButton_Click()
+        {
+            SelectedDate = selectedDate.AddDays(-7);
+        }
+        #endregion
+
+        #region Tomorrow button
+        private ICommand nextDay;
+        public ICommand NextDay
+        {
+            get
+            {
+                if (nextDay == null)
+                {
+                    nextDay = new RelayCommand(
+                        param => this.NextDayButton_Click(),
+                        param => true
+                    );
+                }
+                return nextDay;
+            }
+        }
+        private void NextDayButton_Click()
+        {
+            SelectedDate = selectedDate.AddDays(7);
+        }
+        #endregion
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged = delegate { };

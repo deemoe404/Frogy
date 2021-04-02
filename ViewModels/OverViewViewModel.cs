@@ -170,6 +170,8 @@ namespace Frogy.ViewModels
                     //Thread.Sleep(20);
                 }
             });
+
+            UpdateTime = DateTime.Now.ToString("H:mm");
         }
 
         /// <summary>
@@ -220,6 +222,20 @@ namespace Frogy.ViewModels
             {
                 displayDate = value;
                 Update();
+                OnPropertyChanged();
+            }
+        }
+
+        private string updateTime = DateTime.Now.ToString("H:mm");
+        public string UpdateTime
+        {
+            get
+            {
+                return updateTime;
+            }
+            set
+            {
+                updateTime = value;
                 OnPropertyChanged();
             }
         }
