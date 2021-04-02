@@ -53,8 +53,15 @@ namespace Frogy.Resources.Language
         {
             get
             {
-                return SupportedLanguage.ContainsKey(Properties.Settings.Default.Language) ?
-                    Properties.Settings.Default.Language : SystemLanguage;
+                if (SupportedLanguage.ContainsKey(Properties.Settings.Default.Language))
+                    return Properties.Settings.Default.Language;
+                else
+                {
+                    if (SupportedLanguage.ContainsKey(SystemLanguage))
+                        return SystemLanguage;
+                    else
+                        return SupportedLanguage.Keys.First();
+                }
             }
         }
 

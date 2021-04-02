@@ -38,6 +38,7 @@
     <system:String x:Key="General_Minute">分钟</system:String>
     <system:String x:Key="General_Second">秒</system:String>
     <system:String x:Key="General_Total">总和</system:String>
+    <system:String x:Key="General_LastUpdate">上次刷新：</system:String>
 
     <system:String x:Key="Summary_DailyAverage">日均</system:String>
     <system:String x:Key="Summary_WeeklySummary">本周详情</system:String>

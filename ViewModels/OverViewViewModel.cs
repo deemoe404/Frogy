@@ -172,7 +172,7 @@ namespace Frogy.ViewModels
                 }
             });
 
-            UpdateTime = DateTime.Now.ToString("H:mm");
+            UpdateTime = LanguageHelper.InquireLocalizedWord("General_LastUpdate") + DateTime.Now.ToString("H:mm");
         }
 
         /// <summary>

@@ -38,6 +38,7 @@
     <system:String x:Key="General_Minute">Minute</system:String>
     <system:String x:Key="General_Second">Second</system:String>
     <system:String x:Key="General_Total">Total</system:String>
+    <system:String x:Key="General_LastUpdate">Last update:</system:String>
 
     <system:String x:Key="Summary_DailyAverage">Daily</system:String>
     <system:String x:Key="Summary_WeeklySummary">Weekly summary</system:String>

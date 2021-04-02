@@ -162,8 +162,7 @@ namespace Frogy.Classes
         /// <summary>
         /// App language
         /// </summary>
-        private string languageSetting = LanguageHelper.SupportedLanguage.ContainsKey(Properties.Settings.Default.Language) ?
-            Properties.Settings.Default.Language : System.Globalization.CultureInfo.CurrentUICulture.Name;
+        private string languageSetting = LanguageHelper.PreferenceLanguage;
         public string LanguageSetting
         {
             get { return languageSetting; }

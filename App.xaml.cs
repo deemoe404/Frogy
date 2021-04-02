@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Threading;
 using System.Security.Principal;
+using Frogy.Resources.Language;
 
 using Frogy.Methods;
 
@@ -30,28 +31,10 @@ namespace Frogy
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            //Promote permission if not Administrator
-            var principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-            if (!principal.IsInRole(WindowsBuiltInRole.Administrator))
-                MyDeviceHelper.PromotePermission();
-
             //Launage switch
             ResourceDictionary dict = new ResourceDictionary();
-            switch (appData.LanguageSetting)
-            {
-                case "en-US":
-                    dict.Source = new Uri(@"Resources\Language\en-US.xaml", UriKind.Relative);
-                    ConfigHelper.Instance.SetLang("en");
-                    break;
-                case "zh-CN":
-                    dict.Source = new Uri(@"Resources\Language\zh-CN.xaml", UriKind.Relative);
-                    ConfigHelper.Instance.SetLang("zh-cn");
-                    break;
-                default: //english default
-                    dict.Source = new Uri(@"Resources\Language\en-US.xaml", UriKind.Relative);
-                    ConfigHelper.Instance.SetLang("en");
-                    break;
-            }
+            dict.Source = new Uri(@"Resources\Language\" + LanguageHelper.PreferenceLanguage + ".xaml", UriKind.Relative);
+            ConfigHelper.Instance.SetLang(LanguageHelper.PreferenceLanguage == "zh-CN" ? "zh-cn" : "en");
             Current.Resources.MergedDictionaries.Add(dict);
 
             //theme switch
@@ -78,9 +61,15 @@ namespace Frogy
             //tray icon
             mutex = new Mutex(true, "FrogyMainProgram");
             string startupArg = e.Args.Count() > 0 ? e.Args[0] : null;
-                
+            
+            //if frogy not running
             if (mutex.WaitOne(0, false) || startupArg == "restart")
             {
+                //Promote permission if not Administrator
+                var principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
+                if (!principal.IsInRole(WindowsBuiltInRole.Administrator))
+                    MyDeviceHelper.PromotePermission();
+
                 taskbarIcon = (TaskbarIcon)FindResource("icon");
 
                 taskbarIcon.ShowBalloonTip(
