@@ -1,4 +1,4 @@
-﻿<Page x:Class="Frogy.Views.OverViewView"
+﻿<Page
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,121 +6,120 @@
       xmlns:local="clr-namespace:Frogy.ViewModels"
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       xmlns:hc="https://handyorg.github.io/handycontrol"
+      xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" x:Class="Frogy.Views.OverViewView"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="OverView">
 
     <Grid>
         <hc:ScrollViewer HorizontalScrollBarVisibility="Auto"
+                         Background="Transparent"
                          IsInertiaEnabled="True"
                          PanningMode="VerticalFirst"
-                         Name="View">
+                         x:Name="View">
+            <StackPanel>
 
-                <StackPanel>
-
-                    <Grid>
-                        <Grid HorizontalAlignment="Left"
+                <Grid>
+                    <Grid HorizontalAlignment="Left"
                           VerticalAlignment="Center"
                           Margin="25,25,25,25">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
 
-                            <TextBlock Style="{StaticResource TextBlockTitleBold}" 
+                        <TextBlock Style="{StaticResource TextBlockTitleBold}" 
                                    Text="{DynamicResource Chart_Title}"/>
-                            <Button Grid.Column="1"
+                        <Button Grid.Column="1"
                                 Margin="5"
                                 FontFamily="Segoe MDL2 Assets"
                                 Content="&#xE72C;"
                                 Command="{Binding Refresh}"/>
-                        </Grid>
+                    </Grid>
 
 
-                        <Grid Grid.Column="1"
+                    <Grid Grid.Column="1"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Right"
                           Margin="25">
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
 
-                            <DatePicker Name="myDatePicker" 
-                                    SelectedDate="{Binding Path=DisplayDate}" 
+                        <DatePicker x:Name="myDatePicker" 
+                                    SelectedDate="{Binding DisplayDate}" 
                                     Grid.Column="1"
                                     Width="190"/>
 
-                        </Grid>
                     </Grid>
+                </Grid>
 
-                    <lvc:CartesianChart Series="{Binding OverviewChart}" 
+                <lvc:CartesianChart Series="{Binding OverviewChart}" 
                                     Height="340"
                                     LegendLocation="Bottom"
                                     Style="{DynamicResource DefaultChartStyle}"
                                     Margin="5,5,5,5">
-                        <lvc:CartesianChart.Resources>
-                            <Style TargetType="lvc:DefaultTooltip">
-                                <Setter Property="Background" Value="DarkOrange"></Setter>
-                                <Setter Property="Foreground" Value="White"></Setter>
-                                <Setter Property="ShowTitle" Value="True"></Setter>
-                                <Setter Property="SelectionMode" Value="OnlySender"/>
-                                <Setter Property="ShowSeries" Value="True"></Setter>
-                            </Style>
-                        </lvc:CartesianChart.Resources>
+                    <lvc:CartesianChart.Resources>
+                        <Style TargetType="{x:Type lvc:DefaultTooltip}">
+                            <Setter Property="Background" Value="DarkOrange"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="ShowTitle" Value="True"/>
+                            <Setter Property="SelectionMode" Value="OnlySender"/>
+                            <Setter Property="ShowSeries" Value="True"/>
+                        </Style>
+                    </lvc:CartesianChart.Resources>
 
-                        <lvc:CartesianChart.AxisX>
-                            <lvc:Axis Title="{DynamicResource Chart_Footnote}" 
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="{DynamicResource Chart_Footnote}" 
                                   Labels="{Binding OverviewChartLables}"
                                   Style="{DynamicResource DefaultAxisStyle}"/>
-                        </lvc:CartesianChart.AxisX>
+                    </lvc:CartesianChart.AxisX>
 
-                        <lvc:CartesianChart.AxisY>
-                            <lvc:Axis LabelFormatter="{Binding OverviewChartFormatter}"
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis LabelFormatter="{Binding OverviewChartFormatter}"
                                   Style="{DynamicResource DefaultAxisStyle}"/>
-                        </lvc:CartesianChart.AxisY>
-                    </lvc:CartesianChart>
+                    </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart>
 
-                    <Separator/>
+                <Separator/>
 
-                    <TextBlock Style="{StaticResource TextBlockTitleBold}" 
+                <TextBlock Style="{StaticResource TextBlockTitleBold}" 
                            Text="{DynamicResource Table_Title}"
                            HorizontalAlignment="Left"
                            VerticalAlignment="Center"
                            Margin="25,25,25,25"/>
 
-                    <ListView ItemsSource="{Binding Path=Overview}"
-                              IsEnabled="True"
-                              PreviewMouseWheel="ListView_PreviewMouseWheel"
-                              PreviewTouchMove="ListView_PreviewTouchMove">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="{DynamicResource Table_Icon}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Image Source="{Binding Path=AppIcon}"
+                <ListView ItemsSource="{Binding Overview}"
+                          IsEnabled="False">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="{DynamicResource Table_Icon}">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding AppIcon}"
                                                Width="25"
                                                Height="25"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
 
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=AppName}">
-                                    <GridViewColumnHeader Content="{DynamicResource Table_SoftwareTitle}"/>
-                                </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding AppName}">
+                                <GridViewColumnHeader Content="{DynamicResource Table_SoftwareTitle}"/>
+                            </GridViewColumn>
 
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=AppDuration}">
-                                    <GridViewColumnHeader Content="{DynamicResource Table_TimeDuration}"/>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                            <GridViewColumn DisplayMemberBinding="{Binding AppDuration}">
+                                <GridViewColumnHeader Content="{DynamicResource Table_TimeDuration}"/>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
 
-                    <Separator/>
+                <Separator/>
 
-                    <!--<TextBlock Style="{StaticResource TextBlockTitleBold}" 
+                <!--<TextBlock Style="{StaticResource TextBlockTitleBold}" 
                            Text="SummaryView"
                            HorizontalAlignment="Left"
                            VerticalAlignment="Center"
@@ -130,32 +129,32 @@
                           IsEnabled="False">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=SystemState}"
+                            <GridViewColumn DisplayMemberBinding="{Binding SystemState}"
                                             Header="System State"/>
 
                             <GridViewColumn Header="Icon">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Image Source="{Binding Path=AppIcon}"
+                                        <Image Source="{Binding AppIcon}"
                                                Width="25"
                                                Height="25"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=AppName}"
+                            <GridViewColumn DisplayMemberBinding="{Binding AppName}"
                                             Header="Software Name"/>
 
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=WindowTitle}"
+                            <GridViewColumn DisplayMemberBinding="{Binding WindowTitle}"
                                             Header="Window Title"/>
 
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=StartTime}"
+                            <GridViewColumn DisplayMemberBinding="{Binding StartTime}"
                                             Header="StartTime"/>
 
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=StopTime}"
+                            <GridViewColumn DisplayMemberBinding="{Binding StopTime}"
                                             Header="StopTime"/>
 
-                            <GridViewColumn DisplayMemberBinding="{Binding Path=AppDuration}"
+                            <GridViewColumn DisplayMemberBinding="{Binding AppDuration}"
                                             Header="Time Duration"/>
 
                         </GridView>
@@ -163,7 +162,7 @@
                 </ListView>
             </StackPanel>
         </hc:ScrollViewer>
-        
+
         <hc:GotoTop Animated="True"
                     AutoHiding="True" 
                     AnimationTime="500" 

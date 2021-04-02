@@ -11,7 +11,8 @@
 
     <Grid>
         <hc:ScrollViewer HorizontalScrollBarVisibility="Auto"
-                         IsInertiaEnabled="True">
+                         IsInertiaEnabled="True"
+                         PanningMode="VerticalFirst">
             <StackPanel>
                 <TextBlock Margin="10"
                            Style="{StaticResource TextBlockDefaultInfo}"
@@ -29,6 +30,7 @@
                         <ColumnDefinition Width="95"/>
                     </Grid.ColumnDefinitions>
                     <Button Content="{DynamicResource Option_DataPathButton}" 
+                            Style="{StaticResource ButtonPrimary}"
                             Command="{Binding ChangeDataPathButton}"  
                             Grid.Column="1"
                             Margin="5,5,5,0"/>
@@ -74,7 +76,7 @@
                 </StackPanel>
 
                 <Separator/>
-                
+
                 <TextBlock Style="{StaticResource TextBlockSubTitleBold}"
                            Text="{DynamicResource Option_SystemTitle}"
                            Margin="10,10,10,0"
@@ -85,7 +87,7 @@
                               Content="{DynamicResource Option_Startup}" 
                               IsChecked="{Binding Path=StartupStatus}"/>
                 </StackPanel>
-                
+
                 <Separator/>
 
                 <TextBlock Style="{StaticResource TextBlockSubTitleBold}"
@@ -102,6 +104,6 @@
 
             </StackPanel>
         </hc:ScrollViewer>
-
     </Grid>
+
 </Page>
