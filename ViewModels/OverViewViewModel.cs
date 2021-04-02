@@ -272,6 +272,51 @@ namespace Frogy.ViewModels
         }
         #endregion
 
+        #region Yesterday button
+        private ICommand preDay;
+        public ICommand PreDay
+        {
+            get
+            {
+                if (preDay == null)
+                {
+                    preDay = new RelayCommand(
+                        param => this.PreDayButton_Click(),
+                        param => true
+                    );
+                }
+                return preDay;
+            }
+        }
+        private void PreDayButton_Click()
+        {
+            DisplayDate = displayDate.AddDays(-1);
+        }
+        #endregion
+
+        #region Tomorrow button
+        private ICommand nextDay;
+        public ICommand NextDay
+        {
+            get
+            {
+                if (nextDay == null)
+                {
+                    nextDay = new RelayCommand(
+                        param => this.NextDayButton_Click(),
+                        param => true
+                    );
+                }
+                return nextDay;
+            }
+        }
+        private void NextDayButton_Click()
+        {
+            DisplayDate = displayDate.AddDays(1);
+        }
+        #endregion
+
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)

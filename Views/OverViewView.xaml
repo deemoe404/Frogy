@@ -30,6 +30,7 @@
 
                         <TextBlock Style="{StaticResource TextBlockTitleBold}" 
                                    Text="{DynamicResource Chart_Title}"/>
+
                         <Button Grid.Column="1"
                                 Margin="5"
                                 FontFamily="Segoe MDL2 Assets"
@@ -47,12 +48,22 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <DatePicker x:Name="myDatePicker" 
-                                    SelectedDate="{Binding DisplayDate}" 
-                                    Grid.Column="1"
-                                    Width="190"/>
+                        <Button Grid.Column="2"
+                                FontFamily="Segoe MDL2 Assets"
+                                Content="&#xE760;"
+                                Command="{Binding PreDay}"/>
+                        <Button Grid.Column="4"
+                                FontFamily="Segoe MDL2 Assets"
+                                Content="&#xE761;"
+                                Command="{Binding NextDay}"/>
+                        <hc:DatePicker x:Name="myDatePicker" 
+                                       SelectedDate="{Binding DisplayDate}" 
+                                       Grid.Column="3"
+                                       Width="190"/>
 
                     </Grid>
                 </Grid>
