@@ -11,9 +11,6 @@ namespace Frogy
 {
     class AppViewModel
     {
-        /// <summary>
-        /// 如果窗口没显示，就显示窗口
-        /// </summary>
         public ICommand ShowWindowCommand
         {
             get
@@ -33,9 +30,6 @@ namespace Frogy
             }
         }
 
-        /// <summary>
-        /// 隐藏窗口
-        /// </summary>
         public ICommand HideWindowCommand
         {
             get
@@ -48,15 +42,14 @@ namespace Frogy
             }
         }
 
-
-        /// <summary>
-        /// 关闭软件
-        /// </summary>
         public ICommand ExitApplicationCommand
         {
             get
             {
-                return new DelegateCommand { CommandAction = () => Application.Current.Shutdown() };
+                return new DelegateCommand 
+                { 
+                    CommandAction = () => Environment.Exit(0) 
+                };
             }
         }
     }
@@ -78,8 +71,14 @@ namespace Frogy
 
         public event EventHandler CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add 
+            { 
+                CommandManager.RequerySuggested += value; 
+            }
+            remove 
+            { 
+                CommandManager.RequerySuggested -= value; 
+            }
         }
     }
 

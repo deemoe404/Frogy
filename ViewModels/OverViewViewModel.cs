@@ -1,24 +1,20 @@
-﻿using Frogy.Classes;
-using Frogy.Methods;
-using Frogy.Models;
-using Frogy.Resources.Language;
-using HandyControl.Controls;
-using LiveCharts;
-using LiveCharts.Wpf;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
-using System.Windows.Threading;
+
+using LiveCharts;
+using LiveCharts.Wpf;
+
+using Frogy.Classes;
+using Frogy.Methods;
+using Frogy.Models;
+using Frogy.Resources.Language;
 
 namespace Frogy.ViewModels
 {

@@ -5,20 +5,19 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       xmlns:hc="https://handyorg.github.io/handycontrol"
-      xmlns:local="clr-namespace:Frogy.Views"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="SummaryView">
+      mc:Ignorable="d">
 
     <Grid>
         <hc:LoadingLine VerticalAlignment="Top"
                         Visibility="{Binding Loading}"/>
+        
         <hc:ScrollViewer IsInertiaEnabled="True"
                          PanningMode="VerticalFirst"
                          Name="View">
             <StackPanel>
                 
                 <Grid>
+                    <!--Title & Refresh button-->
                     <Grid HorizontalAlignment="Left"
                           VerticalAlignment="Center"
                           Margin="25,25,25,25">
@@ -42,7 +41,7 @@
                                 Content="&#xE72C;"/>
                     </Grid>
 
-
+                    <!--Date selecter & switcher--> 
                     <Grid Grid.Column="1"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Right"
@@ -59,12 +58,12 @@
                         <Button Grid.Column="2"
                                 FontFamily="Segoe MDL2 Assets"
                                 Content="&#xE760;"
-                                Command="{Binding PreDay}"
+                                Command="{Binding PreWeek}"
                                 IsEnabled="{Binding DateChangeable}"/>
                         <Button Grid.Column="4"
                                 FontFamily="Segoe MDL2 Assets"
                                 Content="&#xE761;"
-                                Command="{Binding NextDay}"
+                                Command="{Binding PostWeek}"
                                 IsEnabled="{Binding DateChangeable}"/>
                         <hc:DatePicker x:Name="myDatePicker" 
                                        SelectedDate="{Binding SelectedDate}" 
@@ -76,10 +75,10 @@
                 </Grid>
 
                 <lvc:CartesianChart Series="{Binding SummaryChart}"  
-                            Height="340"
-                            LegendLocation="None"
-                            Style="{DynamicResource DefaultChartStyle}"
-                            Margin="5,5,5,5">
+                                    Height="340"
+                                    LegendLocation="None"
+                                    Style="{DynamicResource DefaultChartStyle}"
+                                    Margin="5,5,5,5">
                     <lvc:CartesianChart.Resources>
                         <Style TargetType="{x:Type lvc:DefaultTooltip}">
                             <Setter Property="Background" Value="#326CF3"/>
@@ -134,6 +133,7 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
+                
             </StackPanel>
         </hc:ScrollViewer>
 

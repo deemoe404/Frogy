@@ -1,20 +1,20 @@
-﻿using LiveCharts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using Frogy.Models;
-using Frogy.Classes;
-using LiveCharts.Wpf;
-using static Frogy.Models.SummaryModel;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Windows;
+
+using LiveCharts.Wpf;
+using LiveCharts;
+
+using static Frogy.Models.SummaryModel;
+using Frogy.Classes;
 using Frogy.Methods;
 using Frogy.Resources.Language;
-using System.Collections.ObjectModel;
 
 namespace Frogy.ViewModels
 {
@@ -29,29 +29,25 @@ namespace Frogy.ViewModels
 
         async void update()
         {
-            DateChangeable = false;
-            Loading = Visibility.Visible;
+            busy = true;
 
             DateTime firstDay = selectedDate.AddDays(-(int)selectedDate.DayOfWeek);
 
-            var a = await generateChart(firstDay);
-            var b = await generateList(firstDay);
-
-            SummaryChart = a;
+            SeriesCollection tmpChart = await generateChart(firstDay);
+            List<SummaryListItem> tmpList = await generateList(firstDay);
 
             OverviewChartLables = generateChartLables(firstDay);
-            AverageDailyTime = generateAverageDailyTime((ChartValues<double>)SummaryChart[0].Values);
+            AverageDailyTime = generateAverageDailyTime((ChartValues<double>)tmpChart[0].Values);
+            SummaryChart = tmpChart;
 
             SummaryList.Clear();
-
-            foreach (var c in b)
+            foreach (SummaryListItem listItem in tmpList)
             {
-                SummaryList.Add(c);
+                SummaryList.Add(listItem);
                 MyDeviceHelper.DoEvents();
             }
 
-            DateChangeable = true;
-            Loading = Visibility.Hidden;
+            busy = false;
         }
 
         private Task<SeriesCollection> generateChart(DateTime firstDay)
@@ -227,6 +223,7 @@ namespace Frogy.ViewModels
             }
         }
 
+        #region App busy controller
         private bool dateChangeable = true;
         public bool DateChangeable
         {
@@ -255,7 +252,23 @@ namespace Frogy.ViewModels
             }
         }
 
-        #region 刷新按钮
+        private bool busy = false;
+        public bool Busy
+        {
+            get
+            {
+                return busy;
+            }
+            set
+            {
+                busy = value;
+                Loading = busy ? Visibility.Visible : Visibility.Hidden;
+                DateChangeable = !busy;
+            }
+        }
+        #endregion
+
+        #region Refresh button
         private ICommand refresh;
         public ICommand Refresh
         {
@@ -277,45 +290,45 @@ namespace Frogy.ViewModels
         }
         #endregion
 
-        #region Yesterday button
-        private ICommand preDay;
-        public ICommand PreDay
+        #region PreWeek button
+        private ICommand preWeek;
+        public ICommand PreWeek
         {
             get
             {
-                if (preDay == null)
+                if (preWeek == null)
                 {
-                    preDay = new RelayCommand(
-                        param => this.PreDayButton_Click(),
+                    preWeek = new RelayCommand(
+                        param => this.PreWeekButton_Click(),
                         param => true
                     );
                 }
-                return preDay;
+                return preWeek;
             }
         }
-        private void PreDayButton_Click()
+        private void PreWeekButton_Click()
         {
             SelectedDate = selectedDate.AddDays(-7);
         }
         #endregion
 
-        #region Tomorrow button
-        private ICommand nextDay;
-        public ICommand NextDay
+        #region PostWeek button
+        private ICommand postWeek;
+        public ICommand PostWeek
         {
             get
             {
-                if (nextDay == null)
+                if (postWeek == null)
                 {
-                    nextDay = new RelayCommand(
-                        param => this.NextDayButton_Click(),
+                    postWeek = new RelayCommand(
+                        param => this.PostWeekButton_Click(),
                         param => true
                     );
                 }
-                return nextDay;
+                return postWeek;
             }
         }
-        private void NextDayButton_Click()
+        private void PostWeekButton_Click()
         {
             SelectedDate = selectedDate.AddDays(7);
         }

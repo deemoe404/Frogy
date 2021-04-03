@@ -29,6 +29,14 @@ namespace Frogy
         private TaskbarIcon taskbarIcon;
         private static Mutex mutex;
 
+        public App()
+        {
+            Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+            SystemEvents.SessionEnded += SystemEvents_SessionEnded;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             //Launage switch
@@ -79,14 +87,7 @@ namespace Frogy
 
                 appData.StartLogic();
 
-                
-
                 base.OnStartup(e);
-
-                SystemEvents.SessionEnded += SystemEvents_SessionEnded;
-                Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
-                AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-                AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
             }
             else
             {
