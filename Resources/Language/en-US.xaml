@@ -40,8 +40,6 @@
     <system:String x:Key="General_Total">Total</system:String>
     <system:String x:Key="General_LastUpdate">Last update:</system:String>
 
-    <system:String x:Key="System_ExcptionInfo">Frogy has stopped running for unpredictable reasons.</system:String>
-
     <system:String x:Key="Summary_DailyAverage">Daily</system:String>
     <system:String x:Key="Summary_WeeklySummary">Weekly summary</system:String>
 

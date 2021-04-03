@@ -42,8 +42,6 @@ namespace Frogy.ViewModels
             OverviewChartLables = generateChartLables(firstDay);
             AverageDailyTime = generateAverageDailyTime((ChartValues<double>)SummaryChart[0].Values);
 
-            SummaryList.Clear();
-
             foreach (var c in b)
             {
                 SummaryList.Add(c);
