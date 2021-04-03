@@ -40,6 +40,8 @@
     <system:String x:Key="General_Total">总和</system:String>
     <system:String x:Key="General_LastUpdate">上次刷新：</system:String>
 
+    <system:String x:Key="System_ExcptionInfo">由于不可预料的原因，时常已停止运行。</system:String>
+
     <system:String x:Key="Summary_DailyAverage">日均</system:String>
     <system:String x:Key="Summary_WeeklySummary">本周详情</system:String>
 
