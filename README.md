@@ -2,6 +2,7 @@
 时常是一款灵感来源于 iOS “屏幕使用时间”（或是 Android “数字健康”）的 Windows app 。目前实现的功能有：
 * 记录 app 的使用情况
 * 以图表的形式展示一天中不同时段的 app 使用情况
+* 生成周报，查看一周的整体活动情况
 * 现在支持的语言：
   <ol>
   <li>简体中文</li>
@@ -17,6 +18,7 @@
 Frogy is a Windows app inspired by iOS "screen time" (or Android "digital wellbeing"). The functions that currently implemented are:
 * Record the usage of the apps
 * Show the app usage at different times of the day in the form of graphs
+* A weekly to show you the app usage of the whole week
 * Languages supported now：
   <ol>
   <li>Chinese</li>
