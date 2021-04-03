@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Frogy.Methods
 {
@@ -200,6 +201,21 @@ namespace Frogy.Methods
                 Environment.Exit(1);
             }
             catch { }
+        }
+
+        public static void DoEvents()
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background,
+                new DispatcherOperationCallback(ExitFrames), frame);
+            Dispatcher.PushFrame(frame);
+        }
+
+        public static object ExitFrames(object f)
+        {
+            ((DispatcherFrame)f).Continue = false;
+
+            return null;
         }
     }
 }

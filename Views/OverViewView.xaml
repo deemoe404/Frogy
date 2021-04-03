@@ -12,8 +12,9 @@
       Title="OverView">
 
     <Grid>
+        <hc:LoadingLine VerticalAlignment="Top"
+                        Visibility="{Binding Loading}"/>
         <hc:ScrollViewer HorizontalScrollBarVisibility="Auto"
-                         Background="Transparent"
                          IsInertiaEnabled="True"
                          PanningMode="VerticalFirst"
                          x:Name="View">
@@ -51,27 +52,30 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
                         <Button Grid.Column="2"
                                 FontFamily="Segoe MDL2 Assets"
                                 Content="&#xE760;"
-                                Command="{Binding PreDay}"/>
+                                Command="{Binding PreDay}"
+                                IsEnabled="{Binding DateChangeable}"/>
                         <Button Grid.Column="4"
                                 FontFamily="Segoe MDL2 Assets"
                                 Content="&#xE761;"
-                                Command="{Binding NextDay}"/>
+                                Command="{Binding NextDay}"
+                                IsEnabled="{Binding DateChangeable}"/>
                         <hc:DatePicker x:Name="myDatePicker" 
                                        SelectedDate="{Binding DisplayDate}" 
                                        Grid.Column="3"
-                                       Width="190"/>
-
+                                       Width="140"
+                                       IsEnabled="{Binding DateChangeable}"/>
                     </Grid>
                 </Grid>
 
                 <lvc:CartesianChart Series="{Binding OverviewChart}" 
                                     Height="340"
-                                    LegendLocation="Bottom"
+                                    LegendLocation="None"
                                     Style="{DynamicResource DefaultChartStyle}"
                                     Margin="5,5,5,5">
                     <lvc:CartesianChart.Resources>

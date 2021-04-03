@@ -14,6 +14,7 @@ using static Frogy.Models.SummaryModel;
 using System.Windows.Input;
 using Frogy.Methods;
 using Frogy.Resources.Language;
+using System.Collections.ObjectModel;
 
 namespace Frogy.ViewModels
 {
@@ -26,85 +27,110 @@ namespace Frogy.ViewModels
             OverviewChartFormatter = value => value + LanguageHelper.InquireLocalizedWord("General_Minute");
         }
 
-        void update()
+        async void update()
         {
+            DateChangeable = false;
+            Loading = Visibility.Visible;
+
             DateTime firstDay = selectedDate.AddDays(-(int)selectedDate.DayOfWeek);
 
-            SummaryChart = generateChart(firstDay);
-            SummaryList = generateList(firstDay);
+            var a = await generateChart(firstDay);
+            var b = await generateList(firstDay);
+
+            SummaryChart = a;
+
             OverviewChartLables = generateChartLables(firstDay);
             AverageDailyTime = generateAverageDailyTime((ChartValues<double>)SummaryChart[0].Values);
-        }
 
-        private SeriesCollection generateChart(DateTime firstDay)
-        {
-            SeriesCollection result = new SeriesCollection { };
-            ChartValues<double> values = new ChartValues<double>();
-
-            for (int i = 0; i < 7; i++)
+            foreach (var c in b)
             {
-                DateTime day = firstDay.AddDays(i);
-                ((App)Application.Current).appData.Load(day);
-                List<MyTimeDuration> timeline = ((App)Application.Current).appData.AllDays[day].GetTimeline();
-
-                TimeSpan totalTime = new TimeSpan();
-                
-                foreach(MyTimeDuration timeDuration in timeline)
-                {
-                    string appName = timeDuration.TimeDurationTask.ApplicationName;
-                    if (string.IsNullOrEmpty(appName) || appName == "Frogy") continue;
-
-                    totalTime = totalTime.Add(timeDuration.Duration);
-                }
-
-                values.Add(Math.Round(totalTime.TotalMinutes, 2));
+                SummaryList.Add(c);
+                MyDeviceHelper.DoEvents();
             }
 
-            result.Add(new StackedColumnSeries
-            {
-                Title = LanguageHelper.InquireLocalizedWord("General_Total"),
-                DataLabels = false,
-                Values = values,
-                IsHitTestVisible = false
-            });
-
-            return result;
+            DateChangeable = true;
+            Loading = Visibility.Hidden;
         }
 
-        private List<SummaryListItem> generateList(DateTime firstDay)
+        private Task<SeriesCollection> generateChart(DateTime firstDay)
         {
-            List<SummaryListItem> result = new List<SummaryListItem>();
-            Dictionary<string, Software> sumData = new Dictionary<string, Software>();
-
-            for (int i = 0; i < 7; i++)
+            return Task.Run(() =>
             {
-                DateTime day = firstDay.AddDays(i);
-                ((App)Application.Current).appData.Load(day);
+                SeriesCollection result = new SeriesCollection { };
+                ChartValues<double> values = new ChartValues<double>();
 
-                foreach(KeyValuePair<string,Software> kvp in ((App)Application.Current).appData.AllDays[day].GetOverView())
+                for (int i = 0; i < 7; i++)
                 {
-                    if (sumData.ContainsKey(kvp.Key))
-                        sumData[kvp.Key].Duration += kvp.Value.Duration;
-                    else
-                        sumData.Add(kvp.Key, kvp.Value);
-                }
-            }
+                    DateTime day = firstDay.AddDays(i);
+                    ((App)Application.Current).appData.Load(day);
+                    List<MyTimeDuration> timeline = ((App)Application.Current).appData.AllDays[day].GetTimeline();
 
-            var dicSort = from objDic in sumData orderby objDic.Value.Duration descending select objDic;
+                    TimeSpan totalTime = new TimeSpan();
 
-            foreach (KeyValuePair<string, Software> kvp in dicSort)
-            {
-                SummaryListItem tmp =
-                    new SummaryListItem()
+                    foreach (MyTimeDuration timeDuration in timeline)
                     {
-                        AppName = kvp.Key,
-                        AppDuration = kvp.Value.Duration.ToString(),
-                        AppIcon = kvp.Value.Icon
-                    };
-                result.Add(tmp);
-            }
+                        string appName = timeDuration.TimeDurationTask.ApplicationName;
+                        if (string.IsNullOrEmpty(appName) || appName == "Frogy") continue;
 
-            return result;
+                        totalTime = totalTime.Add(timeDuration.Duration);
+                    }
+
+                    values.Add(Math.Round(totalTime.TotalMinutes, 2));
+                }
+
+                Application.Current.Dispatcher.Invoke(delegate
+                {
+                    result.Add(new StackedColumnSeries
+                    {
+                        Title = LanguageHelper.InquireLocalizedWord("General_Total"),
+                        DataLabels = false,
+                        Values = values,
+                        IsHitTestVisible = false
+                    });
+                });
+
+                return result;
+            });
+        }
+
+        private Task<List<SummaryListItem>> generateList(DateTime firstDay)
+        {
+            return Task.Run(() =>
+            {
+                List<SummaryListItem> result = new List<SummaryListItem>();
+                Dictionary<string, Software> sumData = new Dictionary<string, Software>();
+
+                for (int i = 0; i < 7; i++)
+                {
+                    DateTime day = firstDay.AddDays(i);
+                    ((App)Application.Current).appData.Load(day);
+
+                    foreach (KeyValuePair<string, Software> kvp in ((App)Application.Current).appData.AllDays[day].GetOverView())
+                    {
+                        if (sumData.ContainsKey(kvp.Key))
+                            sumData[kvp.Key].Duration += kvp.Value.Duration;
+                        else
+                            sumData.Add(kvp.Key, kvp.Value);
+                    }
+                }
+
+                var dicSort = from objDic in sumData orderby objDic.Value.Duration descending select objDic;
+
+                foreach (KeyValuePair<string, Software> kvp in dicSort)
+                {
+                    SummaryListItem tmp =
+                        new SummaryListItem()
+                        {
+                            AppName = kvp.Key,
+                            AppDuration = kvp.Value.Duration.ToString(),
+                            AppIcon = kvp.Value.Icon
+                        };
+                    result.Add(tmp);
+                }
+
+                return result;
+
+            });
         }
 
         private string[] generateChartLables(DateTime firstDay)
@@ -157,8 +183,8 @@ namespace Frogy.ViewModels
             set { summaryChart = value; OnPropertyChanged(); }
         }
 
-        private List<SummaryListItem> summaryList = new List<SummaryListItem>();
-        public List<SummaryListItem> SummaryList
+        private ObservableCollection<SummaryListItem> summaryList = new ObservableCollection<SummaryListItem>();
+        public ObservableCollection<SummaryListItem> SummaryList
         {
             get
             {
@@ -195,6 +221,34 @@ namespace Frogy.ViewModels
             set
             {
                 averageDailyTime = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool dateChangeable = true;
+        public bool DateChangeable
+        {
+            get
+            {
+                return dateChangeable;
+            }
+            set
+            {
+                dateChangeable = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility loading = Visibility.Hidden;
+        public Visibility Loading
+        {
+            get
+            {
+                return loading;
+            }
+            set
+            {
+                loading = value;
                 OnPropertyChanged();
             }
         }

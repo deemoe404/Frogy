@@ -11,6 +11,8 @@
       Title="SummaryView">
 
     <Grid>
+        <hc:LoadingLine VerticalAlignment="Top"
+                        Visibility="{Binding Loading}"/>
         <hc:ScrollViewer IsInertiaEnabled="True"
                          PanningMode="VerticalFirst"
                          Name="View">
@@ -57,22 +59,25 @@
                         <Button Grid.Column="2"
                                 FontFamily="Segoe MDL2 Assets"
                                 Content="&#xE760;"
-                                Command="{Binding PreDay}"/>
+                                Command="{Binding PreDay}"
+                                IsEnabled="{Binding DateChangeable}"/>
                         <Button Grid.Column="4"
                                 FontFamily="Segoe MDL2 Assets"
                                 Content="&#xE761;"
-                                Command="{Binding NextDay}"/>
+                                Command="{Binding NextDay}"
+                                IsEnabled="{Binding DateChangeable}"/>
                         <hc:DatePicker x:Name="myDatePicker" 
                                        SelectedDate="{Binding SelectedDate}" 
                                        Grid.Column="3"
-                                       Width="190"/>
+                                       Width="140"
+                                       IsEnabled="{Binding DateChangeable}"/>
 
                     </Grid>
                 </Grid>
 
                 <lvc:CartesianChart Series="{Binding SummaryChart}"  
                             Height="340"
-                            LegendLocation="Bottom"
+                            LegendLocation="None"
                             Style="{DynamicResource DefaultChartStyle}"
                             Margin="5,5,5,5">
                     <lvc:CartesianChart.Resources>
@@ -103,7 +108,7 @@
                            Text="{DynamicResource Summary_WeeklySummary}"
                            HorizontalAlignment="Left"
                            Margin="25,25,25,25"/>
-                
+
                 <ListView ItemsSource="{Binding SummaryList}"
                           IsEnabled="False">
                     <ListView.View>
@@ -118,7 +123,8 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn DisplayMemberBinding="{Binding AppName}">
+                            <GridViewColumn DisplayMemberBinding="{Binding AppName}"
+                                            Width="280">
                                 <GridViewColumnHeader Content="{DynamicResource Table_SoftwareTitle}"/>
                             </GridViewColumn>
 
