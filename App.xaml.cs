@@ -107,7 +107,7 @@ namespace Frogy
 
         void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            MessageBox.Show(LanguageHelper.InquireLocalizedWord("System_ExcptionInfo") + e.Exception.Message, 
+            MessageBox.Show(LanguageHelper.InquireLocalizedWord("System_ExcptionInfo") + e.Exception.Message + sender.ToString(), 
                 LanguageHelper.InquireLocalizedWord("TaskBar_AppName"), 
                 MessageBoxButton.OK, 
                 MessageBoxImage.Error);
@@ -115,10 +115,12 @@ namespace Frogy
 
         void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            MessageBox.Show(LanguageHelper.InquireLocalizedWord("System_ExcptionInfo") + e.ToString(),
+            MessageBox.Show(LanguageHelper.InquireLocalizedWord("System_ExcptionInfo") + e.ToString() + sender.ToString(),
                 LanguageHelper.InquireLocalizedWord("TaskBar_AppName"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
+
+            Environment.Exit(1);
         }
 
         private void SystemEvents_SessionEnded(object sender, SessionEndedEventArgs e)

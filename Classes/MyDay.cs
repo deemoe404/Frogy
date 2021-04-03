@@ -32,7 +32,7 @@ namespace Frogy.Classes
         /// <returns>今日小结 - Dictionary<string, TimeSpan></returns>
         public Dictionary<string, Software> GetOverView()
         {
-            List<MyTimeDuration> myTimeDurations = TimeLine;
+            List<MyTimeDuration> myTimeDurations = new List<MyTimeDuration>(TimeLine.ToArray());
             Dictionary<string, Software> overView = new Dictionary<string, Software>();
 
             foreach (MyTimeDuration item in myTimeDurations)
