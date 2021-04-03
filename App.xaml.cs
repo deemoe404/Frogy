@@ -79,9 +79,14 @@ namespace Frogy
 
                 appData.StartLogic();
 
-                SystemEvents.SessionEnded += SystemEvents_SessionEnded;
+                
 
                 base.OnStartup(e);
+
+                SystemEvents.SessionEnded += SystemEvents_SessionEnded;
+                Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+                AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+                AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
             }
             else
             {
@@ -95,6 +100,26 @@ namespace Frogy
             }
         }
 
+        private void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        {
+            Console.WriteLine("Process Exit");
+        }
+
+        void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show(LanguageHelper.InquireLocalizedWord("System_Excption") + e.Exception.Message, 
+                LanguageHelper.InquireLocalizedWord("TaskBar_AppName"), 
+                MessageBoxButton.OK, 
+                MessageBoxImage.Error);
+        }
+
+        void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show(LanguageHelper.InquireLocalizedWord("System_Excption") + e.ToString(),
+                LanguageHelper.InquireLocalizedWord("TaskBar_AppName"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
 
         private void SystemEvents_SessionEnded(object sender, SessionEndedEventArgs e)
         {
