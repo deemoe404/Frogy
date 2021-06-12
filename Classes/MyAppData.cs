@@ -245,7 +245,14 @@ namespace Frogy.Classes
                     string json;
                     try
                     {
-                        json = MyDataHelper.ReadFile(loadPath);
+                        if(File.Exists(loadPath + ".bak"))
+                        {
+                            json = MyDataHelper.ReadFile(loadPath + ".bak");
+                        }
+                        else
+                        {
+                            json = MyDataHelper.ReadFile(loadPath);
+                        }
                         AllDays.Add(date, JsonConvert.DeserializeObject<MyDay>(json));
                     }
                     catch (Newtonsoft.Json.JsonReaderException)
