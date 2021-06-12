@@ -7,7 +7,7 @@
     <system:String x:Key="Tab_Overview">概览</system:String>
     <system:String x:Key="Tab_Option">选项</system:String>
 
-    <system:String x:Key="Chart_Title">攻击</system:String>
+    <system:String x:Key="Chart_Title">共计</system:String>
     <system:String x:Key="Chart_Footnote">总结</system:String>
 
     <system:String x:Key="Table_Title">详情</system:String>
