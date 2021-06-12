@@ -7,7 +7,7 @@
     <system:String x:Key="Tab_Overview">概览</system:String>
     <system:String x:Key="Tab_Option">选项</system:String>
 
-    <system:String x:Key="Chart_Title">综合表格</system:String>
+    <system:String x:Key="Chart_Title">攻击</system:String>
     <system:String x:Key="Chart_Footnote">总结</system:String>
 
     <system:String x:Key="Table_Title">详情</system:String>
@@ -39,8 +39,9 @@
     <system:String x:Key="General_Second">秒</system:String>
     <system:String x:Key="General_Total">总和</system:String>
     <system:String x:Key="General_LastUpdate">上次刷新：</system:String>
-
+    
     <system:String x:Key="System_ExcptionInfo">由于不可预料的原因，时常已停止运行。</system:String>
+    <system:String x:Key="System_ExcptionBadData">很抱歉，由于异常退出，部分时常数据已经受损且无法恢复。受损数据日期：</system:String>
 
     <system:String x:Key="Summary_DailyAverage">日均</system:String>
     <system:String x:Key="Summary_WeeklySummary">本周详情</system:String>

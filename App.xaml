@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Frogy"
              xmlns:tb="http://www.hardcodet.net/taskbar"
-             ShutdownMode="OnExplicitShutdown">
+             ShutdownMode="OnExplicitShutdown"
+             SessionEnding="App_SessionEnding">
 
     <!--StartupUri="Views/MainPage.xaml"-->
 

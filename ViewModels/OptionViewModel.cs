@@ -20,7 +20,7 @@ namespace Frogy.ViewModels
     {
         public OptionViewModel()
         {
-            DataPath = ((App)Application.Current).appData.StoragePath;
+            DataPath = ((App)Application.Current).AppData.StoragePath;
         }
 
         private Visibility infoVisibility = Visibility.Collapsed;
@@ -72,13 +72,13 @@ namespace Frogy.ViewModels
                 dialog.IsFolderPicker = true;
 
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-                    ((App)Application.Current).appData.StoragePath = dialog.FileName;
+                    ((App)Application.Current).AppData.StoragePath = dialog.FileName;
             }
             catch (Exception exp)
             {
                 MessageBox.Show(exp.Message);
             }
-            DataPath = ((App)Application.Current).appData.StoragePath;
+            DataPath = ((App)Application.Current).AppData.StoragePath;
         }
         #endregion
 
@@ -89,10 +89,10 @@ namespace Frogy.ViewModels
             get 
             {
                 languageList.Clear();
-                languageList.Add(LanguageHelper.SupportedLanguage[((App)Application.Current).appData.LanguageSetting]);
+                languageList.Add(LanguageHelper.SupportedLanguage[((App)Application.Current).AppData.LanguageSetting]);
 
                 foreach (KeyValuePair<string, string> pair in LanguageHelper.SupportedLanguage)
-                    if (pair.Key != ((App)Application.Current).appData.LanguageSetting)
+                    if (pair.Key != ((App)Application.Current).AppData.LanguageSetting)
                         languageList.Add(pair.Value);
 
                 return languageList;
@@ -106,7 +106,7 @@ namespace Frogy.ViewModels
             set
             {
                 InfoVisibility = Visibility.Visible;
-                ((App)Application.Current).appData.LanguageSetting = LanguageHelper.InquireCodeName(languageList[value]);
+                ((App)Application.Current).AppData.LanguageSetting = LanguageHelper.InquireCodeName(languageList[value]);
 
                 languageListSelectedIndex = value;
                 OnPropertyChanged();
@@ -115,8 +115,8 @@ namespace Frogy.ViewModels
         #endregion
 
         #region Theme setting
-        private int themeListSelectedIndex = ((App)Application.Current).appData.ThemeSetting >= 0 && ((App)Application.Current).appData.ThemeSetting <= 1 ?
-            ((App)Application.Current).appData.ThemeSetting : 0;
+        private int themeListSelectedIndex = ((App)Application.Current).AppData.ThemeSetting >= 0 && ((App)Application.Current).AppData.ThemeSetting <= 1 ?
+            ((App)Application.Current).AppData.ThemeSetting : 0;
         public int ThemeListSelectedIndex
         {
             get { return themeListSelectedIndex; }
@@ -124,7 +124,7 @@ namespace Frogy.ViewModels
             {
                 InfoVisibility = Visibility.Visible;
                 if (value >= 0 && value <= 1)
-                    ((App)Application.Current).appData.ThemeSetting = value;
+                    ((App)Application.Current).AppData.ThemeSetting = value;
 
                 themeListSelectedIndex = value;
                 OnPropertyChanged();

@@ -159,5 +159,12 @@ namespace Frogy.Methods
                 throw new InvalidOperationException("Source folder not found!");
             }
         }
+
+        public static void RenameFile(string srcFile, string destFile)
+        {
+            FileInfo fi = new FileInfo(srcFile); //xx/xx/aa.rar
+            if(File.Exists(destFile)) File.Delete(destFile);
+            fi.MoveTo(destFile); //xx/xx/xx.rar
+        }
     }
 }

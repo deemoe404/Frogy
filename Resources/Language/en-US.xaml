@@ -7,7 +7,7 @@
     <system:String x:Key="Tab_Overview">Overview</system:String>
     <system:String x:Key="Tab_Option">Option</system:String>
 
-    <system:String x:Key="Chart_Title">Comprehensive Chart</system:String>
+    <system:String x:Key="Chart_Title">Total</system:String>
     <system:String x:Key="Chart_Footnote">Summary</system:String>
 
     <system:String x:Key="Table_Title">Details</system:String>
@@ -38,9 +38,10 @@
     <system:String x:Key="General_Minute">Minute</system:String>
     <system:String x:Key="General_Second">Second</system:String>
     <system:String x:Key="General_Total">Total</system:String>
-    <system:String x:Key="General_LastUpdate">Last update:</system:String>
-
+    <system:String x:Key="General_LastUpdate">Last update: </system:String>
+    
     <system:String x:Key="System_ExcptionInfo">Frogy has stopped running for unpredictable reasons.</system:String>
+    <system:String x:Key="System_ExcptionBadData">The Frogy data may have been corrupted due to an abnormal exit. Date:</system:String>
 
     <system:String x:Key="Summary_DailyAverage">Daily</system:String>
     <system:String x:Key="Summary_WeeklySummary">Weekly summary</system:String>

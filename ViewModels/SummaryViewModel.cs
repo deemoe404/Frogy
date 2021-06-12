@@ -22,23 +22,22 @@ namespace Frogy.ViewModels
     {
         public SummaryViewModel()
         {
-            update();
-
-            OverviewChartFormatter = value => value + LanguageHelper.InquireLocalizedWord("General_Minute");
+            Update();
         }
 
-        async void update()
+        async void Update()
         {
             busy = true;
 
             DateTime firstDay = selectedDate.AddDays(-(int)selectedDate.DayOfWeek);
 
-            SeriesCollection tmpChart = await generateChart(firstDay);
+            SeriesCollection tmpChart = await GenerateChart(firstDay);
             List<SummaryListItem> tmpList = await generateList(firstDay);
 
             OverviewChartLables = generateChartLables(firstDay);
             AverageDailyTime = generateAverageDailyTime((ChartValues<double>)tmpChart[0].Values);
             SummaryChart = tmpChart;
+            UpdateTime = LanguageHelper.InquireLocalizedWord("General_LastUpdate") + DateTime.Now.ToString("H:mm");
 
             SummaryList.Clear();
             foreach (SummaryListItem listItem in tmpList)
@@ -50,7 +49,9 @@ namespace Frogy.ViewModels
             busy = false;
         }
 
-        private Task<SeriesCollection> generateChart(DateTime firstDay)
+        //todo:不要输入datetime
+
+        private Task<SeriesCollection> GenerateChart(DateTime firstDay)
         {
             return Task.Run(() =>
             {
@@ -60,8 +61,8 @@ namespace Frogy.ViewModels
                 for (int i = 0; i < 7; i++)
                 {
                     DateTime day = firstDay.AddDays(i);
-                    ((App)Application.Current).appData.Load(day);
-                    List<MyTimeDuration> timeline = ((App)Application.Current).appData.AllDays[day].GetTimeline();
+                    ((App)Application.Current).AppData.Load(day);
+                    List<MyTimeDuration> timeline = ((App)Application.Current).AppData.AllDays[day].GetTimeline();
 
                     TimeSpan totalTime = new TimeSpan();
 
@@ -101,9 +102,9 @@ namespace Frogy.ViewModels
                 for (int i = 0; i < 7; i++)
                 {
                     DateTime day = firstDay.AddDays(i);
-                    ((App)Application.Current).appData.Load(day);
+                    ((App)Application.Current).AppData.Load(day);
 
-                    foreach (KeyValuePair<string, Software> kvp in ((App)Application.Current).appData.AllDays[day].GetOverView())
+                    foreach (KeyValuePair<string, Software> kvp in ((App)Application.Current).AppData.AllDays[day].GetOverView())
                     {
                         if (sumData.ContainsKey(kvp.Key))
                             sumData[kvp.Key].Duration += kvp.Value.Duration;
@@ -159,6 +160,36 @@ namespace Frogy.ViewModels
             return result;
         }
 
+        //private int averageDailyTime(double[] Week)
+        //{
+        //    double result = 0;
+
+        //    for (int i = 0; i < Week.Count(); i++)
+        //        result += Week[i] / 7;
+
+        //    return (int)result;
+        //}
+
+        private Task<string> generateCompare(DateTime firstDay)
+        {
+            return Task.Run(()=>
+            {
+                string result = "";
+
+                DateTime totalTime = new DateTime();
+                DateTime lastWeek = firstDay.AddDays(-7);
+
+                for(int i= 0; i < 7; i++)
+                {
+                    totalTime.AddMinutes(lastWeek.AddDays(i).Minute);
+                }
+
+                int avg = totalTime.Minute / 7;
+
+                return result;
+            });
+        }
+
         private DateTime selectedDate = DateTime.Today;
         public DateTime SelectedDate
         {
@@ -169,7 +200,7 @@ namespace Frogy.ViewModels
             set
             {
                 selectedDate = value;
-                update();
+                Update();
                 OnPropertyChanged();
             }
         }
@@ -202,11 +233,27 @@ namespace Frogy.ViewModels
             set { overviewChartLables = value; OnPropertyChanged(); }
         }
 
-        private Func<double, string> overviewChartFormatter;
+        private Func<double, string> overviewChartFormatter = value => value + LanguageHelper.InquireLocalizedWord("General_Minute");
         public Func<double, string> OverviewChartFormatter
         {
-            get { return overviewChartFormatter; }
-            set { overviewChartFormatter = value; OnPropertyChanged(); }
+            get 
+            { 
+                return overviewChartFormatter; 
+            }
+        }
+
+        private string updateTime = DateTime.Now.ToString("H:mm");
+        public string UpdateTime
+        {
+            get
+            {
+                return updateTime;
+            }
+            set
+            {
+                updateTime = value;
+                OnPropertyChanged();
+            }
         }
 
         private string averageDailyTime;
@@ -219,6 +266,20 @@ namespace Frogy.ViewModels
             set
             {
                 averageDailyTime = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string compareLastWeek;
+        public string CompareLastWeek
+        {
+            get
+            {
+                return compareLastWeek;
+            }
+            set
+            {
+                compareLastWeek = value;
                 OnPropertyChanged();
             }
         }
@@ -286,7 +347,7 @@ namespace Frogy.ViewModels
         }
         private void RefreshButton_Click()
         {
-            update();
+            Update();
         }
         #endregion
 
@@ -334,6 +395,8 @@ namespace Frogy.ViewModels
         }
         #endregion
 
+
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -342,5 +405,7 @@ namespace Frogy.ViewModels
             this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
+
+
     }
 }

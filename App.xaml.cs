@@ -17,6 +17,9 @@ using System.Security.Principal;
 using Frogy.Resources.Language;
 
 using Frogy.Methods;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
+using System.IO;
 
 namespace Frogy
 {
@@ -25,16 +28,30 @@ namespace Frogy
     /// </summary>
     public partial class App : Application
     {
-        public MyAppData appData = new MyAppData();
+        private MyAppData appData = new MyAppData();
+        public MyAppData AppData
+        {
+            get { return appData; }
+        }
+        
         private TaskbarIcon taskbarIcon;
         private static Mutex mutex;
 
         public App()
         {
             Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
-            SystemEvents.SessionEnded += SystemEvents_SessionEnded;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
+        }
+
+        private void App_SessionEnding(object sender, SessionEndingCancelEventArgs e)
+        {
+            appData.StopLogic();
+
+            if (appData.Saving)
+                e.Cancel = true;
+            else
+                Environment.Exit(0);
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -69,7 +86,7 @@ namespace Frogy
             //tray icon
             mutex = new Mutex(true, "FrogyMainProgram");
             string startupArg = e.Args.Count() > 0 ? e.Args[0] : null;
-            
+
             //if frogy not running
             if (mutex.WaitOne(0, false) || startupArg == "restart")
             {
@@ -80,11 +97,12 @@ namespace Frogy
 
                 taskbarIcon = (TaskbarIcon)FindResource("icon");
 
-                taskbarIcon.ShowBalloonTip(
-                    dict["TaskBar_AppName"].ToString(),
-                    dict["TaskBar_StartUp"].ToString(), 
+                ShowNotification(
+                    LanguageHelper.InquireLocalizedWord("TaskBar_AppName"),
+                    LanguageHelper.InquireLocalizedWord("TaskBar_StartUp"),
                     BalloonIcon.Info);
 
+                appData.InitializeMyAppData();
                 appData.StartLogic();
 
                 base.OnStartup(e);
@@ -92,10 +110,10 @@ namespace Frogy
             else
             {
                 MessageBox.Show(
-                    dict["TaskBar_Overlap"].ToString(),
-                    dict["TaskBar_AppName"].ToString(), 
+                    LanguageHelper.InquireLocalizedWord("TaskBar_Overlap"),
+                    LanguageHelper.InquireLocalizedWord("TaskBar_AppName"),
                     MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                    MessageBoxImage.Information);
 
                 Environment.Exit(1);
             }
@@ -103,7 +121,7 @@ namespace Frogy
 
         private void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
-            Console.WriteLine("Process Exit");
+
         }
 
         void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
@@ -112,35 +130,31 @@ namespace Frogy
                 LanguageHelper.InquireLocalizedWord("TaskBar_AppName"), 
                 MessageBoxButton.OK, 
                 MessageBoxImage.Error);
-        }
-
-        void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            MessageBox.Show(LanguageHelper.InquireLocalizedWord("System_ExcptionInfo") + e.ToString() + sender.ToString(),
-                LanguageHelper.InquireLocalizedWord("TaskBar_AppName"),
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
 
             Environment.Exit(1);
         }
 
-        private void SystemEvents_SessionEnded(object sender, SessionEndedEventArgs e)
+        void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            appData.Save();
-            SessionEndReasons reason = e.Reason;
-            switch (reason)
-            {
-                case SessionEndReasons.Logoff:
-                    break;
-                case SessionEndReasons.SystemShutdown:
-                    break;
-            }
+
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
+            Current.DispatcherUnhandledException -= Current_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
+            AppDomain.CurrentDomain.ProcessExit -= new EventHandler(CurrentDomain_ProcessExit);
+
             appData.Save();
             base.OnExit(e);
+        }
+
+        public void ShowNotification(string title, string content, BalloonIcon icon)
+        {
+            taskbarIcon.ShowBalloonTip(
+                title,
+                content,
+                icon);
         }
     }
 }

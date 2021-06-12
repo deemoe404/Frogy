@@ -1,20 +1,16 @@
 ﻿using Frogy.Methods;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Policy;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
 using System.Windows.Threading;
 using System.IO;
 
-
 using Frogy.Resources.Language;
+using System.Windows;
+using Hardcodet.Wpf.TaskbarNotification;
+using Newtonsoft.Json;
+
 namespace Frogy.Classes
 {
     /// <summary>
@@ -22,15 +18,15 @@ namespace Frogy.Classes
     /// </summary>
     public class MyAppData
     {
-        private DispatcherTimer mainLogicLoop = new DispatcherTimer() { Interval = new TimeSpan(10000000) };
-        private DispatcherTimer savingLogicLoop = new DispatcherTimer() { Interval = new TimeSpan(600000000) };
+        private DispatcherTimer mainLogicLoop = new DispatcherTimer() { Interval = new TimeSpan(0,0,1) };
+        private DispatcherTimer savingLogicLoop = new DispatcherTimer() { Interval = new TimeSpan(0,1,0) };
 
         /// <summary>
         /// 所有时间线
         /// </summary>
         public Dictionary<DateTime, MyDay> AllDays = new Dictionary<DateTime, MyDay>();
 
-        public MyAppData()
+        public void InitializeMyAppData()
         {
             DateTime today = DateTime.Today;
 
@@ -202,9 +198,6 @@ namespace Frogy.Classes
             }
         }
 
-        /// <summary>
-        /// App data path
-        /// </summary>
         private string storagePath = Directory.Exists(Properties.Settings.Default.AppDataPath) ?
             Properties.Settings.Default.AppDataPath : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Frogy\\");
         public string StoragePath
@@ -225,23 +218,23 @@ namespace Frogy.Classes
             }
         }
 
-        /// <summary>
-        /// Save daily activity
-        /// </summary>
+        public bool Saving { get; set; }
         public void Save()
         {
+            Saving = true;
+
             Directory.CreateDirectory(storagePath);
 
             string savePath = Path.Combine(storagePath, DateTime.Today.ToString("yyyyMMdd") + ".json");
+            string tempPath = Path.Combine(storagePath, DateTime.Today.ToString("yyyyMMdd") + "temp.json");
             string content = MyDataHelper.CoverObjectToJson(AllDays[DateTime.Today]);
             
-            MyDataHelper.WriteFile(savePath, content);
+            MyDataHelper.WriteFile(tempPath, content);
+            MyDataHelper.RenameFile(tempPath, savePath);
+
+            Saving = false;
         }
 
-        /// <summary>
-        /// Load daily activity
-        /// </summary>
-        /// <param name="LoadDate">date</param>
         public void Load(DateTime date)
         {
             if (!AllDays.ContainsKey(date))
@@ -249,21 +242,38 @@ namespace Frogy.Classes
                 string loadPath = Path.Combine(storagePath, date.ToString("yyyyMMdd") + ".json");
                 if (File.Exists(loadPath))
                 {
-                    string Json = MyDataHelper.ReadFile(loadPath);
-                    AllDays.Add(date, MyDataHelper.CoverJsonToObject<MyDay>(Json));
+                    string json;
+                    try
+                    {
+                        json = MyDataHelper.ReadFile(loadPath);
+                        AllDays.Add(date, JsonConvert.DeserializeObject<MyDay>(json));
+                    }
+                    catch (Newtonsoft.Json.JsonReaderException)
+                    {
+                        ((App)Application.Current).ShowNotification(
+                            LanguageHelper.InquireLocalizedWord("TaskBar_AppName"),
+                            LanguageHelper.InquireLocalizedWord("System_ExcptionBadData") + date.ToString("yyyy/MM/dd"),
+                            BalloonIcon.Error);
+
+                        File.Delete(loadPath);
+                        AllDays.Add(date, new MyDay());
+                    }
                 }
                 else
                     AllDays.Add(date, new MyDay());
             }
         }
 
-        /// <summary>
-        /// Start main logic
-        /// </summary>
         public void StartLogic()
         {
             mainLogicLoop.Start();
             savingLogicLoop.Start();
+        }
+
+        public void StopLogic()
+        {
+            mainLogicLoop.Stop();
+            savingLogicLoop.Stop();
         }
     }
 }

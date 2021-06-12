@@ -20,18 +20,13 @@ namespace Frogy.ViewModels
 {
     class OverViewViewModel : INotifyPropertyChanged
     {
-        /// <summary>
-        /// 按顺序打印OverView
-        /// </summary>
-        /// <param name="TodayOverview">今日OverView</param>
-        /// <returns>List<OverViewItem></returns>
-        private Task<List<OverViewItem>> PrintOverview(Dictionary<string, Software> TodayOverview)
+        Task<List<OverViewItem>> GenerateList(Dictionary<string, Software> OverView)
         {
             return Task.Run(() =>
             {
                 List<OverViewItem> result = new List<OverViewItem>();
-                //排序
-                var dicSort = from objDic in TodayOverview orderby objDic.Value.Duration descending select objDic;
+                
+                var dicSort = from objDic in OverView orderby objDic.Value.Duration descending select objDic;
 
                 foreach (KeyValuePair<string, Software> kvp in dicSort)
                 {
@@ -49,22 +44,18 @@ namespace Frogy.ViewModels
             });
         }
 
-        /// <summary>
-        /// 打印表格
-        /// </summary>
-        /// <param name="mies"></param>
-        private Task<SeriesCollection> PrintOverviewChart(List<MyTimeDuration> tmp)
+        Task<SeriesCollection> GenerateChart(List<MyTimeDuration> AllTask)
         {
             return Task.Run(() =>
             {
                 SeriesCollection result = new SeriesCollection { };
-                Dictionary<string, ChartValues<double>> tmpdic = new Dictionary<string, ChartValues<double>>();
-                foreach (MyTimeDuration duration in tmp)
+                Dictionary<string, ChartValues<double>> rawData = new Dictionary<string, ChartValues<double>>();
+                foreach (MyTimeDuration duration in AllTask)
                 {
                     string appName = duration.TimeDurationTask.ApplicationName;
                     if (string.IsNullOrEmpty(appName) || appName == "Frogy") continue;
 
-                    if (!tmpdic.ContainsKey(appName)) tmpdic.Add(appName,
+                    if (!rawData.ContainsKey(appName)) rawData.Add(appName,
                         new ChartValues<double> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
 
                     TimeSpan start = duration.StartTime;
@@ -72,13 +63,13 @@ namespace Frogy.ViewModels
                     TimeSpan spent = duration.Duration;
 
                     if (start.Hours == stop.Hours)
-                        tmpdic[appName][start.Hours] += Math.Round(spent.TotalMinutes, 2);
+                        rawData[appName][start.Hours] += Math.Round(spent.TotalMinutes, 2);
                     else
                     {
                         if (stop.Hours - start.Hours == 1)
                         {
-                            tmpdic[appName][start.Hours] += Math.Round((59.59d - start.Minutes), 2);
-                            tmpdic[appName][stop.Hours] += stop.Minutes;
+                            rawData[appName][start.Hours] += Math.Round((59.59d - start.Minutes), 2);
+                            rawData[appName][stop.Hours] += stop.Minutes;
                         }
                         else
                         {
@@ -86,43 +77,23 @@ namespace Frogy.ViewModels
                             {
                                 int tmpint = stop.Hours - start.Hours;
 
-                                tmpdic[appName][start.Hours] += Math.Round((59.59d - start.Minutes), 2);
-                                tmpdic[appName][stop.Hours] += stop.Minutes;
+                                rawData[appName][start.Hours] += Math.Round((59.59d - start.Minutes), 2);
+                                rawData[appName][stop.Hours] += stop.Minutes;
 
                                 for (int i = 1; i < tmpint; i++)
-                                    tmpdic[appName][start.Hours + i] = 59.59d;
+                                    rawData[appName][start.Hours + i] = 59.59d;
                             }
-                        }
-                    }
-                }
-
-                ChartValues<double> sumTime = new ChartValues<double> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-                foreach (string key in tmpdic.Keys)
-                {
-                    for(int i = 0; i < tmpdic[key].Count(); i++)
-                    {
-                        sumTime[i] += tmpdic[key][i];
-                    }
-                }
-
-                foreach (string key in tmpdic.Keys)
-                {
-                    for(int j = 0; j < tmpdic[key].Count(); j++)
-                    {
-                        if (tmpdic[key][j] / sumTime[j] < 0.01)
-                        {
-                            tmpdic[key][j] = 0;
                         }
                     }
                 }
 
                 Application.Current.Dispatcher.Invoke(delegate
                 {
-                    foreach (string key in tmpdic.Keys)
+                    foreach (string key in rawData.Keys)
                     {
                         result.Add(new StackedColumnSeries
                         {
-                            Values = tmpdic[key],
+                            Values = rawData[key],
                             DataLabels = false,
                             Title = key,
                             IsHitTestVisible = false
@@ -133,45 +104,25 @@ namespace Frogy.ViewModels
                 return result;
             });
         }
-
-        /// <summary>
-        /// 打印SummaryView
-        /// </summary>
-        /// <returns></returns>
-        private Task<List<DetailViewItem>> PrintSummaryView(List<MyTimeDuration> durations)
+        
+        Task<string> GenerateSumTime(Dictionary<string, Software> AllTask)
         {
             return Task.Run(() =>
             {
-                List<DetailViewItem> result = new List<DetailViewItem>();
+                double totalTime = 0;
+                foreach (KeyValuePair<string, Software> pair in AllTask)
+                    totalTime += pair.Value.Duration.TotalMinutes;
 
-                foreach (MyTimeDuration timeSpan in durations)
-                {
-                    DetailViewItem tmp = new DetailViewItem()
-                    {
-                        StartTime = timeSpan.StartTime.ToString(),
-                        StopTime = timeSpan.StopTime.ToString(),
-                        AppDuration = timeSpan.Duration.ToString(),
-                        AppIcon = MyDataHelper.BitmapToBitmapImage(MyDataHelper.Base64StringToImage(timeSpan.TimeDurationTask.ApplicationIcon_Base64)),
-                        AppName = timeSpan.TimeDurationTask.ApplicationName,
-                        WindowTitle = timeSpan.TimeDurationTask.ApplicationTitle,
-                        SystemState = timeSpan.TimeDurationTask.ComputerStatus.ToString()
-                    };
-                    result.Add(tmp);
-                }
-                return result;
+                int hour = (int)totalTime / 60;
+                int minutes = (int)(totalTime - hour * 60);
+
+                return hour + LanguageHelper.InquireLocalizedWord("General_Hour") + minutes + LanguageHelper.InquireLocalizedWord("General_Minute");
             });
         }
 
         public OverViewViewModel()
         {
             Update();
-
-            OverviewChartLables = new string[] { "0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00",
-            "7:00", "8:00", "9:00", "10:00", "11:00", "12:00",
-            "13:00", "14:00", "15:00", "16:00", "17:00", "18:00",
-            "19:00", "20:00", "21:00", "22:00", "23:00"};
-
-            OverviewChartFormatter = value => value + LanguageHelper.InquireLocalizedWord("General_Minute");
         }
 
         private async void Update()
@@ -179,58 +130,26 @@ namespace Frogy.ViewModels
             DateChangeable = false;
             Loading = Visibility.Visible;
 
-            ((App)Application.Current).appData.Load(displayDate);
-            MyDay today = ((App)Application.Current).appData.AllDays[displayDate];
+            ((App)Application.Current).AppData.Load(displayDate);
+            MyDay today = ((App)Application.Current).AppData.AllDays[displayDate];
 
-            var a = await PrintOverview(today.GetOverView());
-            var b = await PrintOverviewChart(today.GetTimeline());
-#if DEBUG
-            var c = await PrintSummaryView(today.GetTimeline());
-#endif
+            Dictionary<string, Software> overView = today.GetOverView();
+
+            DailyTime = await GenerateSumTime(overView);
+            OverviewChart = await GenerateChart(today.GetTimeline());
+            UpdateTime = LanguageHelper.InquireLocalizedWord("General_LastUpdate") + DateTime.Now.ToString("H:mm");
 
             Overview.Clear();
-            DetailView.Clear();
-            OverviewChart = b;
-
-            foreach (OverViewItem d in a)
+            foreach (OverViewItem item in await GenerateList(overView))
             {
-                Overview.Add(d);
+                Overview.Add(item);
                 MyDeviceHelper.DoEvents();
             }
-
-#if DEBUG
-            foreach (DetailViewItem f in c)
-            {
-                DetailView.Add(f);
-                MyDeviceHelper.DoEvents();
-            }
-#endif
-            UpdateTime = LanguageHelper.InquireLocalizedWord("General_LastUpdate") + DateTime.Now.ToString("H:mm");
 
             DateChangeable = true;
             Loading = Visibility.Hidden;
         }
 
-        /// <summary>
-        /// 详细数据
-        /// </summary>
-        private ObservableCollection<DetailViewItem> detailView = new ObservableCollection<DetailViewItem>();
-        public ObservableCollection<DetailViewItem> DetailView
-        {
-            get
-            {
-                return detailView;
-            }
-            set
-            {
-                detailView = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// 整体视图
-        /// </summary>
         private ObservableCollection<OverViewItem> overview = new ObservableCollection<OverViewItem>();
         public ObservableCollection<OverViewItem> Overview
         {
@@ -245,9 +164,6 @@ namespace Frogy.ViewModels
             }
         }
 
-        /// <summary>
-        /// 显示数据日期
-        /// </summary>
         private DateTime displayDate = DateTime.Today;
         public DateTime DisplayDate
         {
@@ -305,29 +221,50 @@ namespace Frogy.ViewModels
             }
         }
 
+        private string dailyTime;
+        public string DailyTime
+        {
+            get
+            {
+                return dailyTime;
+            }
+            set
+            {
+                dailyTime = value;
+                OnPropertyChanged();
+            }
+        }
+
         #region 表格
-        /// <summary>
-        /// 表格
-        /// </summary>
         private SeriesCollection overviewChart = new SeriesCollection();
         public SeriesCollection OverviewChart
         {
-            get { return overviewChart; }
-            set { overviewChart = value; OnPropertyChanged(); }
+            get 
+            { 
+                return overviewChart; 
+            }
+            set 
+            { 
+                overviewChart = value; 
+                OnPropertyChanged(); 
+            }
         }
 
-        private string[] overviewChartLables;
         public string[] OverviewChartLables
         {
-            get { return overviewChartLables; }
-            set { overviewChartLables = value; OnPropertyChanged(); }
+            get 
+            {
+                return new string[] { "0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "99:00", "21:00", "22:00", "23:00" };
+            }
         }
 
-        private Func<double, string> overviewChartFormatter;
+        private Func<double, string> overviewChartFormatter = value => value + LanguageHelper.InquireLocalizedWord("General_Minute");
         public Func<double, string> OverviewChartFormatter
         {
-            get { return overviewChartFormatter; }
-            set { overviewChartFormatter = value; OnPropertyChanged(); }
+            get 
+            {
+                return overviewChartFormatter; 
+            }
         }
         #endregion
 

@@ -48,7 +48,7 @@ namespace Frogy
             {
                 return new DelegateCommand 
                 { 
-                    CommandAction = () => Environment.Exit(0) 
+                    CommandAction = () => Application.Current.Shutdown()
                 };
             }
         }

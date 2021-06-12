@@ -28,10 +28,16 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock VerticalAlignment="Center"
-                                   Style="{StaticResource TextBlockTitleBold}" 
-                                   Text="{DynamicResource Chart_Title}"/>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Style="{StaticResource TextBlockDefault}" 
+                                       HorizontalAlignment="Left"
+                                       Text="{DynamicResource Chart_Title}"/>
 
+                            <TextBlock VerticalAlignment="Center"
+                                       Style="{StaticResource TextBlockTitleBold}" 
+                                       Text="{Binding DailyTime}"/>
+                        </StackPanel>
+                        
                         <Button Grid.Column="1"
                                 Margin="5"
                                 FontFamily="Segoe MDL2 Assets"
@@ -126,57 +132,14 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn DisplayMemberBinding="{Binding AppName}">
+                            <GridViewColumn DisplayMemberBinding="{Binding AppName}"
+                                            Width="280">
                                 <GridViewColumnHeader Content="{DynamicResource Table_SoftwareTitle}"/>
                             </GridViewColumn>
 
                             <GridViewColumn DisplayMemberBinding="{Binding AppDuration}">
                                 <GridViewColumnHeader Content="{DynamicResource Table_TimeDuration}"/>
                             </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-
-                <Separator/>
-
-                <!--<TextBlock Style="{StaticResource TextBlockTitleBold}" 
-                           Text="SummaryView"
-                           HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           Margin="25,25,25,25"/>-->
-
-                <ListView ItemsSource="{Binding DetailView}"
-                          IsEnabled="False">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn DisplayMemberBinding="{Binding SystemState}"
-                                            Header="System State"/>
-
-                            <GridViewColumn Header="Icon">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Image Source="{Binding AppIcon}"
-                                               Width="25"
-                                               Height="25"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-
-                            <GridViewColumn DisplayMemberBinding="{Binding AppName}"
-                                            Header="Software Name"/>
-
-                            <GridViewColumn DisplayMemberBinding="{Binding WindowTitle}"
-                                            Header="Window Title"/>
-
-                            <GridViewColumn DisplayMemberBinding="{Binding StartTime}"
-                                            Header="StartTime"/>
-
-                            <GridViewColumn DisplayMemberBinding="{Binding StopTime}"
-                                            Header="StopTime"/>
-
-                            <GridViewColumn DisplayMemberBinding="{Binding AppDuration}"
-                                            Header="Time Duration"/>
-
                         </GridView>
                     </ListView.View>
                 </ListView>
