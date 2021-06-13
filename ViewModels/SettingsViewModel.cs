@@ -16,9 +16,9 @@ using System.Windows.Controls;
 
 namespace Frogy.ViewModels
 {
-    class OptionViewModel : INotifyPropertyChanged
+    class SettingsViewModel : INotifyPropertyChanged
     {
-        public OptionViewModel()
+        public SettingsViewModel()
         {
             DataPath = ((App)Application.Current).AppData.StoragePath;
         }

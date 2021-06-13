@@ -46,4 +46,12 @@
     <system:String x:Key="Summary_DailyAverage">日均</system:String>
     <system:String x:Key="Summary_WeeklySummary">本周详情</system:String>
 
+    <!--about page-->
+    <system:String x:Key="About_Title">关于</system:String>
+    <system:String x:Key="About_Developer">开发者</system:String>
+    <system:String x:Key="About_DIMOJANG">DMOJANG</system:String>
+    <system:String x:Key="About_Relevance">反馈</system:String>
+    <system:String x:Key="About_Credits">致谢</system:String>
+    <system:String x:Key="About_Content">时常是一款灵感来源于 iOS “屏幕使用时间”（或是 Android “数字健康”）的 Windows app 。</system:String>
+
 </ResourceDictionary>

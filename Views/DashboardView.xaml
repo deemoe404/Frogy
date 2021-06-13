@@ -20,7 +20,17 @@
         </hc:TabItem>
 
         <hc:TabItem Header="{DynamicResource Tab_Option}">
-            <Frame Source="OptionView.xaml"/>
+            <hc:ScrollViewer HorizontalScrollBarVisibility="Auto"
+                             IsInertiaEnabled="True"
+                             PanningMode="VerticalFirst">
+                <StackPanel>
+                    <Frame Source="SettingsView.xaml"
+                           Margin="10"/>
+                    <Frame Source="../Resources/Pages/About.xaml"
+                       Margin="10"/>
+                </StackPanel>
+            </hc:ScrollViewer>
+            
         </hc:TabItem>
     </hc:TabControl>
 

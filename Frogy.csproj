@@ -160,7 +160,7 @@
     <Compile Include="Methods\MyAppxPackageHelper.cs" />
     <Compile Include="Methods\MyEventHelper.cs" />
     <Compile Include="Models\DashboardModel.cs" />
-    <Compile Include="Models\OptionModel.cs" />
+    <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Models\OverviewModel.cs" />
     <Compile Include="Models\WeeklyModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -169,8 +169,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\Language\LanguageHelper.cs" />
+    <Compile Include="Resources\Pages\About.xaml.cs">
+      <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\DashboardViewModel.cs" />
-    <Compile Include="ViewModels\OptionViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\OverviewViewModel.cs" />
     <Compile Include="ViewModels\WeeklyViewModel.cs" />
     <Compile Include="Views\DashboardView.xaml.cs">
@@ -181,8 +184,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Classes\MyAppData.cs" />
-    <Compile Include="Views\OptionView.xaml.cs">
-      <DependentUpon>OptionView.xaml</DependentUpon>
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OverviewView.xaml.cs">
       <DependentUpon>OverviewView.xaml</DependentUpon>
@@ -198,6 +201,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\Pages\About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Theme\DarkTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -210,7 +217,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OptionView.xaml">
+    <Page Include="Views\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

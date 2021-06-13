@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Frogy.Models
 {
-    class OptionModel
+    class SettingsModel
     {
     }
 }
