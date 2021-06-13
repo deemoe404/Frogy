@@ -163,9 +163,11 @@ namespace Frogy.Methods
         public static void RenameFile(string srcFile, string destFile)
         {
             FileInfo fi = new FileInfo(srcFile); //xx/xx/aa.rar
-            File.Copy(destFile, destFile + ".bak");
+            if(File.Exists(destFile))
+                File.Copy(destFile, destFile + ".bak");
+
             if(File.Exists(destFile)) File.Delete(destFile);
-            fi.MoveTo(destFile); //xx/xx/xx.rar
+                fi.MoveTo(destFile); //xx/xx/xx.rar
             File.Delete(destFile + ".bak");
         }
     }
