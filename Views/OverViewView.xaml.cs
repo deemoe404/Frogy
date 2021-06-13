@@ -21,7 +21,7 @@ namespace Frogy.Views
     /// </summary>
     public partial class OverViewView : Page
     {
-        OverViewViewModel viewModel = new OverViewViewModel();
+        OverviewViewModel viewModel = new OverviewViewModel();
 
         public OverViewView()
         {

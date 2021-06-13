@@ -12,11 +12,11 @@
 
     <hc:TabControl Style="{StaticResource TabControlCapsuleSolid}">
         <hc:TabItem Header="{DynamicResource Tab_Summary}">
-            <Frame Source="SummaryView.xaml"/>
+            <Frame Source="WeeklyView.xaml"/>
         </hc:TabItem>
 
         <hc:TabItem Header="{DynamicResource Tab_Overview}">
-            <Frame Source="OverViewView.xaml"/>
+            <Frame Source="OverviewView.xaml"/>
         </hc:TabItem>
 
         <hc:TabItem Header="{DynamicResource Tab_Option}">

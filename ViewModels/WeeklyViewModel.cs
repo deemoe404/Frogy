@@ -11,16 +11,16 @@ using System.Windows;
 using LiveCharts.Wpf;
 using LiveCharts;
 
-using static Frogy.Models.SummaryModel;
+using static Frogy.Models.WeeklyModel;
 using Frogy.Classes;
 using Frogy.Methods;
 using Frogy.Resources.Language;
 
 namespace Frogy.ViewModels
 {
-    class SummaryViewModel : INotifyPropertyChanged
+    class WeeklyViewModel : INotifyPropertyChanged
     {
-        public SummaryViewModel()
+        public WeeklyViewModel()
         {
             Update();
         }

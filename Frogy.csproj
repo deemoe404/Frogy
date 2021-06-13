@@ -161,8 +161,8 @@
     <Compile Include="Methods\MyEventHelper.cs" />
     <Compile Include="Models\DashboardModel.cs" />
     <Compile Include="Models\OptionModel.cs" />
-    <Compile Include="Models\OverViewModel.cs" />
-    <Compile Include="Models\SummaryModel.cs" />
+    <Compile Include="Models\OverviewModel.cs" />
+    <Compile Include="Models\WeeklyModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -171,8 +171,8 @@
     <Compile Include="Resources\Language\LanguageHelper.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\OptionViewModel.cs" />
-    <Compile Include="ViewModels\OverViewViewModel.cs" />
-    <Compile Include="ViewModels\SummaryViewModel.cs" />
+    <Compile Include="ViewModels\OverviewViewModel.cs" />
+    <Compile Include="ViewModels\WeeklyViewModel.cs" />
     <Compile Include="Views\DashboardView.xaml.cs">
       <DependentUpon>DashboardView.xaml</DependentUpon>
     </Compile>
@@ -184,11 +184,11 @@
     <Compile Include="Views\OptionView.xaml.cs">
       <DependentUpon>OptionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OverViewView.xaml.cs">
-      <DependentUpon>OverViewView.xaml</DependentUpon>
+    <Compile Include="Views\OverviewView.xaml.cs">
+      <DependentUpon>OverviewView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SummaryView.xaml.cs">
-      <DependentUpon>SummaryView.xaml</DependentUpon>
+    <Compile Include="Views\WeeklyView.xaml.cs">
+      <DependentUpon>WeeklyView.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\Language\en-US.xaml">
       <SubType>Designer</SubType>
@@ -214,11 +214,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OverViewView.xaml">
+    <Page Include="Views\OverviewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SummaryView.xaml">
+    <Page Include="Views\WeeklyView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

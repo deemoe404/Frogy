@@ -21,7 +21,7 @@ namespace Frogy.Views
     /// </summary>
     public partial class SummaryView : Page
     {
-        SummaryViewModel viewModel = new SummaryViewModel();
+        WeeklyViewModel viewModel = new WeeklyViewModel();
         public SummaryView()
         {
             this.DataContext = viewModel;

@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 
 namespace Frogy.Models
 {
-    class SummaryModel
+    class WeeklyModel
     {
         public class SummaryListItem
         {

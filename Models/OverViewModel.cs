@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 
 namespace Frogy.Models
 {
-    class OverViewModel
+    class OverviewModel
     {
 
     }

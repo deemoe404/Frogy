@@ -18,7 +18,7 @@ using Frogy.Resources.Language;
 
 namespace Frogy.ViewModels
 {
-    class OverViewViewModel : INotifyPropertyChanged
+    class OverviewViewModel : INotifyPropertyChanged
     {
         Task<List<OverViewItem>> GenerateList(Dictionary<string, Software> OverView)
         {
@@ -120,7 +120,7 @@ namespace Frogy.ViewModels
             });
         }
 
-        public OverViewViewModel()
+        public OverviewViewModel()
         {
             Update();
         }
