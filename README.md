@@ -1,42 +1,26 @@
-# 时常 - 屏幕使用时间
-时常是一款灵感来源于 iOS “屏幕使用时间”（或是 Android “数字健康”）的 Windows app 。目前实现的功能有：
-* 记录 app 的使用情况
-* 以图表的形式展示一天中不同时段的 app 使用情况
-* 生成周报，查看一周的整体活动情况
-* 现在支持的语言：
-  <ol>
-  <li>简体中文</li>
-  <li>英文</li>
-  </ol>
-  不支持的语言将会默认显示英文。
+# TimeFrogy - ScreenTime Tracker
 
+TimeFrogy is a Windows application that draws inspiration from iOS' "Screen Time" and Android's "Digital Wellbeing." It serves as a tool for monitoring and managing your screen time. Here are the key features it currently offers:
 
-****
-<br>
+- **App Usage Tracking:** TimeFrogy records your app usage to help you understand how you spend your time on your computer.
 
-# TimeFrogy - ScreenTime
-Frogy is a Windows app inspired by iOS "screen time" (or Android "digital wellbeing"). The functions that currently implemented are:
-* Record the usage of the apps
-* Show the app usage at different times of the day in the form of graphs
-* A weekly to show you the app usage of the whole week
-* Languages supported now：
-  <ol>
-  <li>Chinese</li>
-  <li>English</li>
-  </ol>
-  If an unsupported language is detected, English is displayed.
+- **Hourly App Usage Charts:** It visualizes your app usage throughout the day, allowing you to see when and how often you use specific applications.
 
-****
-<br>
+- **Weekly Reports:** TimeFrogy generates weekly reports that provide insights into your overall activity during the past week.
 
+## Supported Languages
 
-# 特别感谢 Special thanks to
-[![Visual Studio Community 2019](https://raw.githubusercontent.com/HandyOrg/HandyOrgResource/master/HandyControl/Resources/vs2019_logo.png)](https://visualstudio.microsoft.com/free-developer-offers/)
-[![HandyControl](https://raw.githubusercontent.com/HandyOrg/HandyOrgResource/master/HandyControl/Resources/icon.png)](https://github.com/HandyOrg/HandyControl)
-[![livecharts](https://lvcharts.net/Content/Images/LiveChartsWhite.gif)](https://github.com/Live-Charts/Live-Charts)
+- Chinese (Simplified)
+- English
 
-****
-<br>
+For unsupported languages, TimeFrogy defaults to displaying content in English.
 
-# 屏幕截图 Screenshots
-![Frogy](https://s1.ax1x.com/2020/08/11/aqqpr9.png "Screenshots")
+## Special Thanks To
+
+- [![Visual Studio Community 2019](https://raw.githubusercontent.com/HandyOrg/HandyOrgResource/master/HandyControl/Resources/vs2019_logo.png)](https://visualstudio.microsoft.com/free-developer-offers/)
+- [![HandyControl](https://raw.githubusercontent.com/HandyOrg/HandyOrgResource/master/HandyControl/Resources/icon.png)](https://github.com/HandyOrg/HandyControl)
+- [![LiveCharts](https://lvcharts.net/Content/Images/LiveChartsWhite.gif)](https://github.com/Live-Charts/Live-Charts)
+
+## Screenshots
+
+![TimeFrogy](https://s1.ax1x.com/2020/08/11/aqqpr9.png "Screenshots")
